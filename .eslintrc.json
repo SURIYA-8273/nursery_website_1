@@ -1,0 +1,34 @@
+{
+    "extends": [
+        "next/core-web-vitals",
+        "next/typescript"
+    ],
+    "rules": {
+        "no-restricted-imports": [
+            "error",
+            {
+                "patterns": [
+                    {
+                        "group": [
+                            "@/data/*",
+                            "@/presentation/*"
+                        ],
+                        "message": "Domain layer cannot import from Data or Presentation layers",
+                        "files": [
+                            "src/domain/**/*.ts"
+                        ]
+                    },
+                    {
+                        "group": [
+                            "@/presentation/*"
+                        ],
+                        "message": "Data layer cannot import from Presentation layer",
+                        "files": [
+                            "src/data/**/*.ts"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
