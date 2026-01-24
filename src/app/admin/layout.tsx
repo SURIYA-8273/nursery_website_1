@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '@/data/datasources/supabase.client';
 import { APP_CONFIG } from '@/core/config/constants';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Menu } from 'lucide-react';
 
 import { AdminSidebar } from '@/presentation/components/admin/sidebar';
 
@@ -12,6 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const router = useRouter();
     const pathname = usePathname();
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -47,9 +48,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     return (
-        <div className="min-h-screen bg-surface flex">
-            <AdminSidebar />
-            <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto">
+        <div className="min-h-screen bg-surface flex flex-col md:flex-row">
+            {/* Mobile Header */}
+            <div className="md:hidden bg-white border-b border-secondary/10 p-4 flex items-center justify-between sticky top-0 z-40">
+                <h1 className="font-serif text-xl font-bold text-primary tracking-tight">
+                    Admin Panel
+                </h1>
+                <button
+                    onClick={() => setIsSidebarOpen(true)}
+                    className="p-2 text-text-primary hover:bg-secondary/10 rounded-lg transition-colors"
+                >
+                    <Menu size={24} />
+                </button>
+            </div>
+
+            <AdminSidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+            />
+
+            <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto w-full">
                 {children}
             </main>
         </div>

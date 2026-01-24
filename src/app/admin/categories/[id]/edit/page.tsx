@@ -1,18 +1,43 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { SupabaseCategoryRepository } from '@/data/repositories/supabase-category.repository';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import Link from 'next/link';
 
-export default function NewCategoryPage() {
+export default function EditCategoryPage() {
     const router = useRouter();
+    const params = useParams();
+    const categoryId = params.id as string;
+
     const [loading, setLoading] = useState(false);
+    const [fetchingCategory, setFetchingCategory] = useState(true);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
     });
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            const repo = new SupabaseCategoryRepository();
+            const category = await repo.getCategoryById(categoryId);
+
+            if (category) {
+                setFormData({
+                    name: category.name,
+                    description: category.description || '',
+                });
+            } else {
+                alert('Category not found');
+                router.push('/admin/categories');
+            }
+
+            setFetchingCategory(false);
+        };
+
+        fetchCategory();
+    }, [categoryId, router]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -26,18 +51,18 @@ export default function NewCategoryPage() {
             const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
             const repo = new SupabaseCategoryRepository();
-            await repo.createCategory({
+            await repo.updateCategory(categoryId, {
                 name: formData.name,
                 slug,
                 description: formData.description,
-                image: '', // Optional for now
             });
 
+            alert('Category updated successfully!');
             router.push('/admin/categories');
             router.refresh();
 
         } catch (error) {
-            if (error instanceof Error) {
+           if (error instanceof Error) {
         alert('Error: ' + error.message);
     } else {
         alert('An unknown error occurred.');
@@ -47,13 +72,21 @@ export default function NewCategoryPage() {
         }
     };
 
+    if (fetchingCategory) {
+        return (
+            <div className="max-w-4xl mx-auto p-6 md:p-8 flex items-center justify-center min-h-screen">
+                <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-4xl mx-auto p-6 md:p-8 pb-20">
             <div className="flex items-center gap-4 mb-8">
                 <Link href="/admin/categories" className="p-2 hover:bg-black/5 rounded-full transition-colors">
                     <ArrowLeft size={24} />
                 </Link>
-                <h1 className="font-serif text-3xl font-bold text-primary">Add New Category</h1>
+                <h1 className="font-serif text-3xl font-bold text-primary">Edit Category</h1>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-sm border border-secondary/10 space-y-6">
@@ -82,14 +115,20 @@ export default function NewCategoryPage() {
                     />
                 </div>
 
-                <div className="pt-4 flex items-center justify-end">
+                <div className="pt-4 flex items-center justify-between">
+                    <Link
+                        href="/admin/categories"
+                        className="px-6 py-3 rounded-xl border border-secondary/20 hover:bg-secondary/10 transition-colors font-medium"
+                    >
+                        Cancel
+                    </Link>
                     <button
                         type="submit"
                         disabled={loading}
                         className="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary-hover shadow-lg hover:shadow-soft active:scale-95 transition-all text-lg flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
                     >
                         {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-                        {loading ? 'Creating...' : 'Save Category'}
+                        {loading ? 'Updating...' : 'Update Category'}
                     </button>
                 </div>
 

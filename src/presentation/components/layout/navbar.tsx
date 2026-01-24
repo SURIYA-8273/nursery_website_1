@@ -47,10 +47,7 @@ export const Navbar = () => {
                     <div className="bg-primary text-white p-2 rounded-lg group-hover:bg-primary-hover transition-colors">
                         <Leaf size={24} fill="currentColor" />
                     </div>
-                    <span className={cn(
-                        "font-serif text-xl font-bold tracking-tight transition-colors",
-                        scrolled || !isHome ? "text-primary" : "text-primary md:text-white"
-                    )}>
+                    <span className="font-serif text-xl font-bold tracking-tight transition-colors text-primary">
                         GreenRoots
                     </span>
                 </Link>
@@ -61,10 +58,7 @@ export const Navbar = () => {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className={cn(
-                                "text-sm font-medium transition-colors hover:text-accent",
-                                scrolled || !isHome ? "text-text-primary" : "text-white/90 hover:text-white"
-                            )}
+                            className="text-sm font-medium transition-colors text-gray-700 hover:text-primary"
                         >
                             {link.name}
                         </Link>
@@ -73,18 +67,12 @@ export const Navbar = () => {
 
                 {/* Icons */}
                 <div className="flex items-center gap-4">
-                    <button className={cn(
-                        "p-2 rounded-full transition-colors hover:bg-black/5",
-                        scrolled || !isHome ? "text-text-secondary" : "text-white/90"
-                    )}>
+                    <button className="p-2 rounded-full transition-colors hover:bg-black/5 text-gray-700">
                         <Search size={20} />
                     </button>
 
                     <Link href="/cart" className="relative group">
-                        <button className={cn(
-                            "p-2 rounded-full transition-colors hover:bg-black/5",
-                            scrolled || !isHome ? "text-text-secondary" : "text-white/90"
-                        )}>
+                        <button className="p-2 rounded-full transition-colors hover:bg-black/5 text-gray-700">
                             <ShoppingCart size={20} />
                         </button>
                         {cart.totalItems > 0 && (
@@ -95,17 +83,14 @@ export const Navbar = () => {
                     </Link>
 
                     <Link href="/admin/login">
-                        <button className={cn(
-                            "p-2 rounded-full transition-colors hover:bg-black/5 hidden md:block",
-                            scrolled || !isHome ? "text-text-secondary" : "text-white/90"
-                        )}>
+                        <button className="p-2 rounded-full transition-colors hover:bg-black/5 hidden md:block text-gray-700">
                             <User size={20} />
                         </button>
                     </Link>
 
                     {/* Mobile Menu Toggle */}
                     <button
-                        className={cn("md:hidden p-2", scrolled || !isHome ? "text-text-primary" : "text-white")}
+                        className="md:hidden p-2 text-gray-700"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     >
                         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

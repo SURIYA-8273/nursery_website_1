@@ -25,7 +25,7 @@ export default async function PlantListingPage({ searchParams }: Props) {
     const categories = await repo.getCategories();
 
     return (
-        <main className="min-h-screen max-w-7xl mx-auto p-4 py-8">
+        <main className="min-h-screen max-w-7xl mx-auto p-4 pt-24 pb-12">
             {/* Header & Search */}
             <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
                 <div className="w-full md:w-auto">
@@ -75,7 +75,7 @@ export default async function PlantListingPage({ searchParams }: Props) {
 
             {/* Grid */}
             {plants.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                     {plants.map((plant) => (
                         <PlantCard key={plant.id} plant={plant} />
                     ))}

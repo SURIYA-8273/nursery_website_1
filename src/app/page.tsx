@@ -3,7 +3,7 @@ import { PlantCard } from '@/presentation/components/ui/plant-card';
 import { HeroSection } from '@/presentation/components/home/hero-section';
 import { FeaturesSection } from '@/presentation/components/home/features-section';
 import { CategoryHighlights } from '@/presentation/components/home/category-highlights';
-import { PlantCareSection } from '@/presentation/components/home/plant-care-section';
+
 import { NewsletterSection } from '@/presentation/components/home/newsletter-section';
 import { Heading } from '@/presentation/components/ui/typography';
 import Link from 'next/link';
@@ -40,7 +40,7 @@ export default async function Home() {
           </div>
 
           {plants.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {plants.map((plant) => (
                 <PlantCard key={plant.id} plant={plant} />
               ))}
@@ -60,7 +60,7 @@ export default async function Home() {
       </section>
 
       {/* 5. Plant Care Tips */}
-      <PlantCareSection />
+
 
       {/* 6. Newsletter */}
       <NewsletterSection />
