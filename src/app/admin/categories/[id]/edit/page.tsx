@@ -48,12 +48,9 @@ export default function EditCategoryPage() {
         setLoading(true);
 
         try {
-            const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
             const repo = new SupabaseCategoryRepository();
             await repo.updateCategory(categoryId, {
                 name: formData.name,
-                slug,
                 description: formData.description,
             });
 
@@ -62,11 +59,11 @@ export default function EditCategoryPage() {
             router.refresh();
 
         } catch (error) {
-           if (error instanceof Error) {
-        alert('Error: ' + error.message);
-    } else {
-        alert('An unknown error occurred.');
-    }
+            if (error instanceof Error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('An unknown error occurred.');
+            }
         } finally {
             setLoading(false);
         }

@@ -44,6 +44,19 @@ const tokens = {
         cream: '#F9FAFB', // Cool white instead of warm sand
         white: '#FFFFFF',
         black: '#1A1A1A',
+        sage: {
+            50: '#f6f8f6',
+            100: '#eef2ee',
+            200: '#dce5dd',
+            300: '#bfd1c1',
+            400: '#9cb8a0',
+            500: '#7d9f82',
+            600: '#628167',
+            700: '#4f6853',
+            800: '#405343',
+            900: '#354438',
+            950: '#1d261f',
+        },
     },
     typography: {
         fontFamily: {
@@ -123,6 +136,10 @@ const config: Config = {
                     ...tokens.colors.emerald,
                 },
                 cream: tokens.colors.cream,
+                sage: {
+                    DEFAULT: tokens.colors.sage[500],
+                    ...tokens.colors.sage,
+                },
             },
             fontFamily: tokens.typography.fontFamily,
             fontSize: tokens.typography.fontSize,

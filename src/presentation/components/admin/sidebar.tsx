@@ -46,11 +46,11 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
                 )}
             >
                 <div className="p-8 border-b border-secondary/10 flex items-center justify-between">
-                    <h1 className="font-serif text-2xl font-bold text-primary tracking-tight">
+                    <h1 className="font-serif text-2xl font-bold text-black tracking-tight">
                         Admin Panel
                     </h1>
                     {/* Close button for mobile only */}
-                    <button onClick={onClose} className="md:hidden text-text-secondary hover:text-primary">
+                    <button onClick={onClose} className="md:hidden text-text-secondary hover:text-black">
                         <X size={24} />
                     </button>
                 </div>
@@ -66,8 +66,8 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
                                 className={cn(
                                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium",
                                     isActive
-                                        ? "bg-primary text-white shadow-md shadow-primary/20"
-                                        : "text-text-secondary hover:bg-surface hover:text-primary"
+                                        ? "bg-black text-white shadow-md shadow-black/20"
+                                        : "text-text-secondary hover:bg-neutral-100 hover:text-black"
                                 )}
                             >
                                 <item.icon size={20} />
@@ -80,7 +80,7 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
                 <div className="p-4 border-t border-secondary/10">
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-muted hover:bg-red-50 hover:text-red-600 transition-colors font-medium"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-text-muted hover:bg-neutral-100 hover:text-black transition-colors font-medium"
                     >
                         <LogOut size={20} />
                         Logout

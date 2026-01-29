@@ -14,7 +14,7 @@ export class CheckoutViaWhatsAppUseCase {
         let message = "Hello! I would like to order the following plants:\n\n";
 
         cart.items.forEach((item) => {
-            message += `- ${item.plant.name} (x${item.quantity}): ₹${item.plant.discountPrice || item.plant.price}\n`;
+            message += `- ${item.plant.name} (x${item.quantity}): ₹${item.plant.discountPrice || item.plant.price || 0}\n`;
         });
 
         message += `\nTotal: ₹${cart.totalPrice}`;

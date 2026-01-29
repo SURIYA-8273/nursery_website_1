@@ -8,7 +8,7 @@ export const APP_CONFIG = {
         home: '/',
         plants: '/plants',
         cart: '/cart',
-        favorites: '/favorites',
+        favorites: '/wishlist',
         admin: {
             dashboard: '/admin/dashboard',
             login: '/admin/login',

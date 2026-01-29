@@ -37,7 +37,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-surface">
-                <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                <Loader2 className="w-8 h-8 text-black animate-spin" />
             </div>
         );
     }
@@ -51,7 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="min-h-screen bg-surface flex flex-col md:flex-row">
             {/* Mobile Header */}
             <div className="md:hidden bg-white border-b border-secondary/10 p-4 flex items-center justify-between sticky top-0 z-40">
-                <h1 className="font-serif text-xl font-bold text-primary tracking-tight">
+                <h1 className="font-serif text-xl font-bold text-black tracking-tight">
                     Admin Panel
                 </h1>
                 <button

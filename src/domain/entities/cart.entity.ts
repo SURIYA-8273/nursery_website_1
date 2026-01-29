@@ -3,6 +3,11 @@ import { Plant } from './plant.entity';
 export interface CartItem {
     plant: Plant;
     quantity: number;
+    selectedVariant?: {
+        id: string;
+        size: string;
+        price: number;
+    };
 }
 
 export interface Cart {

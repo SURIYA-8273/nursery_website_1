@@ -8,7 +8,7 @@ export interface IPlantRepository {
         limit?: number;
     }): Promise<{ plants: Plant[]; total: number }>;
 
-    getPlantBySlug(slug: string): Promise<Plant | null>;
+    getPlantById(id: string): Promise<Plant | null>;
 
     getFeaturedPlants(): Promise<Plant[]>;
 

@@ -23,12 +23,9 @@ export default function NewCategoryPage() {
         setLoading(true);
 
         try {
-            const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-
             const repo = new SupabaseCategoryRepository();
             await repo.createCategory({
                 name: formData.name,
-                slug,
                 description: formData.description,
                 image: '', // Optional for now
             });
@@ -38,10 +35,10 @@ export default function NewCategoryPage() {
 
         } catch (error) {
             if (error instanceof Error) {
-        alert('Error: ' + error.message);
-    } else {
-        alert('An unknown error occurred.');
-    }
+                alert('Error: ' + error.message);
+            } else {
+                alert('An unknown error occurred.');
+            }
         } finally {
             setLoading(false);
         }

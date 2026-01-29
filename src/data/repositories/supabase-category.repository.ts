@@ -30,7 +30,6 @@ export class SupabaseCategoryRepository implements ICategoryRepository {
             .from('categories')
             .insert({
                 name: category.name,
-                slug: category.slug,
                 image: category.image,
                 description: category.description,
             })
@@ -44,7 +43,6 @@ export class SupabaseCategoryRepository implements ICategoryRepository {
     async updateCategory(id: string, category: Partial<Category>): Promise<Category> {
         const updates: any = {};
         if (category.name) updates.name = category.name;
-        if (category.slug) updates.slug = category.slug;
         if (category.image) updates.image = category.image;
         if (category.description) updates.description = category.description;
 
@@ -72,7 +70,6 @@ export class SupabaseCategoryRepository implements ICategoryRepository {
         return {
             id: row.id,
             name: row.name,
-            slug: row.slug,
             image: row.image,
             description: row.description,
         };

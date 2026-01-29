@@ -6,9 +6,9 @@ import { useRouter } from 'next/navigation';
 import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
 import { SupabaseCategoryRepository } from '@/data/repositories/supabase-category.repository';
 import { Plant, Category } from '@/domain/entities/plant.entity';
-import { Plus, Edit3, Trash2, Filter } from 'lucide-react';
+import { Plus, Edit3, Trash2, Filter, Eye } from 'lucide-react';
 import { SearchInput } from '@/presentation/components/common/search-input';
-import { Pagination } from '@/presentation/components/common/pagination';
+import { DataTable, TableHeader } from '@/presentation/components/admin/data-table';
 
 export default function AdminPlantsPage() {
     const router = useRouter();
@@ -60,9 +60,9 @@ export default function AdminPlantsPage() {
 
         // Stock filter
         if (stockFilter === 'low') {
-            filtered = filtered.filter(p => p.stock > 0 && p.stock < 10);
+            filtered = filtered.filter(p => (p.stock || 0) > 0 && (p.stock || 0) < 10);
         } else if (stockFilter === 'out') {
-            filtered = filtered.filter(p => p.stock === 0);
+            filtered = filtered.filter(p => (p.stock || 0) === 0);
         }
 
         // Update total
@@ -85,14 +85,14 @@ export default function AdminPlantsPage() {
         fetchPlants();
     }, [searchQuery, statusFilter, categoryFilter, stockFilter, currentPage, pageSize]);
 
-    const handleDelete = async (id: string, name: string) => {
-        if (!confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+    const handleDelete = async (plant: Plant) => {
+        if (!confirm(`Are you sure you want to delete "${plant.name}"? This action cannot be undone.`)) {
             return;
         }
 
         try {
             const repo = new SupabasePlantRepository();
-            await repo.deletePlant(id);
+            await repo.deletePlant(plant.id);
 
             // Refresh the list
             fetchPlants();
@@ -105,8 +105,8 @@ export default function AdminPlantsPage() {
         }
     };
 
-    const handleEdit = (id: string) => {
-        router.push(`/admin/plants/${id}/edit`);
+    const handleEdit = (plant: Plant) => {
+        router.push(`/admin/plants/${plant.id}/edit`);
     };
 
     const handlePageChange = (page: number) => {
@@ -120,16 +120,74 @@ export default function AdminPlantsPage() {
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
+    const headers: TableHeader[] = [
+        { label: 'Plant' },
+        { label: 'Price', className: 'font-medium' },
+        { label: 'Stock' },
+        { label: 'Status' },
+        { label: 'Actions', align: 'right' }
+    ];
+
+    const renderRow = (plant: Plant) => [
+        {
+            content: (
+                <div className="flex items-center gap-3 md:gap-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-surface rounded-lg overflow-hidden shrink-0">
+                        {plant.images[0] && <img src={plant.images[0]} alt="" className="w-full h-full object-cover" />}
+                    </div>
+                    <div>
+                        <div className="font-bold text-text-primary line-clamp-1 text-sm md:text-base">{plant.name}</div>
+                    </div>
+                </div>
+            )
+        },
+        { content: `₹${plant.price}` },
+        {
+            content: (
+                <span className={`text-sm md:text-base ${(plant.stock || 0) === 0 ? 'font-bold text-black border-b border-black' : (plant.stock || 0) < 10 ? 'font-medium text-black' : ''}`}>
+                    {plant.stock || 0}
+                </span>
+            )
+        },
+        {
+            content: (
+                <span className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold ${plant.isActive ? 'bg-black text-white' : 'bg-white text-black border border-neutral-200'}`}>
+                    {plant.isActive ? 'Active' : 'Inactive'}
+                </span>
+            )
+        },
+        {
+            actions: [
+                {
+                    label: 'View',
+                    icon: <Eye size={18} />,
+                    onClick: () => console.log('View', plant.id)
+                },
+                {
+                    label: 'Edit',
+                    icon: <Edit3 size={18} />,
+                    onClick: () => handleEdit(plant)
+                },
+                {
+                    label: 'Delete',
+                    icon: <Trash2 size={18} />,
+                    onClick: () => handleDelete(plant),
+                    variant: 'danger' as const
+                }
+            ]
+        }
+    ];
+
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
                 <div>
-                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-primary">Plants</h1>
+                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-black">Plants</h1>
                     <p className="text-sm md:text-base text-text-secondary">Manage your inventory</p>
                 </div>
 
-                <Link href="/admin/plants/new" className="w-full md:w-auto bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-primary-hover shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm md:text-base">
+                <Link href="/admin/plants/new" className="w-full md:w-auto bg-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-neutral-800 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm md:text-base">
                     <Plus size={20} />
                     Add Plant
                 </Link>
@@ -137,172 +195,104 @@ export default function AdminPlantsPage() {
 
             {/* Search and Filters */}
             <div className="bg-white rounded-2xl shadow-sm border border-secondary/10 p-4 md:p-6 mb-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Search */}
-                    <div className="sm:col-span-2">
-                        <SearchInput
-                            value={searchQuery}
-                            onChange={setSearchQuery}
-                            placeholder="Search by name or slug..."
-                        />
-                    </div>
+                <div className="flex flex-col gap-6">
+                    <SearchInput
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        placeholder="Search by name..."
+                    />
 
-                    {/* Status Filter */}
-                    <div>
-                        <select
-                            value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value as any)}
-                            className="w-full px-4 py-2.5 border border-secondary/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm md:text-base"
-                        >
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
+                    <div className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                            {/* Status Filter */}
+                            <div>
+                                <select
+                                    value={statusFilter}
+                                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                                    className="w-full px-4 py-2.5 border border-secondary/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm md:text-base"
+                                >
+                                    <option value="all">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
 
-                    {/* Category Filter */}
-                    <div>
-                        <select
-                            value={categoryFilter}
-                            onChange={(e) => setCategoryFilter(e.target.value)}
-                            className="w-full px-4 py-2.5 border border-secondary/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm md:text-base"
-                        >
-                            <option value="all">All Categories</option>
-                            {categories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
+                            {/* Category Filter */}
+                            <div>
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="w-full px-4 py-2.5 border border-secondary/20 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm md:text-base"
+                                >
+                                    <option value="all">All Categories</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat.id} value={cat.id}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
 
-                {/* Stock Filter */}
-                <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <div className="flex items-center gap-2 text-text-muted">
-                        <Filter size={18} />
-                        <span className="text-sm font-medium">Stock:</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            onClick={() => setStockFilter('all')}
-                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'all'
-                                ? 'bg-primary text-white'
-                                : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
-                                }`}
-                        >
-                            All
-                        </button>
-                        <button
-                            onClick={() => setStockFilter('low')}
-                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'low'
-                                ? 'bg-primary text-white'
-                                : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
-                                }`}
-                        >
-                            Low Stock (&lt;10)
-                        </button>
-                        <button
-                            onClick={() => setStockFilter('out')}
-                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'out'
-                                ? 'bg-primary text-white'
-                                : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
-                                }`}
-                        >
-                            Out of Stock
-                        </button>
+                        {/* Stock Filter */}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                            <div className="flex items-center gap-2 text-text-muted">
+                                <Filter size={18} />
+                                <span className="text-sm font-medium">Stock:</span>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                <button
+                                    onClick={() => setStockFilter('all')}
+                                    className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'all'
+                                        ? 'bg-primary text-white'
+                                        : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
+                                        }`}
+                                >
+                                    All
+                                </button>
+                                <button
+                                    onClick={() => setStockFilter('low')}
+                                    className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'low'
+                                        ? 'bg-primary text-white'
+                                        : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
+                                        }`}
+                                >
+                                    Low Stock (&lt;10)
+                                </button>
+                                <button
+                                    onClick={() => setStockFilter('out')}
+                                    className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-colors ${stockFilter === 'out'
+                                        ? 'bg-primary text-white'
+                                        : 'bg-secondary/10 text-text-secondary hover:bg-secondary/20'
+                                        }`}
+                                >
+                                    Out of Stock
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Plant Table */}
-            <div className="bg-white rounded-3xl shadow-sm border border-secondary/10 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left min-w-[800px] md:min-w-0">
-                        <thead className="bg-secondary/5 border-b border-secondary/10">
-                            <tr>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Plant</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Price</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Stock</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Status</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary text-right whitespace-nowrap">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-secondary/10">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={5} className="p-8 md:p-12 text-center text-text-muted">Loading inventory...</td>
-                                </tr>
-                            ) : plants.length === 0 ? (
-                                <tr>
-                                    <td colSpan={5} className="p-8 md:p-12 text-center text-text-muted">
-                                        {searchQuery || statusFilter !== 'all' || categoryFilter !== 'all' || stockFilter !== 'all'
-                                            ? 'No plants found matching your filters.'
-                                            : 'No plants found.'}
-                                    </td>
-                                </tr>
-                            ) : (
-                                plants.map((plant) => (
-                                    <tr key={plant.id} className="hover:bg-surface transition-colors">
-                                        <td className="p-4 md:p-6">
-                                            <div className="flex items-center gap-3 md:gap-4">
-                                                <div className="w-10 h-10 md:w-12 md:h-12 bg-surface rounded-lg overflow-hidden shrink-0">
-                                                    {plant.images[0] && <img src={plant.images[0]} alt="" className="w-full h-full object-cover" />}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold text-text-primary line-clamp-1 text-sm md:text-base">{plant.name}</div>
-                                                    <div className="text-xs text-text-muted hidden md:block font-mono">{plant.slug}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-4 md:p-6 font-medium text-sm md:text-base">₹{plant.price}</td>
-                                        <td className="p-4 md:p-6">
-                                            <span className={`text-sm md:text-base ${plant.stock === 0 ? 'text-red-500 font-bold' : plant.stock < 10 ? 'text-orange-500 font-medium' : ''}`}>
-                                                {plant.stock}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 md:p-6">
-                                            <span className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[10px] md:text-xs font-bold ${plant.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                                                {plant.isActive ? 'Active' : 'Inactive'}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 md:p-6 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button
-                                                    onClick={() => handleEdit(plant.id)}
-                                                    className="p-1.5 md:p-2 hover:bg-secondary/10 rounded-full text-text-muted hover:text-primary transition-colors"
-                                                    title="Edit plant"
-                                                >
-                                                    <Edit3 size={18} className="w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(plant.id, plant.name)}
-                                                    className="p-1.5 md:p-2 hover:bg-red-50 rounded-full text-text-muted hover:text-red-500 transition-colors"
-                                                    title="Delete plant"
-                                                >
-                                                    <Trash2 size={18} className="w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Pagination */}
-                {!loading && totalItems > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={totalItems}
-                        pageSize={pageSize}
-                        onPageChange={handlePageChange}
-                        onPageSizeChange={handlePageSizeChange}
-                    />
-                )}
-            </div>
+            <DataTable<Plant>
+                data={plants}
+                headers={headers}
+                renderRow={renderRow}
+                loading={loading}
+                emptyMessage={searchQuery || statusFilter !== 'all' || categoryFilter !== 'all' || stockFilter !== 'all'
+                    ? 'No plants found matching your filters.'
+                    : 'No plants found.'}
+                rowKey={(plant) => plant.id}
+                pagination={{
+                    currentPage,
+                    totalPages,
+                    totalItems,
+                    pageSize,
+                    onPageChange: handlePageChange,
+                    onPageSizeChange: handlePageSizeChange
+                }}
+            />
         </div>
     );
 }

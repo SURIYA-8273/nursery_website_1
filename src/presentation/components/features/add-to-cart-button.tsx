@@ -8,17 +8,22 @@ import { cn } from '@/lib/utils';
 
 interface Props {
     plant: Plant;
+    selectedVariant?: {
+        id: string;
+        size: string;
+        price: number;
+    };
     className?: string;
 }
 
-export const AddToCartButton = ({ plant, className }: Props) => {
+export const AddToCartButton = ({ plant, selectedVariant, className }: Props) => {
     const [quantity, setQuantity] = useState(1);
     const [isAdding, setIsAdding] = useState(false);
     const addToCart = useCartStore((state) => state.addToCart);
 
     const handleAdd = async () => {
         setIsAdding(true);
-        await addToCart(plant, quantity);
+        await addToCart(plant, quantity, selectedVariant);
 
         // Simulate feedback delay
         setTimeout(() => {
@@ -39,9 +44,9 @@ export const AddToCartButton = ({ plant, className }: Props) => {
                 </button>
                 <span className="font-bold text-lg min-w-[2ch] text-center">{quantity}</span>
                 <button
-                    onClick={() => setQuantity(q => Math.min(plant.stock, q + 1))}
+                    onClick={() => setQuantity(q => Math.min(plant.stock || 0, q + 1))}
                     className="p-1 hover:text-primary transition-colors disabled:opacity-50"
-                    disabled={quantity >= plant.stock}
+                    disabled={quantity >= (plant.stock || 0)}
                 >
                     <Plus size={18} />
                 </button>
@@ -49,7 +54,7 @@ export const AddToCartButton = ({ plant, className }: Props) => {
 
             <button
                 onClick={handleAdd}
-                disabled={isAdding || plant.stock === 0}
+                disabled={isAdding || (plant.stock || 0) === 0}
                 className={cn(
                     "flex-1 flex items-center justify-center gap-2 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg active:scale-95 text-lg",
                     isAdding

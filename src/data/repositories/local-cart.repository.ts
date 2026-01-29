@@ -23,7 +23,10 @@ export class LocalCartRepository implements ICartRepository {
 
     async addItem(item: CartItem): Promise<void> {
         const cart = await this.getCart();
-        const existingItemIndex = cart.items.findIndex(i => i.plant.id === item.plant.id);
+        const existingItemIndex = cart.items.findIndex(i =>
+            i.plant.id === item.plant.id &&
+            i.selectedVariant?.id === item.selectedVariant?.id
+        );
 
         if (existingItemIndex > -1) {
             cart.items[existingItemIndex].quantity += item.quantity;
@@ -35,21 +38,27 @@ export class LocalCartRepository implements ICartRepository {
         this._saveCart(cart);
     }
 
-    async removeItem(plantId: string): Promise<void> {
+    async removeItem(plantId: string, variantId?: string): Promise<void> {
         const cart = await this.getCart();
-        cart.items = cart.items.filter(item => item.plant.id !== plantId);
+        cart.items = cart.items.filter(item =>
+            !(item.plant.id === plantId && item.selectedVariant?.id === variantId)
+        );
         this._updateTotals(cart);
         this._saveCart(cart);
     }
 
-    async updateQuantity(plantId: string, quantity: number): Promise<void> {
+    async updateQuantity(plantId: string, quantity: number, variantId?: string): Promise<void> {
         const cart = await this.getCart();
-        const item = cart.items.find(item => item.plant.id === plantId);
+        const item = cart.items.find(item =>
+            item.plant.id === plantId && item.selectedVariant?.id === variantId
+        );
 
         if (item) {
             item.quantity = quantity;
             if (item.quantity <= 0) {
-                cart.items = cart.items.filter(i => i.plant.id !== plantId);
+                cart.items = cart.items.filter(i =>
+                    !(i.plant.id === plantId && i.selectedVariant?.id === variantId)
+                );
             }
         }
 
@@ -64,7 +73,9 @@ export class LocalCartRepository implements ICartRepository {
     private _updateTotals(cart: Cart): void {
         cart.totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         cart.totalPrice = cart.items.reduce((sum, item) => {
-            const price = item.plant.discountPrice || item.plant.price;
+            const price = item.selectedVariant?.price
+                ? item.selectedVariant.price
+                : (item.plant.discountPrice || item.plant.price || 0);
             return sum + (price * item.quantity);
         }, 0);
     }

@@ -4,14 +4,21 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ShoppingCart, User, Search, Menu, X, Leaf } from 'lucide-react';
+import { ShoppingBag, Heart, Menu, X, Leaf } from 'lucide-react';
 import { useCartStore } from '@/presentation/store/cart.store';
+import { useWishlistStore } from '@/presentation/store/wishlist.store';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
     const { cart } = useCartStore();
+    const { wishlist, refreshWishlist } = useWishlistStore();
+
+    // Init stores
+    useEffect(() => {
+        refreshWishlist();
+    }, [refreshWishlist]);
 
     // Handle scroll effect
     useEffect(() => {
@@ -35,30 +42,28 @@ export const Navbar = () => {
     return (
         <header
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                scrolled || !isHome
-                    ? "bg-white/90 backdrop-blur-md shadow-sm py-3"
-                    : "bg-transparent py-5"
+                "sticky top-0 left-0 right-0 z-50 transition-all duration-300 bg-white border-b border-gray-100 py-3",
+                scrolled ? "shadow-md" : ""
             )}
         >
-            <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
                 {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="bg-primary text-white p-2 rounded-lg group-hover:bg-primary-hover transition-colors">
-                        <Leaf size={24} fill="currentColor" />
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="bg-[#2F4F4F] text-white p-2.5 rounded-full transition-colors">
+                        <Leaf size={20} fill="none" strokeWidth={2} />
                     </div>
-                    <span className="font-serif text-xl font-bold tracking-tight transition-colors text-primary">
-                        GreenRoots
+                    <span className="font-serif text-3xl font-bold tracking-tight text-[#1A2F2F]">
+                        Verdant
                     </span>
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
+                <nav className="hidden lg:flex items-center gap-10">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-sm font-medium transition-colors text-gray-700 hover:text-primary"
+                            className="text-base font-medium transition-colors text-gray-600 hover:text-[#2F4F4F]"
                         >
                             {link.name}
                         </Link>
@@ -66,31 +71,30 @@ export const Navbar = () => {
                 </nav>
 
                 {/* Icons */}
-                <div className="flex items-center gap-4">
-                    <button className="p-2 rounded-full transition-colors hover:bg-black/5 text-gray-700">
-                        <Search size={20} />
-                    </button>
+                <div className="flex items-center gap-2 sm:gap-4">
+                    {/* Favorites/Wishlist */}
+                    <Link href="/wishlist" className="relative group p-2">
+                        <Heart size={24} className="text-[#1A2F2F] group-hover:text-[#D36E45] transition-colors" />
+                        {wishlist.totalItems > 0 && (
+                            <span className="absolute top-0 right-0 bg-[#D36E45] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                                {wishlist.totalItems}
+                            </span>
+                        )}
+                    </Link>
 
-                    <Link href="/cart" className="relative group">
-                        <button className="p-2 rounded-full transition-colors hover:bg-black/5 text-gray-700">
-                            <ShoppingCart size={20} />
-                        </button>
-                        {cart.totalItems > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
+                    {/* Cart */}
+                    <Link href="/cart" className="relative group p-2">
+                        <ShoppingBag size={24} className="text-[#1A2F2F] group-hover:text-[#2F5E48] transition-colors" />
+                        {cart.totalItems >= 0 && (
+                            <span className="absolute top-0 right-0 bg-[#2F5E48] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
                                 {cart.totalItems}
                             </span>
                         )}
                     </Link>
 
-                    <Link href="/admin/login">
-                        <button className="p-2 rounded-full transition-colors hover:bg-black/5 hidden md:block text-gray-700">
-                            <User size={20} />
-                        </button>
-                    </Link>
-
-                    {/* Mobile Menu Toggle */}
+                    {/* Menu Toggle */}
                     <button
-                        className="md:hidden p-2 text-gray-700"
+                        className="p-2 text-[#1A2F2F] hover:bg-black/5 rounded-full transition-colors ml-1"
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     >
                         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -100,12 +104,12 @@ export const Navbar = () => {
 
             {/* Mobile Menu */}
             {mobileMenuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-white border-b border-secondary/10 shadow-lg md:hidden p-4 flex flex-col gap-4 animate-in slide-in-from-top-5">
+                <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-xl lg:hidden p-6 flex flex-col gap-4 animate-in slide-in-from-top-2">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-lg font-medium text-text-primary py-2 border-b border-secondary/5"
+                            className="text-xl font-medium text-[#1A2F2F] py-3 border-b border-gray-100 last:border-0"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             {link.name}
@@ -116,3 +120,4 @@ export const Navbar = () => {
         </header>
     );
 }
+

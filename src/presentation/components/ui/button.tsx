@@ -14,12 +14,15 @@ const buttonVariants = cva(
                 ghost: "hover:bg-black/5 text-text-secondary hover:text-text-primary",
                 link: "text-primary underline-offset-4 hover:underline",
                 destructive: "bg-red-500 text-white hover:bg-red-600 shadow-lg hover:shadow-red-500/30",
+                hero: "bg-sage text-cream hover:bg-sage/90 shadow-lg hover:shadow-sage/30",
+                "hero-outline": "border-2 border-cream text-cream hover:bg-cream hover:text-foreground bg-transparent",
             },
             size: {
                 default: "h-11 px-6 py-2",
                 sm: "h-9 rounded-full px-4 text-xs",
                 lg: "h-14 rounded-full px-8 text-lg",
                 icon: "h-10 w-10",
+                xl: "h-16 rounded-full px-10 text-xl",
             },
             fullWidth: {
                 true: "w-full",

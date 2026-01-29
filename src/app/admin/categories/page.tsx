@@ -7,7 +7,7 @@ import { SupabaseCategoryRepository } from '@/data/repositories/supabase-categor
 import { Category } from '@/domain/entities/plant.entity';
 import { Plus, Edit3, Trash2 } from 'lucide-react';
 import { SearchInput } from '@/presentation/components/common/search-input';
-import { Pagination } from '@/presentation/components/common/pagination';
+import { DataTable, TableHeader } from '@/presentation/components/admin/data-table';
 
 export default function AdminCategoriesPage() {
     const router = useRouter();
@@ -34,7 +34,6 @@ export default function AdminCategoriesPage() {
             filtered = filtered.filter(
                 cat =>
                     cat.name.toLowerCase().includes(query) ||
-                    cat.slug.toLowerCase().includes(query) ||
                     (cat.description && cat.description.toLowerCase().includes(query))
             );
         }
@@ -58,14 +57,14 @@ export default function AdminCategoriesPage() {
         fetchData();
     }, [fetchCategories, searchQuery, currentPage, pageSize]);
 
-    const handleDelete = async (id: string, name: string) => {
-        if (!confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+    const handleDelete = async (cat: Category) => {
+        if (!confirm(`Are you sure you want to delete "${cat.name}"? This action cannot be undone.`)) {
             return;
         }
 
         try {
             const repo = new SupabaseCategoryRepository();
-            await repo.deleteCategory(id);
+            await repo.deleteCategory(cat.id);
 
             // Refresh the list
             fetchCategories();
@@ -78,8 +77,8 @@ export default function AdminCategoriesPage() {
         }
     };
 
-    const handleEdit = (id: string) => {
-        router.push(`/admin/categories/${id}/edit`);
+    const handleEdit = (cat: Category) => {
+        router.push(`/admin/categories/${cat.id}/edit`);
     };
 
     const handlePageChange = (page: number) => {
@@ -93,16 +92,42 @@ export default function AdminCategoriesPage() {
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
+    const headers: TableHeader[] = [
+        { label: 'Name', className: 'font-bold text-text-primary' },
+        { label: 'Description', className: 'text-text-muted max-w-xs md:max-w-md truncate' },
+        { label: 'Actions', align: 'right' }
+    ];
+
+    const renderRow = (cat: Category) => [
+        { content: cat.name },
+        { content: cat.description || '-' },
+        {
+            actions: [
+                {
+                    label: 'Edit',
+                    icon: <Edit3 size={18} />,
+                    onClick: () => handleEdit(cat)
+                },
+                {
+                    label: 'Delete',
+                    icon: <Trash2 size={18} />,
+                    onClick: () => handleDelete(cat),
+                    variant: 'danger' as const
+                }
+            ]
+        }
+    ];
+
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
                 <div>
-                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-primary">Categories</h1>
+                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-black">Categories</h1>
                     <p className="text-sm md:text-base text-text-secondary">Manage plant categories</p>
                 </div>
 
-                <Link href="/admin/categories/new" className="w-full md:w-auto bg-primary text-white px-6 py-2.5 rounded-full font-bold hover:bg-primary-hover shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm md:text-base">
+                <Link href="/admin/categories/new" className="w-full md:w-auto bg-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-neutral-800 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm md:text-base">
                     <Plus size={20} />
                     Add Category
                 </Link>
@@ -118,73 +143,28 @@ export default function AdminCategoriesPage() {
             </div>
 
             {/* Categories Table */}
-            <div className="bg-white rounded-3xl shadow-sm border border-secondary/10 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left min-w-[600px] md:min-w-0">
-                        <thead className="bg-secondary/5 border-b border-secondary/10">
-                            <tr>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Name</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Slug</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary whitespace-nowrap">Description</th>
-                                <th className="p-4 md:p-6 font-bold text-text-secondary text-right whitespace-nowrap">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-secondary/10">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan={4} className="p-8 md:p-12 text-center text-text-muted">Loading categories...</td>
-                                </tr>
-                            ) : categories.length === 0 ? (
-                                <tr>
-                                    <td colSpan={4} className="p-8 md:p-12 text-center text-text-muted">
-                                        {searchQuery
-                                            ? 'No categories found matching your search.'
-                                            : 'No categories found.'}
-                                    </td>
-                                </tr>
-                            ) : (
-                                categories.map((cat) => (
-                                    <tr key={cat.id} className="hover:bg-surface transition-colors">
-                                        <td className="p-4 md:p-6 font-bold text-text-primary text-sm md:text-base">{cat.name}</td>
-                                        <td className="p-4 md:p-6 font-mono text-xs md:text-sm text-text-secondary">{cat.slug}</td>
-                                        <td className="p-4 md:p-6 text-text-muted max-w-xs md:max-w-md truncate text-sm md:text-base">{cat.description || '-'}</td>
-                                        <td className="p-4 md:p-6 text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <button
-                                                    onClick={() => handleEdit(cat.id)}
-                                                    className="p-1.5 md:p-2 hover:bg-secondary/10 rounded-full text-text-muted hover:text-primary transition-colors"
-                                                    title="Edit category"
-                                                >
-                                                    <Edit3 size={18} className="w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(cat.id, cat.name)}
-                                                    className="p-1.5 md:p-2 hover:bg-red-50 rounded-full text-text-muted hover:text-red-500 transition-colors"
-                                                    title="Delete category"
-                                                >
-                                                    <Trash2 size={18} className="w-4 h-4 md:w-[18px] md:h-[18px]" />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Pagination */}
-                {!loading && totalItems > 0 && (
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        totalItems={totalItems}
-                        pageSize={pageSize}
-                        onPageChange={handlePageChange}
-                        onPageSizeChange={handlePageSizeChange}
-                    />
-                )}
-            </div>
+            <DataTable<Category>
+                data={categories}
+                headers={headers}
+                renderRow={renderRow}
+                loading={loading}
+                emptyMessage={searchQuery
+                    ? 'No categories found matching your search.'
+                    : 'No categories found.'}
+                rowKey={(cat) => cat.id}
+                minWidth="600px"
+                pagination={{
+                    currentPage,
+                    totalPages,
+                    totalItems,
+                    pageSize,
+                    onPageChange: handlePageChange,
+                    onPageSizeChange: handlePageSizeChange
+                }}
+            />
         </div>
     );
 }
+
+
+

@@ -11,7 +11,7 @@ export class WhatsAppService {
         let total = 0;
 
         items.forEach((item, index) => {
-            const price = item.plant.discountPrice || item.plant.price;
+            const price = item.plant.discountPrice || item.plant.price || 0;
             const itemTotal = price * item.quantity;
             total += itemTotal;
 
@@ -27,7 +27,7 @@ export class WhatsAppService {
     }
 
     static generateBuyNowLink(plant: Plant, quantity: number = 1): string {
-        const price = plant.discountPrice || plant.price;
+        const price = plant.discountPrice || plant.price || 0;
         const total = price * quantity;
 
         const message = `Hello, I want to buy this plant 🌱\n\nName: ${plant.name}\nPrice: ₹${price}\nQuantity: ${quantity}\nTotal: ₹${total}`;
