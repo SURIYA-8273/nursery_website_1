@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Leaf, Moon, Sun, Wind } from 'lucide-react';
+import { ArrowRight, Leaf, Moon, Sun, Wind } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Heading } from './heading';
 
 const categories = [
     {
@@ -37,52 +38,44 @@ const categories = [
     }
 ];
 
-export const BrowseByCategory = () => {
+export const BrowseByCategory = ({ viewAllLink }: { viewAllLink?: string }) => {
     return (
-        <section className="py-24 bg-[#FAF9F6]">
+        <section className="py-24 bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 {/* Header */}
-                <div className="text-center max-w-2xl mx-auto mb-16">
-                    <span className="text-[10px] md:text-xs font-bold text-[#4A5D54] uppercase tracking-[0.2em] mb-4 block">
-                        BROWSE BY CATEGORY
-                    </span>
-                    <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-[#1A2E26] mb-8 leading-tight">
-                        Find Your Perfect Plant
-                    </h2>
-                    <p className="text-gray-500 text-sm md:text-base leading-relaxed opacity-80">
-                        Whether you're looking for a low-maintenance companion or a tropical statement piece, we have something for every space and skill level.
-                    </p>
-                </div>
+                <Heading title="Browse By Category" subtitle="Find Your Perfect Plant" />
+
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
                     {categories.map((cat, i) => (
                         <Link
                             key={i}
                             href={cat.href}
-                            className="group bg-white rounded-[32px] p-8 md:p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-black/5 hover:-translate-y-1 border border-transparent hover:border-gray-100 flex flex-col items-start gap-6"
+                            className="group bg-[var(--color-surface-hover)] rounded-[32px] p-8 md:p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 border border-white/5 hover:border-[var(--color-primary)] flex flex-col items-start gap-6"
                         >
-                            <div className={cn(
-                                "w-16 h-16 rounded-[20px] flex items-center justify-center text-[#2D5A42]",
-                                cat.color
-                            )}>
-                                <cat.icon size={32} strokeWidth={1.5} />
-                            </div>
-
                             <div className="space-y-3">
-                                <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#1A2E26] group-hover:text-[#2D5A42] transition-colors">
+                                <h3 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors">
                                     {cat.name}
                                 </h3>
-                                <p className="text-gray-500 text-sm md:text-base leading-relaxed opacity-70">
+                                <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed opacity-70">
                                     {cat.description}
                                 </p>
                             </div>
-
-                            <span className="text-[#D36E45] font-bold text-sm md:text-base mt-2">
-                                {cat.count}
-                            </span>
                         </Link>
                     ))}
+                </div>
+
+                <div className="flex justify-center mt-10">
+                    {viewAllLink && (
+                        <Link
+                            href={viewAllLink}
+                            className="inline-flex items-center gap-2 text-[#2D5A42] font-bold text-lg hover:gap-3 transition-all"
+                        >
+                            Explore All <ArrowRight size={20} />
+                        </Link>
+                    )}
+
                 </div>
             </div>
         </section>

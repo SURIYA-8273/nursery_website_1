@@ -1,38 +1,76 @@
 @import "tailwindcss";
 
 @theme {
-  /* Color Palette - Fresh Green Theme */
-  --color-primary: #10b981;
-  /* Emerald 500 */
-  --color-primary-hover: #047857;
-  /* Emerald 700 */
-  --color-primary-light: #d1fae5;
-  /* Emerald 100 */
-
-  --color-secondary: #84cc16;
-  /* Leaf 500 */
-  --color-secondary-hover: #65a30d;
-
-  --color-surface: #f8fafc;
-  /* Natural 50 */
-  --color-surface-hover: #f1f5f9;
-
-  --color-accent: #d97757;
-  /* Terra */
-
-  --color-text-primary: #064e3b;
-  /* Emerald 900 - Deep Green Text */
-  --color-text-secondary: #334155;
-  /* Slate 700 */
-  --color-text-muted: #64748b;
-  /* Slate 500 */
-
-  /* Shadows */
-  --shadow-soft: 0 20px 40px -4px rgb(16 185 129 / 0.15);
-
-  /* Fonts */
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-light: var(--color-primary-light);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-accent: var(--color-accent);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --shadow-soft: var(--shadow-soft);
   --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root {
+  /* Fresh Green Theme (Light) */
+  --color-primary: #10b981;
+  /* Vibrant Emerald */
+  --color-primary-hover: #059669;
+  /* Darker Emerald */
+  --color-primary-light: #d1fae5;
+  /* Light Emerald */
+
+  --color-secondary: #84cc16;
+  /* Fresh Leaf Green */
+  --color-secondary-hover: #65a30d;
+
+  --color-surface: #F9FAFB;
+  /* Cream/White */
+  --color-surface-hover: #FFFFFF;
+  /* Pure White Cards */
+
+  --color-accent: #10b981;
+
+  --color-text-primary: #1A2E26;
+  /* Dark Green Text */
+  --color-text-secondary: #4A5D54;
+  /* Muted Green Text */
+  --color-text-muted: #6B857B;
+
+  --shadow-soft: 0 20px 40px -4px rgba(16, 185, 129, 0.15);
+}
+
+.dark {
+  /* Dark Green Theme */
+  --color-primary: #2D5A42;
+  /* Deep Jungle Green */
+  --color-primary-hover: #1A3C2F;
+  --color-primary-light: #4A7C62;
+
+  --color-secondary: #D36E45;
+  /* Rust/Terracotta Accent */
+  --color-secondary-hover: #B85C36;
+
+  --color-surface: #0B1410;
+  /* Very Dark Green Background */
+  --color-surface-hover: #15251F;
+  /* Slightly Lighter Cards */
+
+  --color-accent: #D36E45;
+
+  --color-text-primary: #EDF5F1;
+  /* Off-white */
+  --color-text-secondary: #A3B8B0;
+  /* Muted Sage */
+  --color-text-muted: #6B857B;
+
+  --shadow-soft: 0 20px 40px -4px rgba(0, 0, 0, 0.4);
 }
 
 /* Custom Utilities if needed */

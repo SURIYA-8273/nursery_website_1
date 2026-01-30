@@ -8,60 +8,45 @@ interface CartSummaryProps {
 
 export const CartSummary = ({ totalPrice, checkoutUrl }: CartSummaryProps) => {
     return (
-        <div className="bg-[#FAF9F6] p-6 md:p-8 rounded-[32px] border border-secondary/5 h-fit shadow-sm">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#1A2E26] mb-6">Order Summary</h2>
+        <div className="bg-[var(--color-surface-hover)] p-4 md:p-6 rounded-[10px] border border-white/5 h-fit shadow-sm">
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-4">Order Summary</h2>
 
-            <div className="space-y-4 mb-8">
-                <div className="flex justify-between items-center text-[#4A5D54]">
+            <div className="space-y-2 mb-4">
+                <div className="flex justify-between items-center text-[var(--color-text-secondary)]">
                     <span className="text-lg">Subtotal</span>
-                    <span className="font-medium text-[#1A2E26]">₹{totalPrice.toFixed(2)}</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">₹{totalPrice.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between items-center text-[#4A5D54]">
+                <div className="flex justify-between items-center text-[var(--color-text-secondary)]">
                     <span className="text-lg">Shipping</span>
                     <span className="font-medium">Free</span>
                 </div>
             </div>
 
-            <div className="border-t border-secondary/10 pt-6 mb-8">
+            <div className="border-t border-white/10 pt-4 mb-4">
                 <div className="flex justify-between items-center">
-                    <span className="font-serif font-bold text-xl md:text-2xl text-[#1A2E26]">Total</span>
-                    <span className="font-serif font-bold text-2xl md:text-3xl text-[#1A2E26]">₹{totalPrice.toFixed(2)}</span>
+                    <span className="font-serif font-bold text-xl md:text-2xl text-[var(--color-text-primary)]">Total</span>
+                    <span className="font-serif font-bold text-2xl md:text-3xl text-[var(--color-text-primary)]">₹{totalPrice.toFixed(2)}</span>
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="flex flex-col gap-4">
                 <a
                     href={checkoutUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full"
                 >
-                    <button className="w-full bg-[#2D5A42] hover:bg-[#234734] text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-md active:scale-[0.98]">
+                    <Button className='w-full'>
                         Proceed to Checkout
-                    </button>
+                    </Button>
                 </a>
-
-                <a href="/plants" className="block w-full text-center py-3 text-[#2D5A42] font-bold hover:underline">
-                    Continue Shopping
+                <a href="/plants">
+                    <Button variant="outline" className='w-full'>
+                        Continue Shopping
+                    </Button>
                 </a>
             </div>
 
-            <div className="mt-10 pt-8 border-t border-secondary/10 grid grid-cols-2 gap-6">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-[#1A2E26] font-bold text-sm">
-                        <Truck size={18} className="text-[#2D5A42]" />
-                        <span>Free Shipping</span>
-                    </div>
-                    <p className="text-[10px] text-[#4A5D54]">On orders $50+</p>
-                </div>
-                <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-[#1A2E26] font-bold text-sm">
-                        <Shield size={18} className="text-[#2D5A42]" />
-                        <span>30-Day Guarantee</span>
-                    </div>
-                    <p className="text-[10px] text-[#4A5D54]">Healthy plant promise</p>
-                </div>
-            </div>
+           
         </div>
     );
 };

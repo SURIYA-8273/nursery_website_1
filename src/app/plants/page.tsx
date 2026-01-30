@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
 import { PlantsClient } from './plants-client';
 
@@ -13,9 +14,11 @@ export default async function PlantListingPage() {
     const categories = await repo.getCategories();
 
     return (
-        <PlantsClient
-            initialPlants={plants}
-            categories={categories}
-        />
+        <Suspense fallback={<div className="min-h-screen flex justify-center items-center">Loading...</div>}>
+            <PlantsClient
+                initialPlants={plants}
+                categories={categories}
+            />
+        </Suspense>
     );
 }

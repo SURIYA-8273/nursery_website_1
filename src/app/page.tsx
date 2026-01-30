@@ -29,7 +29,7 @@ export default async function Home() {
       <FeaturesSection />
 
       {/* 3. Browse By Category */}
-      <BrowseByCategory />
+      <BrowseByCategory viewAllLink="/plants" />
 
       {/* 4. Best Selling Plants (Featured) */}
       <FeaturedPlants
@@ -45,8 +45,7 @@ export default async function Home() {
       {/* 6. Contact Section */}
       <ContactSection />
 
-      {/* 6. Newsletter */}
-      <NewsletterSection />
+     
     </main>
   );
 }

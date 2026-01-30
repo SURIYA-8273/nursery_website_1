@@ -8,6 +8,8 @@ import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { CartSummary } from '@/presentation/components/features/cart-summary';
 import { PlantCard } from '@/presentation/components/ui/plant-card';
 import { Plant } from '@/domain/entities/plant.entity';
+import { Heading } from '@/presentation/components/home/heading';
+import { Button } from '@/presentation/components/ui/button';
 
 interface CartClientProps {
     relatedPlants: Plant[];
@@ -52,15 +54,11 @@ export function CartClient({ relatedPlants }: CartClientProps) {
     const checkoutUrl = WhatsAppService.generateCheckoutLink(cart.items);
 
     return (
-        <main className="min-h-screen bg-white max-w-7xl mx-auto pb-12 md:pb-20">
-            <div className="pt-24 md:pt-32 pb-8 md:pb-12 px-6 md:px-10 bg-[#FAF9F6] border-b border-secondary/5 mb-8 md:mb-12">
-                <h1 className="font-serif text-3xl md:text-5xl font-bold text-[#1A2E26] mb-2">
-                    Shopping Cart
-                </h1>
-                <p className="text-[#4A5D54] font-medium opacity-80">
-                    {cart.totalItems} {cart.totalItems === 1 ? 'item' : 'items'} in your cart
-                </p>
-            </div>
+        <main className="min-h-screen bg-[var(--color-surface)] max-w-7xl mx-auto pb-12 md:pb-20">
+            <div className='mb-4'></div>
+
+            <Heading title="Shopping Cart" subtitle={`${cart.totalItems} ${cart.totalItems === 1 ? 'item' : 'items'} in your cart`} />
+
 
             <div className="px-4 md:px-8">
 
@@ -71,9 +69,9 @@ export function CartClient({ relatedPlants }: CartClientProps) {
                             {cart.items.map((item) => {
                                 const price = item.selectedVariant ? item.selectedVariant.price : item.plant.price;
                                 return (
-                                    <div key={`${item.plant.id}-${item.selectedVariant?.id || 'default'}`} className="flex gap-4 md:gap-8 p-4 md:p-6 bg-[#FAF9F6] rounded-[32px] border border-secondary/5 group relative">
+                                    <div key={`${item.plant.id}-${item.selectedVariant?.id || 'default'}`} className="flex gap-4 md:gap-8 p-2 md:p-4 bg-[var(--color-surface-hover)] rounded-[10px] border border-black/10 shadow-sm group relative">
                                         {/* Image */}
-                                        <div className="w-24 h-24 md:w-40 md:h-40 bg-white rounded-2xl md:rounded-[24px] overflow-hidden shrink-0 relative shadow-sm">
+                                        <div className="w-24 h-24 md:w-40 md:h-40 bg-[var(--color-surface)] rounded-2xl md:rounded-[24px] overflow-hidden shrink-0 relative shadow-sm">
                                             {item.plant.images[0] && (
                                                 <img
                                                     src={item.plant.images[0]}
@@ -87,37 +85,38 @@ export function CartClient({ relatedPlants }: CartClientProps) {
                                         <div className="flex-1 flex flex-col justify-between py-1 md:py-2">
                                             <div className="flex justify-between items-start gap-2">
                                                 <div className="space-y-1">
-                                                    <h3 className="font-serif font-bold text-lg md:text-2xl text-[#1A2E26] leading-tight">{item.plant.name}</h3>
+                                                    <h3 className="font-serif font-bold text-lg md:text-2xl text-[var(--color-text-primary)] leading-tight">{item.plant.name}</h3>
                                                     {item.plant.description && (
-                                                        <p className="text-xs md:text-sm text-[#4A5D54] italic font-medium opacity-80">{item.plant.name.toLowerCase()}</p>
+                                                        <p className="text-xs md:text-sm text-[var(--color-text-secondary)] italic font-medium opacity-80">{item.plant.name.toLowerCase()}</p>
                                                     )}
                                                     {item.selectedVariant && (
-                                                        <p className="text-xs md:text-sm text-[#4A5D54] font-medium mt-1">Size: {item.selectedVariant.size}</p>
+                                                        <p className="text-xs md:text-sm text-[var(--color-text-muted)] font-medium mt-1">Size: {item.selectedVariant.size}</p>
                                                     )}
                                                 </div>
                                                 <button
                                                     onClick={() => removeFromCart(item.plant.id, item.selectedVariant?.id)}
-                                                    className="text-[#4A5D54] hover:text-red-500 transition-colors p-2 absolute top-4 right-4 md:static"
-                                                    title="Remove item"
+                                                    className="bg-[#FF4D4D] text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-sm active:scale-95"
+                                                    title="Remove from wishlist"
                                                 >
-                                                    <Trash2 size={20} className="w-4 h-4 md:w-5 md:h-5" />
+                                                    <Trash2 size={18} />
                                                 </button>
+
                                             </div>
 
-                                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-black/5 md:border-none">
+                                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5 md:border-none">
                                                 {/* Quantity Selector */}
-                                                <div className="flex items-center gap-4 bg-white rounded-full px-2 py-1 shadow-sm border border-secondary/5">
+                                                <div className="flex items-center gap-4 bg-[var(--color-surface)] rounded-full px-2 py-1 shadow-sm border border-white/5">
                                                     <button
                                                         onClick={() => updateQuantity(item.plant.id, Math.max(1, item.quantity - 1), item.selectedVariant?.id)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FAF9F6] text-[#4A5D54] transition-colors disabled:opacity-30"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors disabled:opacity-30"
                                                         disabled={item.quantity <= 1}
                                                     >
                                                         <Minus size={14} />
                                                     </button>
-                                                    <span className="font-bold w-4 text-center text-sm md:text-base text-[#1A2E26]">{item.quantity}</span>
+                                                    <span className="font-bold w-4 text-center text-sm md:text-base text-[var(--color-text-primary)]">{item.quantity}</span>
                                                     <button
                                                         onClick={() => updateQuantity(item.plant.id, item.quantity + 1, item.selectedVariant?.id)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FAF9F6] text-[#4A5D54] transition-colors"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors"
                                                     >
                                                         <Plus size={14} />
                                                     </button>
@@ -125,7 +124,7 @@ export function CartClient({ relatedPlants }: CartClientProps) {
 
                                                 {/* Price */}
                                                 <div className="text-right flex items-center gap-3">
-                                                    <p className="font-serif font-bold text-lg md:text-2xl text-[#1A2E26]">
+                                                    <p className="font-serif font-bold text-lg md:text-2xl text-[var(--color-text-primary)]">
                                                         ₹{((price || 0) * item.quantity).toFixed(2)}
                                                     </p>
                                                 </div>
@@ -136,12 +135,13 @@ export function CartClient({ relatedPlants }: CartClientProps) {
                             })}
                         </div>
 
-                        <button
-                            onClick={clearCart}
-                            className="text-sm font-bold text-[#4A5D54] hover:text-[#1A2E26] transition-colors ml-2 underline underline-offset-4"
-                        >
-                            Clear all items
-                        </button>
+                        <div className='flex justify-center items-center'>
+                            <Button
+                                onClick={clearCart}
+                            >
+                                Clear all items
+                            </Button>
+                        </div>
                     </div>
 
                     {/* Summary Card */}
@@ -152,10 +152,10 @@ export function CartClient({ relatedPlants }: CartClientProps) {
 
                 {/* Related Products */}
                 {relatedPlants.length > 0 && (
-                    <div className="mt-24 pt-16 border-t border-secondary/10">
+                    <div className="mt-24 pt-16 border-t border-white/10">
                         <div className="flex items-center justify-between mb-10 px-2">
-                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[#1A2E26]">You Might Also Like</h2>
-                            <Link href="/plants" className="text-[#2D5A42] font-bold hover:underline flex items-center gap-1 transition-all">
+                            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)]">You Might Also Like</h2>
+                            <Link href="/plants" className="text-[var(--color-primary-light)] font-bold hover:underline flex items-center gap-1 transition-all">
                                 View All <ArrowRight size={18} />
                             </Link>
                         </div>

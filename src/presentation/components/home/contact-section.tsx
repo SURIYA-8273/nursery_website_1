@@ -5,21 +5,21 @@ import { cn } from '@/lib/utils';
 
 export const ContactSection = () => {
     return (
-        <section className="py-20 md:py-32 bg-[#FAF9F6]">
+        <section className="py-20 md:py-32 bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                     {/* Left Column: Info */}
                     <div className="space-y-8 md:space-y-12">
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-[#D36E45] font-bold tracking-widest uppercase text-xs">
+                            <div className="flex items-center gap-2 text-[var(--color-secondary)] font-bold tracking-widest uppercase text-xs">
                                 <Mail size={16} fill="currentColor" />
                                 <span>Get in Touch</span>
                             </div>
-                            <h2 className="font-serif text-4xl md:text-6xl font-bold text-[#1A2E26] leading-tight">
+                            <h2 className="font-serif text-4xl md:text-6xl font-bold text-[var(--color-text-primary)] leading-tight">
                                 We'd Love to Hear From You
                             </h2>
-                            <p className="text-[#4A5D54] text-lg max-w-lg leading-relaxed">
+                            <p className="text-[var(--color-text-secondary)] text-lg max-w-lg leading-relaxed">
                                 Have questions about plant care or need help choosing the perfect plant? Our team of plant experts is here to help!
                             </p>
                         </div>
@@ -54,34 +54,34 @@ export const ContactSection = () => {
                     </div>
 
                     {/* Right Column: Form Card */}
-                    <div className="bg-white p-8 md:p-12 rounded-[40px] shadow-xl shadow-black/[0.03] border border-secondary/5">
-                        <h3 className="font-serif text-2xl md:text-3xl font-bold text-[#1A2E26] mb-8">Send Us a Message</h3>
+                    <div className="bg-[var(--color-surface-hover)] p-8 md:p-12 rounded-[40px] shadow-xl shadow-black/20 border border-white/5">
+                        <h3 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-8">Send Us a Message</h3>
 
                         <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-[#1A2E26] ml-1">Your Name</label>
+                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Your Name</label>
                                 <input
                                     type="text"
                                     placeholder="John Doe"
-                                    className="w-full bg-[#FAF9F6] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#D36E45]/20 transition-all outline-none text-[#1A2E26] placeholder:text-gray-400"
+                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-[#1A2E26] ml-1">Email Address</label>
+                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Email Address</label>
                                 <input
                                     type="email"
                                     placeholder="john@example.com"
-                                    className="w-full bg-[#FAF9F6] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#D36E45]/20 transition-all outline-none text-[#1A2E26] placeholder:text-gray-400"
+                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-[#1A2E26] ml-1">Your Message</label>
+                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Your Message</label>
                                 <textarea
                                     rows={4}
                                     placeholder="Tell us how we can help..."
-                                    className="w-full bg-[#FAF9F6] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[#D36E45]/20 transition-all outline-none text-[#1A2E26] placeholder:text-gray-400 resize-none"
+                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] resize-none"
                                 />
                             </div>
 
@@ -100,12 +100,12 @@ export const ContactSection = () => {
 
 const ContactInfoItem = ({ icon, title, detail }: { icon: React.ReactNode, title: string, detail: React.ReactNode }) => (
     <div className="flex items-start gap-4 group">
-        <div className="w-12 h-12 rounded-full bg-[#E8EAE6] flex items-center justify-center text-[#4A5D54] shrink-0 group-hover:bg-[#D36E45] group-hover:text-white transition-colors">
+        <div className="w-12 h-12 rounded-full bg-[var(--color-surface-hover)] flex items-center justify-center text-[var(--color-text-muted)] shrink-0 group-hover:bg-[#D36E45] group-hover:text-white transition-colors">
             {icon}
         </div>
         <div className="space-y-1 pt-1">
-            <h4 className="font-bold text-[#1A2E26] leading-none">{title}</h4>
-            <div className="text-[#4A5D54] text-sm md:text-base">{detail}</div>
+            <h4 className="font-bold text-[var(--color-text-primary)] leading-none">{title}</h4>
+            <div className="text-[var(--color-text-secondary)] text-sm md:text-base">{detail}</div>
         </div>
     </div>
 );

@@ -3,6 +3,7 @@
 import { Star, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect, useState } from "react";
+import { Heading } from "./heading";
 
 interface Testimonial {
     id: string;
@@ -65,26 +66,52 @@ const testimonials: Testimonial[] = [
 export const TestimonialsSection = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [visibleCards, setVisibleCards] = useState(4); // Default to desktop
+
+    // Create a TRIPLED list for infinite loop illusion
+    const extendedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
+    // Handle resize to update visible card count
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width >= 1024) setVisibleCards(4);
+            else if (width >= 768) setVisibleCards(3);
+            else setVisibleCards(2);
+        };
+
+        handleResize(); // Initial check
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const scroll = (direction: "left" | "right") => {
         if (scrollContainerRef.current) {
             const container = scrollContainerRef.current;
-            const scrollAmount = container.clientWidth * 0.8;
+            // Calculate exact card width including gap (24px)
+            // We use the first child's width if available, or approx
+            const firstCard = container.firstElementChild as HTMLElement;
+            const cardWidth = firstCard ? firstCard.clientWidth : 0;
+            const gap = 24; // gap-6
+            const scrollAmount = cardWidth + gap;
 
-            // Check if we are at the end
-            const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
-            const isAtStart = container.scrollLeft <= 10;
+            // Check bounds for seamless loop
+            const maxScroll = container.scrollWidth / 3 * 2;
+            const minScroll = container.scrollWidth / 3;
+
+            // If we are too far left (set 1), jump to set 2
+            if (container.scrollLeft < 100) {
+                container.scrollLeft = minScroll + container.scrollLeft;
+            }
+            // If we are too far right (set 3), jump to set 2
+            else if (container.scrollLeft >= maxScroll) {
+                container.scrollLeft = minScroll + (container.scrollLeft - maxScroll);
+            }
 
             let target = direction === "left"
                 ? container.scrollLeft - scrollAmount
                 : container.scrollLeft + scrollAmount;
-
-            // Loop logic
-            if (direction === "right" && isAtEnd) {
-                target = 0;
-            } else if (direction === "left" && isAtStart) {
-                target = container.scrollWidth;
-            }
 
             container.scrollTo({
                 left: target,
@@ -93,99 +120,105 @@ export const TestimonialsSection = () => {
         }
     };
 
+    // Infinite loop reset handler for manual scrolling
+    const handleScroll = () => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const totalWidth = container.scrollWidth;
+        const oneThird = totalWidth / 3;
+
+        // Calculate active index based on card width
+        const firstCard = container.firstElementChild as HTMLElement;
+        const gap = 24;
+        const cardWidth = firstCard ? firstCard.clientWidth + gap : 0;
+
+        if (cardWidth > 0) {
+            const currentScroll = container.scrollLeft;
+            const rawIndex = Math.round(currentScroll / cardWidth);
+            setActiveIndex(rawIndex % testimonials.length);
+        }
+
+        // If we've scrolled past the second set (into the third), snap back to second
+        if (container.scrollLeft >= oneThird * 2) {
+            container.scrollLeft -= oneThird;
+        }
+        // If we've scrolled back into the first set, snap forward to second
+        else if (container.scrollLeft <= 50) { // Tolerance
+            container.scrollLeft += oneThird;
+        }
+    };
+
+    // Initialize to middle set
+    useEffect(() => {
+        const container = scrollContainerRef.current;
+        if (container) {
+            const timer = setTimeout(() => {
+                if (container.scrollWidth > container.clientWidth) {
+                    container.scrollLeft = container.scrollWidth / 3;
+                    setActiveIndex(0); // Reset index visualization
+                }
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, []);
+
     // Autoplay logic
     useEffect(() => {
         if (isPaused) return;
 
         const interval = setInterval(() => {
             scroll("right");
-        }, 5000); // Scroll every 5 seconds
+        }, 3000);
 
         return () => clearInterval(interval);
     }, [isPaused]);
 
+    // Calculate number of dots (pages)
+    const pageCount = Math.ceil(testimonials.length / visibleCards);
+    // Calculate which "page" layer the current index falls into
+    // Example: 5 items, 4 visible. Active 0,1,2,3 -> Page 0. Active 4 -> Page 1.
+    const activePage = Math.floor(activeIndex / visibleCards);
+
     return (
         <section
-            className="py-24 bg-[#FAF9F6] overflow-hidden"
+            className="py-24 bg-[var(--color-surface)] overflow-hidden"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
             <div className="max-w-7xl mx-auto px-4 md:px-8">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
-                    <div className="text-left">
-                        <div className="flex items-center gap-2 text-[#D36E45] font-bold tracking-widest uppercase text-xs mb-4">
-                            <MapPin size={14} fill="currentColor" strokeWidth={0} />
-                            GOOGLE REVIEWS
-                        </div>
-                        <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#1A2E26] mb-6">
-                            What Our Customers Say
-                        </h2>
-                        <div className="flex items-center gap-4">
-                            <div className="flex gap-1">
-                                {[...Array(4)].map((_, i) => (
-                                    <Star key={i} size={20} fill="#D36E45" className="text-[#D36E45]" />
-                                ))}
-                                <Star size={20} className="text-gray-300" />
-                            </div>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-2xl font-bold text-[#1A2E26]">4.8</span>
-                                <span className="text-gray-400 text-sm font-medium">312 reviews</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Navigation Buttons */}
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => {
-                                scroll("left");
-                                setIsPaused(true);
-                                setTimeout(() => setIsPaused(false), 10000); // Pause for 10s after manual click
-                            }}
-                            className="bg-white text-[#1A2E26] p-4 rounded-full shadow-sm hover:shadow-md border border-gray-100 transition-all active:scale-90"
-                            aria-label="Previous testimonial"
-                        >
-                            <ChevronLeft size={24} />
-                        </button>
-                        <button
-                            onClick={() => {
-                                scroll("right");
-                                setIsPaused(true);
-                                setTimeout(() => setIsPaused(false), 10000); // Pause for 10s after manual click
-                            }}
-                            className="bg-[#D36E45] text-white p-4 rounded-full shadow-sm hover:shadow-md border border-[#D36E45] transition-all active:scale-90"
-                            aria-label="Next testimonial"
-                        >
-                            <ChevronRight size={24} />
-                        </button>
-                    </div>
+                {/* Header */}
+                <Heading title="What Our Customers Say" subtitle="Hear from our satisfied customers who have found their perfect plants with us." />
+                <div className="flex justify-center items-center text-[var(--color-secondary)] font-bold uppercase text-xs mb-4">
+                    <MapPin size={14} fill="currentColor" strokeWidth={0} />
+                    GOOGLE REVIEWS
                 </div>
 
                 {/* Slider Container */}
                 <div className="relative group/slider">
                     <div
                         ref={scrollContainerRef}
+                        onScroll={handleScroll}
                         className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 no-scrollbar scroll-smooth"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
-                        {testimonials.map((item) => (
+                        {extendedTestimonials.map((item, index) => (
                             <div
-                                key={item.id}
-                                className="min-w-[85%] md:min-w-[45%] lg:min-w-[31%] snap-start shrink-0"
+                                key={`${item.id}-${index}`}
+                                className="w-[calc((100%-24px)/2)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
                             >
-                                <div className="bg-white p-8 rounded-[24px] shadow-sm hover:shadow-md transition-shadow flex flex-col h-full border border-gray-100">
+                                <div className="bg-[var(--color-surface-hover)] p-8 rounded-[24px] shadow-sm hover:shadow-md transition-all flex flex-col h-full border border-white/5">
                                     <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-4">
                                             <div className={cn(
-                                                "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold",
+                                                "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-gray-800",
                                                 item.avatarColor
                                             )}>
                                                 {item.initial}
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-[#1A2E26]">{item.name}</h4>
-                                                <p className="text-xs text-gray-400">{item.date}</p>
+                                                <h4 className="font-bold text-[var(--color-text-primary)]">{item.name}</h4>
+                                                <p className="text-xs text-[var(--color-text-muted)]">{item.date}</p>
                                             </div>
                                         </div>
                                         <div className="flex gap-0.5">
@@ -194,16 +227,32 @@ export const TestimonialsSection = () => {
                                                     key={i}
                                                     size={14}
                                                     fill={i < item.rating ? "#D36E45" : "transparent"}
-                                                    className={i < item.rating ? "text-[#D36E45]" : "text-gray-200"}
+                                                    className={i < item.rating ? "text-[#D36E45]" : "text-gray-600"}
                                                 />
                                             ))}
                                         </div>
                                     </div>
-                                    <p className="text-gray-600 leading-relaxed italic flex-1 line-clamp-4">
+                                    <p className="text-[var(--color-text-secondary)] leading-relaxed italic flex-1 line-clamp-4">
                                         "{item.text}"
                                     </p>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* Indicators */}
+                    <div className="flex justify-center gap-2 mt-8">
+                        {Array.from({ length: pageCount }).map((_, index) => (
+                            <div
+                                key={index}
+                                className={cn(
+                                    "h-2 rounded-full transition-all duration-300",
+                                    // Make the dot active if the current page matches logical page
+                                    activePage === index
+                                        ? "w-8 bg-[#D36E45]"
+                                        : "w-2 bg-gray-600"
+                                )}
+                            />
                         ))}
                     </div>
                 </div>

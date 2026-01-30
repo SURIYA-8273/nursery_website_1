@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { ShoppingBag, Heart, Menu, X, Leaf } from 'lucide-react';
 import { useCartStore } from '@/presentation/store/cart.store';
 import { useWishlistStore } from '@/presentation/store/wishlist.store';
+import { ThemeToggle } from '@/presentation/components/ui/theme-toggle';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -91,6 +92,9 @@ export const Navbar = () => {
                             </span>
                         )}
                     </Link>
+
+                    {/* Theme Toggle */}
+                    <ThemeToggle />
 
                     {/* Menu Toggle */}
                     <button
