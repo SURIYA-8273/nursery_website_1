@@ -3,6 +3,7 @@ import { PlantCard } from "@/presentation/components/ui/plant-card";
 import { Heading } from "./heading";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface FeaturedPlantsProps {
     title: string;
@@ -13,7 +14,7 @@ interface FeaturedPlantsProps {
 
 export const FeaturedPlants = ({ title, subtitle, plants, viewAllLink }: FeaturedPlantsProps) => {
     return (
-        <section className="py-12 bg-[var(--color-surface)]">
+        <section className="bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <Heading title={title} subtitle={subtitle} />
                 {plants.length > 0 ? (
@@ -32,9 +33,16 @@ export const FeaturedPlants = ({ title, subtitle, plants, viewAllLink }: Feature
                     {viewAllLink && (
                         <Link
                             href={viewAllLink}
-                            className="inline-flex items-center gap-2 text-[var(--color-primary-light)] font-bold text-lg hover:gap-3 transition-all"
+                            className=""
                         >
-                            Explore All <ArrowRight size={20} />
+                            <Button
+                                variant="default"
+                                className=""
+                                
+                            >
+                                Explore All <ArrowRight size={20} />
+                            </Button>
+                            
                         </Link>
                     )}
 

@@ -25,12 +25,13 @@ export default async function Home() {
       {/* 1. Hero Section */}
       <HeroSection1 />
 
+<div className='mt-10'></div>
       {/* 2. Features / Why Choose Us */}
       <FeaturesSection />
-
+<div className='mt-10'></div>
       {/* 3. Browse By Category */}
       <BrowseByCategory viewAllLink="/plants" />
-
+<div className='mt-10'></div>
       {/* 4. Best Selling Plants (Featured) */}
       <FeaturedPlants
         title="Best Selling Plants"
@@ -38,10 +39,10 @@ export default async function Home() {
         plants={plants}
         viewAllLink="/plants"
       />
-
+<div className='mt-10'></div>
       {/* 5. Testimonials */}
       <TestimonialsSection />
-
+<div className='mt-10'></div>
       {/* 6. Contact Section */}
       <ContactSection />
 

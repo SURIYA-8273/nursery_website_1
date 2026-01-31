@@ -181,7 +181,7 @@ export const TestimonialsSection = () => {
 
     return (
         <section
-            className="py-24 bg-[var(--color-surface)] overflow-hidden"
+            className="bg-[var(--color-surface)] overflow-hidden"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
         >
@@ -189,7 +189,7 @@ export const TestimonialsSection = () => {
 
                 {/* Header */}
                 <Heading title="What Our Customers Say" subtitle="Hear from our satisfied customers who have found their perfect plants with us." />
-                <div className="flex justify-center items-center text-[var(--color-secondary)] font-bold uppercase text-xs mb-4">
+                <div className="flex justify-center items-center text-[#D36E45] font-bold uppercase text-xs mb-4">
                     <MapPin size={14} fill="currentColor" strokeWidth={0} />
                     GOOGLE REVIEWS
                 </div>
@@ -207,8 +207,10 @@ export const TestimonialsSection = () => {
                                 key={`${item.id}-${index}`}
                                 className="w-[calc((100%-24px)/2)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
                             >
-                                <div className="bg-[var(--color-surface-hover)] p-8 rounded-[24px] shadow-sm hover:shadow-md transition-all flex flex-col h-full border border-white/5">
-                                    <div className="flex items-center justify-between mb-6">
+                                <div className="bg-[var(--color-surface-hover)] p-4 rounded-[10px] shadow-sm hover:shadow-md transition-all flex flex-col h-full border border-white/5">
+                                    <div className="flex flex-col gap-3 lg:flex-row items-center justify-between mb-6">
+
+
                                         <div className="flex items-center gap-4">
                                             <div className={cn(
                                                 "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-gray-800",
@@ -232,7 +234,7 @@ export const TestimonialsSection = () => {
                                             ))}
                                         </div>
                                     </div>
-                                    <p className="text-[var(--color-text-secondary)] leading-relaxed italic flex-1 line-clamp-4">
+                                    <p className="text-[var(--color-text-secondary)] text-center leading-relaxed italic flex-1 line-clamp-4">
                                         "{item.text}"
                                     </p>
                                 </div>

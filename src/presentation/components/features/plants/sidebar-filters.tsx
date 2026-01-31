@@ -43,7 +43,7 @@ export const SidebarFilters = ({ categories, filters, onChange, onClose, isMobil
 
     return (
         <div className={cn(
-            "flex flex-col h-full bg-[#FAF9F6] p-6 md:p-8 rounded-[32px] border border-secondary/5",
+            "flex flex-col h-full bg-[var(--color-surface)] p-6 md:p-8 rounded-[32px] border border-secondary/5",
             isMobile ? "rounded-none h-full overflow-y-auto" : ""
         )}>
             {isMobile && (

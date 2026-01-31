@@ -96,9 +96,9 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
     }, [initialPlants, searchQuery, filters, sortBy]);
 
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-[var(--color-surface)]">
             {/* Top Bar: Search & Sort */}
-            <div className="bg-[#FAF9F6] py-8 sticky top-[80px] md:top-[88px] z-30 border-b border-secondary/5">
+            <div className="bg-[var(--color-surface-hover)] py-8 sticky top-[80px] md:top-[88px] z-30 border-b border-secondary/5 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center gap-4">
                     {/* Search */}
                     <div className="relative flex-1 w-full">
@@ -107,27 +107,25 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                             placeholder="Search plants..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-12 pr-4 py-3 bg-white border border-secondary/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2D5A42]/10 transition-all placeholder:text-gray-400"
-                        />
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+         className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"                        />
                     </div>
 
                     <div className="flex items-center gap-4 w-full md:w-auto">
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterDrawerOpen(true)}
-                            className="lg:hidden flex items-center gap-2 px-6 py-3 bg-white border border-secondary/10 rounded-2xl font-bold text-[#1A2E26]"
+                            className="lg:hidden flex items-center gap-2 px-6 py-3 text-[var(--color-text-primary)] bg-[var(--color-surface)] border border-secondary/10 rounded-2xl font-bold text-[#1A2E26]"
                         >
                             <SlidersHorizontal size={18} />
                             Filters
                         </button>
 
                         {/* Sort Dropdown */}
-                        <div className="relative flex-1 md:flex-none">
+                        <div className="relative flex-1 md:flex-none ">
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full md:w-48 appearance-none pl-4 pr-10 py-3 bg-white border border-secondary/10 rounded-2xl font-bold text-[#1A2E26] focus:outline-none focus:ring-2 focus:ring-[#2D5A42]/10 transition-all"
+                                className="w-full md:w-48 appearance-none text-[var(--color-text-primary)] pl-4 pr-10 py-3 bg-[var(--color-surface)] border border-secondary/10 rounded-2xl font-bold text-[#1A2E26] focus:outline-none focus:ring-2 focus:ring-[#2D5A42]/10 transition-all"
                             >
                                 <option value="featured">Featured</option>
                                 <option value="price-low">Price: Low to High</option>

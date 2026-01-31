@@ -53,8 +53,8 @@ export const Navbar = () => {
                     <div className="bg-[#2F4F4F] text-white p-2.5 rounded-full transition-colors">
                         <Leaf size={20} fill="none" strokeWidth={2} />
                     </div>
-                    <span className="font-serif text-3xl font-bold tracking-tight text-[#1A2F2F]">
-                        Verdant
+                    <span className="font-serif text-2xl font-bold tracking-tight text-[#1A2F2F]">
+                        Inner Loop Technologies
                     </span>
                 </Link>
 

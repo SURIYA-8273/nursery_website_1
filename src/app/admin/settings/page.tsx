@@ -142,7 +142,7 @@ export default function SettingsPage() {
                                     value={settings.businessName}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                    placeholder="e.g. GreenRoots"
+                                    placeholder="e.g. Inner Loop Technologies"
                                 />
                             </div>
                             <div className="p-4 bg-blue-50 text-blue-700 rounded-xl text-sm flex gap-3">

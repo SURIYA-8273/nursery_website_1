@@ -42,7 +42,7 @@ export const PlantCard = ({ plant }: PlantCardProps) => {
     };
 
     return (
-        <div className="group block h-full bg-[var(--color-surface-hover)] rounded-[15px] p-2 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-black/20 flex flex-col border border-white/5">
+        <div className="group block h-full bg-[var(--color-surface-hover)] rounded-[10px] p-2 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-black/20 flex flex-col border border-white/5">
             <Link href={`/plants/${plant.id}`} className="block relative mb-6">
                 {/* Image Container */}
                 <div className="aspect-square bg-[#FAF9F6] relative overflow-hidden rounded-[15px]">

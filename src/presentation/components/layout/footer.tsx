@@ -17,7 +17,7 @@ export const Footer = () => {
                                 <Leaf size={24} fill="currentColor" />
                             </div>
                             <span className="font-serif text-xl font-bold text-primary">
-                                GreenRoots
+                                Inner Loop Technologies
                             </span>
                         </div>
                         <p className="text-text-secondary leading-relaxed">
@@ -60,22 +60,16 @@ export const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Newsletter */}
-                    <div>
-                        <h4 className="font-bold text-primary mb-6">Stay Updated</h4>
-                        <p className="text-text-secondary mb-4 text-sm">
-                            Get plant care tips and exclusive offers directly to your inbox.
-                        </p>
-                        <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-                            <Input placeholder="Enter your email" className="bg-white" />
-                            <Button fullWidth>Subscribe</Button>
-                        </form>
-                    </div>
                 </div>
 
                 {/* Bottom Bar */}
                 <div className="pt-8 border-t border-primary/10 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-text-muted">
-                    <p>© 2026 GreenRoots Nursery. All rights reserved.</p>
+                    <div className="flex flex-col gap-2 text-center">
+                        <p>© {new Date().getFullYear()} Inner Loop Technologies. All rights reserved.</p>
+                        <p className="text-xs text-text-muted/80 text-center">
+                            Developer by Inner Loop Technologies • <a href="mailto:innerloopdev@gmail.com" className="hover:text-primary transition-colors">innerloopdev@gmail.com</a> • <a href="tel:+916369363788" className="hover:text-primary transition-colors">+91 6369363788</a>
+                        </p>
+                    </div>
                     <div className="flex gap-6">
                         <Link href="#" className="hover:text-primary">Privacy Policy</Link>
                         <Link href="#" className="hover:text-primary">Terms of Service</Link>

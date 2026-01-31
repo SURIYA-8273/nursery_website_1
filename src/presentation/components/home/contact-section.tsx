@@ -2,17 +2,18 @@
 
 import { Mail, MapPin, Phone, Clock, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 export const ContactSection = () => {
     return (
-        <section className="py-20 md:py-32 bg-[var(--color-surface)]">
+        <section className="bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
                     {/* Left Column: Info */}
                     <div className="space-y-8 md:space-y-12">
                         <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-[var(--color-secondary)] font-bold tracking-widest uppercase text-xs">
+                            <div className="flex items-center gap-2 text-[#D36E45] font-bold tracking-widest uppercase text-xs">
                                 <Mail size={16} fill="currentColor" />
                                 <span>Get in Touch</span>
                             </div>
@@ -85,10 +86,11 @@ export const ContactSection = () => {
                                 />
                             </div>
 
-                            <button className="w-full bg-[#D36E45] text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 hover:bg-[#B85A35] transition-all shadow-lg shadow-[#D36E45]/20 active:scale-[0.98]">
-                                Send Message
-                                <Send size={18} />
-                            </button>
+                          <Button className='w-full'>
+                            Send Message
+                            <Send size={18} />
+                          </Button>
+                            
                         </form>
                     </div>
 
@@ -100,9 +102,9 @@ export const ContactSection = () => {
 
 const ContactInfoItem = ({ icon, title, detail }: { icon: React.ReactNode, title: string, detail: React.ReactNode }) => (
     <div className="flex items-start gap-4 group">
-        <div className="w-12 h-12 rounded-full bg-[var(--color-surface-hover)] flex items-center justify-center text-[var(--color-text-muted)] shrink-0 group-hover:bg-[#D36E45] group-hover:text-white transition-colors">
-            {icon}
-        </div>
+         <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16  rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 bg-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] text-white  transition-colors">
+  {icon}                            </div>
+       
         <div className="space-y-1 pt-1">
             <h4 className="font-bold text-[var(--color-text-primary)] leading-none">{title}</h4>
             <div className="text-[var(--color-text-secondary)] text-sm md:text-base">{detail}</div>

@@ -12,7 +12,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'Plant Selling Website',
+  title: 'Inner Loop Technologies',
   description: 'Fresh & Calming plants for your home',
 };
 

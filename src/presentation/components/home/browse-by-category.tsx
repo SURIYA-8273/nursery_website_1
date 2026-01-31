@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { ArrowRight, Leaf, Moon, Sun, Wind } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
 import { Heading } from './heading';
+
+import { Button } from '../ui/button';
 
 const categories = [
     {
@@ -40,7 +42,7 @@ const categories = [
 
 export const BrowseByCategory = ({ viewAllLink }: { viewAllLink?: string }) => {
     return (
-        <section className="py-24 bg-[var(--color-surface)]">
+        <section className="bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
                 {/* Header */}
                 <Heading title="Browse By Category" subtitle="Find Your Perfect Plant" />
@@ -52,15 +54,22 @@ export const BrowseByCategory = ({ viewAllLink }: { viewAllLink?: string }) => {
                         <Link
                             key={i}
                             href={cat.href}
-                            className="group bg-[var(--color-surface-hover)] rounded-[32px] p-8 md:p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 border border-white/5 hover:border-[var(--color-primary)] flex flex-col items-start gap-6"
+                            className="group bg-[var(--color-surface-hover)]  p-4 md:p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]"
                         >
-                            <div className="space-y-3">
-                                <h3 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors">
+                            <div className="flex  flex-col items-center justify-center">
+                                <h3 className="font-serif text-center text-xl md:text-3xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors pb-2">
                                     {cat.name}
                                 </h3>
-                                <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed opacity-70">
+                                <p className="text-[var(--color-text-secondary)] text-sm md:text-base leading-relaxed opacity-70 text-center">
                                     {cat.description}
                                 </p>
+                                <Button
+                                    variant="link"
+                                    className=""
+                                    
+                                >
+                                    Shop Now
+                                </Button>
                             </div>
                         </Link>
                     ))}
@@ -70,9 +79,16 @@ export const BrowseByCategory = ({ viewAllLink }: { viewAllLink?: string }) => {
                     {viewAllLink && (
                         <Link
                             href={viewAllLink}
-                            className="inline-flex items-center gap-2 text-[#2D5A42] font-bold text-lg hover:gap-3 transition-all"
+                            className=""
                         >
-                            Explore All <ArrowRight size={20} />
+                            <Button
+                                variant="default"
+                                className=""
+                                
+                            >
+                                Explore All <ArrowRight size={20} />
+                            </Button>
+                            
                         </Link>
                     )}
 
