@@ -1,62 +1,92 @@
 import Image from "next/image";
 import { Button } from "../../ui/button";
+import Link from "next/link";
 
 const HeroSection2 = () => {
   return (
     <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/r.jpeg"
-          alt="Beautiful indoor plants in a modern living room"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/30 to-transparent" />
-      </div>
 
-      {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-2xl">
-          <span
-            className="inline-block text-sage bg-sage/10 px-3 py-1 rounded-full font-medium tracking-widest uppercase text-sm mb-4 opacity-0 animate-fade-in backdrop-blur-sm"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Premium Indoor Plants
-          </span>
-          <h1
-            className="font-serif text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-cream leading-tight mb-6 opacity-0 animate-fade-in"
-            style={{ animationDelay: "0.4s" }}
-          >
-            Bring Nature
-            <br />
-            <span className="text-sage-300">Into Your Home</span>
-          </h1>
-          <p
-            className="text-cream/90 text-lg md:text-xl max-w-lg mb-8 leading-relaxed opacity-0 animate-fade-in"
-            style={{ animationDelay: "0.6s" }}
-          >
-            Discover our curated collection of beautiful houseplants, expertly grown and delivered to your doorstep.
-          </p>
-          <div
-            className="flex flex-col sm:flex-row gap-4 opacity-0 animate-fade-in"
-            style={{ animationDelay: "0.8s" }}
-          >
-            <Button variant="default" size="lg" className="bg-sage hover:bg-sage-600 text-white border-none text-lg px-8 h-14">
-              Shop Plants
-            </Button>
-            <Button variant="outline" size="lg" className="border-cream/80 text-lg px-8 h-14 bg-transparent text-cream hover:bg-cream hover:text-green-900">
-              Learn More
-            </Button>
+      <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-2  md:gap-16 items-center relative z-10 w-full">
+        {/* Left Content */}
+        <div className="space-y-6  md:space-y-8 text-center lg:text-left pt-10 md:pt-0">
+          {/* Main Heading */}
+          <div className="space-y-4 md:space-y-6">
+            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl text-center lg:text-[4rem]   text-[var(--color-text-primary)]">
+              A Beautiful Plant Is Like Having A Friend Around The House.
+            </h1>
+            <p className="text-md md:text-lg text-[var(--color-text-primary)] text-center leading-relaxed max-w-md mx-auto lg:mx-0">
+              Discover everything you need to know about your plants, treat them with kindness and they will take care of you.
+            </p>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex gap-4 justify-center md:justify-start">
+            <div className="flex justify-center lg:justify-start">
+              <Link href="/plants">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="rounded-md"
+                >
+                  Explore More
+                </Button>
+              </Link>
+            </div>
+            <div className="flex justify-center lg:justify-start">
+              <Link href="/contact">
+                <Button
+                  variant="default"
+                  size="lg"
+                  className="rounded-md"
+                >
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-float">
-        <div className="w-6 h-10 border-2 border-cream/50 rounded-full flex justify-center">
-          <div className="w-1.5 h-3 bg-cream/50 rounded-full mt-2 animate-pulse" />
+        {/* Right Content - Hero Image */}
+        {/* Right Content - Plant Cluster */}
+        <div className="flex justify-center items-end relative h-[450px] md:h-[600px] w-full mt-4 lg:mt-0">
+
+          {/* Animated Center Element */}
+          <div className="absolute top-[80%] left-[85%] sm:left-[75%] md:left-[80%] -translate-x-1/2 -translate-y-1/2 -z-10">
+            <div className="w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] lg:w-[350px] lg:h-[350px] bg-green-600/30 rounded-[30px] animate-ripple-custom" />
+          </div>
+
+          {/* Back Left - Large Areca */}
+          <div className="absolute top-5 left-3 w-[60%] h-[80%] z-0 transform -translate-x-4 animate-slide-in-left">
+            <Image
+              src="/hero-areca-palm-Photoroom.png"
+              alt="Areca Palm"
+              fill
+              className="object-contain drop-shadow-xl"
+              priority
+            />
+          </div>
+
+          {/* Back Right - Tall Palm */}
+          <div className="absolute top-10 right-8 w-[55%] h-[75%] z-10 transform translate-x-4 animate-slide-in-right">
+            <Image
+              src="/hero-palm-plant-Photoroom.png"
+              alt="Palm Plant"
+              fill
+              className="object-contain drop-shadow-xl"
+              priority
+            />
+          </div>
+
+          {/* Front Center - Peace Lily */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[40%] h-[50%] z-20 animate-slide-in-bottom">
+            <Image
+              src="/peace-lily-decoration.png"
+              alt="Peace Lily"
+              fill
+              className="object-contain drop-shadow-2xl scale-110"
+              priority
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -5,7 +5,6 @@ import { Share2, Heart, Star } from 'lucide-react';
 import { WhatsAppService } from '@/data/services/whatsapp.service';
 import { Metadata } from 'next';
 import { ProductGallery } from '@/presentation/components/features/product-gallery';
-import { ProductTabs } from '@/presentation/components/features/product-tabs';
 import { RelatedPlants } from '@/presentation/components/features/related-plants';
 import { ProductInfo } from '@/presentation/components/features/product-info';
 
@@ -42,6 +41,8 @@ export default async function PlantDetailsPage({ params }: Props) {
     const repo = new SupabasePlantRepository();
     const plant = await repo.getPlantById(resolvedParams.id);
 
+    console.log("oooooooo : ", plant)
+
     if (!plant) {
         notFound();
     }
@@ -54,7 +55,7 @@ export default async function PlantDetailsPage({ params }: Props) {
     const currentPrice = discountPrice || price;
 
     return (
-        <main className="min-h-screen bg-white pb-12 md:pb-20 pt-20 md:pt-24">
+        <main className="min-h-screen bg-[var(--color-surface)] pb-4 md:pb-2 pt-4 md:pt-24">
 
             {/* Breadcrumb / Nav - Responsive */}
             <div className="max-w-7xl mx-auto px-4 md:px-6 mb-6 md:mb-8">
@@ -79,11 +80,8 @@ export default async function PlantDetailsPage({ params }: Props) {
                 </div>
 
                 {/* Right Column: Sticky Product Info */}
-                <div className="lg:sticky lg:top-28 h-fit space-y-6 md:space-y-8">
+                <div>
                     <ProductInfo plant={plant} />
-
-                    {/* Tabs Component */}
-                    <ProductTabs description={plant.description} care={plant.careInstructions || ''} />
                 </div>
             </div>
 

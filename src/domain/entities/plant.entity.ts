@@ -17,6 +17,7 @@ export interface PlantVariant {
     growthRate?: string;
     height?: string;
     weight?: string;
+    potSize?: string;
     quantityInStock: number;
     isAvailable: boolean;
     coverImages: string[];

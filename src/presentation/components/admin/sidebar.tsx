@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Leaf, List, Settings, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, Leaf, List, Settings, LogOut, X, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/data/datasources/supabase.client';
 import { useRouter } from 'next/navigation';
@@ -11,6 +11,7 @@ const navItems = [
     { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Plants', href: '/admin/plants', icon: Leaf },
     { label: 'Categories', href: '/admin/categories', icon: List },
+    { label: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
     { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 

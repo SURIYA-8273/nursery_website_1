@@ -24,27 +24,32 @@ export default function NewPlantPage() {
         fetchCats();
     }, []);
 
-    const handleSubmit = async (formData: PlantFormData, imageFile: File | null) => {
+    const handleSubmit = async (formData: PlantFormData, newImages: File[], keptExistingImages: string[]) => {
         setLoading(true);
 
         try {
             let imageUrls: string[] = [];
 
-            // 1. Upload Image if exists
-            if (imageFile) {
-                const fileName = `plant-${Date.now()}`;
-                const { data, error } = await supabase.storage
-                    .from('plants')
-                    .upload(fileName, imageFile);
+            // 1. Upload Images
+            if (newImages.length > 0) {
+                const uploadPromises = newImages.map(async (file) => {
+                    const fileName = `plant-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+                    const { error } = await supabase.storage
+                        .from('plants')
+                        .upload(fileName, file);
 
-                if (error) throw error;
+                    if (error) throw error;
 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('plants')
-                    .getPublicUrl(fileName);
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('plants')
+                        .getPublicUrl(fileName);
 
-                imageUrls.push(publicUrl);
+                    return publicUrl;
+                });
+
+                imageUrls = await Promise.all(uploadPromises);
             }
+
 
             // 2. Create Plant
             const repo = new SupabasePlantRepository();
@@ -57,13 +62,14 @@ export default function NewPlantPage() {
                 discountPrice: formData.discount ? parseFloat(formData.discount) : undefined,
                 description: formData.description,
                 careInstructions: formData.careInstructions,
+                fertilizingInfo: formData.fertilizingInfo,
                 categoryId: formData.categoryId,
                 images: imageUrls,
                 stock: stock,
                 isActive: formData.isActive,
                 isAvailable: formData.isActive,
                 // Add tag fields if needed
-                tags: [],
+                tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
 
                 // Map variants
                 variants: formData.variants.map(v => ({
@@ -71,6 +77,9 @@ export default function NewPlantPage() {
                     size: v.size,
                     price: parseFloat(v.price) || price,
                     discountPrice: v.discount ? parseFloat(v.discount) : undefined,
+                    growthRate: undefined,
+                    height: v.height,
+                    weight: v.weight,
                     quantityInStock: parseInt(v.stock) || stock,
                     isAvailable: v.isAvailable,
                     coverImages: [] // Can extend to support per-variant images later

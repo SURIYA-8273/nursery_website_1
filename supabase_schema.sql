@@ -129,10 +129,10 @@ create policy "Admin Settings All" on public.settings for all using (auth.role()
 
 -- Storage Bucket for Images
 insert into storage.buckets (id, name, public) values ('plants', 'plants', true) ON CONFLICT (id) DO NOTHING;
-insert into storage.buckets (id, name, public) values ('categories', 'categories', true) ON CONFLICT (id) DO NOTHING;
+insert into storage.buckets (id, name, public) values ('common_images', 'common_images', true) ON CONFLICT (id) DO NOTHING;
 
 drop policy if exists "Public Image Read" on storage.objects;
-create policy "Public Image Read" on storage.objects for select using ( bucket_id in ('plants', 'categories') );
+create policy "Public Image Read" on storage.objects for select using ( bucket_id in ('plants', 'common_images') );
 
 drop policy if exists "Admin Image Upload" on storage.objects;
-create policy "Admin Image Upload" on storage.objects for insert with check ( bucket_id in ('plants', 'categories') and auth.role() = 'authenticated' );
+create policy "Admin Image Upload" on storage.objects for insert with check ( bucket_id in ('plants', 'common_images') and auth.role() = 'authenticated' );

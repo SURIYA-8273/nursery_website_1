@@ -9,50 +9,7 @@ export const HeroSection1 = () => {
     
         <section className="relative min-h-[91vh] md:min-h-[91vh] flex items-center overflow-hidden  bg-[var(--color-surface)]">
 
-            {/* Decorative Vine - Top Left */}
-            <div className="absolute top-0 left-0 opacity-40 md:opacity-60 w-32 md:w-56">
-                <Image
-                    src="/vine-decoration-left.png"
-                    alt="Vine Decoration"
-                    width={224}
-                    height={224}
-                    priority
-                    className="w-full h-auto"
-                />
-            </div>
-
-            {/* Decorative Plant - Bottom Left - Hidden on mobile to save space */}
-            <div className="hidden md:block absolute bottom-0 left-0 opacity-60">
-                <Image
-                    src="/peace-lily-decoration.png"
-                    alt="Peace Lily Decoration"
-                    width={192}
-                    height={192}
-                    priority
-                />
-            </div>
-
-            {/* Decorative Leaf - Top Right */}
-            <div className="absolute top-0 right-0 opacity-40 md:opacity-60 w-40 md:w-64">
-                <Image
-                    src="/palm-leaf-decoration.png"
-                    alt="Palm Leaf Decoration"
-                    width={256}
-                    height={256}
-                    className="w-full h-auto"
-                />
-            </div>
-
-            {/* Decorative Leaves - Bottom Right */}
-            <div className="absolute bottom-0 right-0 opacity-40 md:opacity-60 w-40 md:w-64">
-                <Image
-                    src="/leaves-decoration-right.png"
-                    alt="Leaves Decoration"
-                    width={256}
-                    height={256}
-                    className="w-full h-auto"
-                />
-            </div>
+        
 
             <div className="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10 w-full py-20 md:py-12">
 
@@ -71,7 +28,8 @@ export const HeroSection1 = () => {
                     </div>
 
                     {/* CTA Button */}
-                    <div className="flex justify-center lg:justify-start">
+                    <div className="flex gap-4">
+                        <div className="flex justify-center lg:justify-start">
                         <Link href="/plants">
                             <Button
                                 variant="default"
@@ -80,6 +38,17 @@ export const HeroSection1 = () => {
                                 Explore More
                             </Button>
                         </Link>
+                    </div>
+                    <div className="flex justify-center lg:justify-start">
+                        <Link href="/contact">
+                            <Button
+                                variant="default"
+                                size="lg"
+                            >
+                                Contact Us
+                            </Button>
+                        </Link>
+                    </div>
                     </div>
                 </div>
 

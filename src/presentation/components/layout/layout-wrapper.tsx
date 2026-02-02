@@ -3,6 +3,8 @@
 import { usePathname } from 'next/navigation';
 import { Navbar } from './navbar';
 import { Footer } from './footer';
+import { Toaster } from 'sonner';
+import { SupportChatWidget } from '../features/support-chat-widget';
 
 export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
@@ -12,7 +14,12 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
     // Don't render Navbar and Footer for admin routes
     if (isAdminRoute) {
-        return <>{children}</>;
+        return (
+            <>
+                {children}
+                <Toaster richColors position="top-center" />
+            </>
+        );
     }
 
     // Render Navbar and Footer for all other routes
@@ -20,7 +27,9 @@ export const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
         <>
             <Navbar />
             {children}
+            <SupportChatWidget />
             <Footer />
+            <Toaster richColors position="top-center" />
         </>
     );
 };

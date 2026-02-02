@@ -34,4 +34,8 @@ export class WhatsAppService {
 
         return `https://wa.me/${this.PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
     }
+
+    static generateSupportLink(message: string = 'Hello, I need some help with...'): string {
+        return `https://wa.me/${this.PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+    }
 }

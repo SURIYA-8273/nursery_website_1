@@ -7,14 +7,16 @@ import { Sprout, Droplets, Star } from 'lucide-react';
 interface ProductTabsProps {
     description: string;
     care: string;
+    fertilizing: string;
 }
 
-export const ProductTabs = ({ description, care }: ProductTabsProps) => {
-    const [activeTab, setActiveTab] = useState<'description' | 'care' | 'reviews'>('description');
+export const ProductTabs = ({ description, care, fertilizing }: ProductTabsProps) => {
+    const [activeTab, setActiveTab] = useState<'description' | 'care' | 'fertilizing' | 'reviews'>('description');
 
     const tabs = [
         { id: 'description', label: 'Description', icon: Sprout },
         { id: 'care', label: 'Care Guide', icon: Droplets },
+        { id: 'fertilizing', label: 'Fertilizing', icon: Sprout }, // Using Sprout for now, or maybe Leaf
         { id: 'reviews', label: 'Reviews', icon: Star },
     ] as const;
 
@@ -53,6 +55,18 @@ export const ProductTabs = ({ description, care }: ProductTabsProps) => {
                         </h4>
                         <p className="text-text-secondary leading-relaxed whitespace-pre-line">
                             {care || "Keep soil moist but not waterlogged. Place in bright, indirect light."}
+                        </p>
+                    </div>
+                )}
+
+                {activeTab === 'fertilizing' && (
+                    <div className="bg-surface p-6 rounded-2xl border border-secondary/10">
+                        <h4 className="font-bold text-lg text-primary mb-4 flex items-center gap-2">
+                            <Sprout className="text-green-600" />
+                            Fertilizing Guide
+                        </h4>
+                        <p className="text-text-secondary leading-relaxed whitespace-pre-line">
+                            {fertilizing || "Use organic fertilizer once a month during growing season."}
                         </p>
                     </div>
                 )}

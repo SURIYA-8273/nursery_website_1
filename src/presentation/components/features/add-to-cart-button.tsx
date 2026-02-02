@@ -5,6 +5,7 @@ import { useCartStore } from '@/presentation/store/cart.store';
 import { Plant } from '@/domain/entities/plant.entity';
 import { Minus, Plus, ShoppingBag } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 interface Props {
     plant: Plant;
@@ -52,19 +53,14 @@ export const AddToCartButton = ({ plant, selectedVariant, className }: Props) =>
                 </button>
             </div>
 
-            <button
+            <Button
                 onClick={handleAdd}
                 disabled={isAdding || (plant.stock || 0) === 0}
-                className={cn(
-                    "flex-1 flex items-center justify-center gap-2 font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg active:scale-95 text-lg",
-                    isAdding
-                        ? "bg-secondary text-white cursor-wait"
-                        : "bg-primary text-white hover:bg-primary-hover hover:shadow-primary/30"
-                )}
+                
             >
-                <ShoppingBag size={20} className={isAdding ? "animate-bounce" : ""} />
-                {isAdding ? 'Adding...' : 'Add to Cart'}
-            </button>
+                <ShoppingBag size={20} />
+                {'Add to Cart'}
+            </Button>
         </div>
     );
 };

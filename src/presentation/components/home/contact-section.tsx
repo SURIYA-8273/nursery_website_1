@@ -4,7 +4,24 @@ import { Mail, MapPin, Phone, Clock, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
+import { useState, useEffect } from 'react';
+import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
+import { BusinessSettings } from '@/domain/entities/settings.entity';
+
 export const ContactSection = () => {
+    const [settings, setSettings] = useState<Partial<BusinessSettings>>({});
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            const repo = new SupabaseSettingsRepository();
+            const data = await repo.getSettings();
+            if (data) {
+                setSettings(data);
+            }
+        };
+        fetchSettings();
+    }, []);
+
     return (
         <section className="bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -29,17 +46,17 @@ export const ContactSection = () => {
                             <ContactInfoItem
                                 icon={<MapPin size={20} />}
                                 title="Visit Our Shop"
-                                detail="123 Botanical Avenue, San Francisco, CA 94102"
+                                detail={settings.address || "123 Botanical Avenue, San Francisco, CA 94102"}
                             />
                             <ContactInfoItem
                                 icon={<Phone size={20} />}
                                 title="Call Us"
-                                detail="(415) 555-0123"
+                                detail={settings.mobileNumber || "(415) 555-0123"}
                             />
                             <ContactInfoItem
                                 icon={<Mail size={20} />}
                                 title="Email Us"
-                                detail="hello@verdantplants.com"
+                                detail={settings.email || "hello@verdantplants.com"}
                             />
                             <ContactInfoItem
                                 icon={<Clock size={20} />}
@@ -64,7 +81,7 @@ export const ContactSection = () => {
                                 <input
                                     type="text"
                                     placeholder="John Doe"
-                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
                                 />
                             </div>
 
@@ -73,7 +90,7 @@ export const ContactSection = () => {
                                 <input
                                     type="email"
                                     placeholder="john@example.com"
-                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
+                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
                                 />
                             </div>
 
@@ -82,15 +99,15 @@ export const ContactSection = () => {
                                 <textarea
                                     rows={4}
                                     placeholder="Tell us how we can help..."
-                                    className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] resize-none"
+                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] resize-none"
                                 />
                             </div>
 
-                          <Button className='w-full'>
-                            Send Message
-                            <Send size={18} />
-                          </Button>
-                            
+                            <Button className='w-full rounded-md'>
+                                Send Message
+                                <Send size={18} />
+                            </Button>
+
                         </form>
                     </div>
 
@@ -102,9 +119,9 @@ export const ContactSection = () => {
 
 const ContactInfoItem = ({ icon, title, detail }: { icon: React.ReactNode, title: string, detail: React.ReactNode }) => (
     <div className="flex items-start gap-4 group">
-         <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16  rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 bg-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] text-white  transition-colors">
-  {icon}                            </div>
-       
+        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16  rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 bg-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] text-white  transition-colors">
+            {icon}                            </div>
+
         <div className="space-y-1 pt-1">
             <h4 className="font-bold text-[var(--color-text-primary)] leading-none">{title}</h4>
             <div className="text-[var(--color-text-secondary)] text-sm md:text-base">{detail}</div>

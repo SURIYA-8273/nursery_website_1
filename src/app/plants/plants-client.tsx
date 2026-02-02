@@ -42,6 +42,23 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
     }, [searchQuery, filters, sortBy, pathname, router]);
 
+    // Derived stats
+    const maxPrice = useMemo(() => {
+        if (!initialPlants.length) return 10000;
+        const max = Math.max(...initialPlants.map(p => p.discountPrice || p.price || 0));
+        return Math.ceil(max / 100) * 100; // Round up to nearest 100
+    }, [initialPlants]);
+
+    const categoryCounts = useMemo(() => {
+        const counts: Record<string, number> = {};
+        initialPlants.forEach(p => {
+            if (p.categoryId) {
+                counts[p.categoryId] = (counts[p.categoryId] || 0) + 1;
+            }
+        });
+        return counts;
+    }, [initialPlants]);
+
     // Derived plants list
     const filteredPlants = useMemo(() => {
         let result = [...initialPlants];
@@ -107,14 +124,14 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                             placeholder="Search plants..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-         className="w-full bg-[var(--color-surface)] border-none rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-secondary)]/20 transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"                        />
+                            className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]" />
                     </div>
 
                     <div className="flex items-center gap-4 w-full md:w-auto">
                         {/* Mobile Filter Toggle */}
                         <button
                             onClick={() => setIsFilterDrawerOpen(true)}
-                            className="lg:hidden flex items-center gap-2 px-6 py-3 text-[var(--color-text-primary)] bg-[var(--color-surface)] border border-secondary/10 rounded-2xl font-bold text-[#1A2E26]"
+                            className="lg:hidden flex items-center gap-2 px-6 py-3 text-[var(--color-text-primary)] bg-[var(--color-surface)]  border border-[var(--color-primary)]/20 rounded-2xl font-bold text-[#1A2E26]"
                         >
                             <SlidersHorizontal size={18} />
                             Filters
@@ -125,7 +142,7 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full md:w-48 appearance-none text-[var(--color-text-primary)] pl-4 pr-10 py-3 bg-[var(--color-surface)] border border-secondary/10 rounded-2xl font-bold text-[#1A2E26] focus:outline-none focus:ring-2 focus:ring-[#2D5A42]/10 transition-all"
+                                className="w-full md:w-48 appearance-none text-[var(--color-text-primary)] pl-4 pr-10 py-3 bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl font-bold text-[#1A2E26] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition-all"
                             >
                                 <option value="featured">Featured</option>
                                 <option value="price-low">Price: Low to High</option>
@@ -150,6 +167,8 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                             categories={categories}
                             filters={filters}
                             onChange={setFilters}
+                            counts={categoryCounts}
+                            maxPrice={maxPrice}
                         />
                     </aside>
 
@@ -182,7 +201,7 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                                             category: '',
                                             light: '',
                                             care: '',
-                                            priceRange: [0, 10000]
+                                            priceRange: [0, maxPrice]
                                         });
                                     }}
                                     className="bg-[#2D5A42] text-white px-8 py-3 rounded-full font-bold shadow-lg"
@@ -214,6 +233,8 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                         filters={filters}
                         onChange={setFilters}
                         onClose={() => setIsFilterDrawerOpen(false)}
+                        counts={categoryCounts}
+                        maxPrice={maxPrice}
                     />
                 </div>
             </div>

@@ -19,7 +19,7 @@
 
 :root {
   /* Fresh Green Theme (Light) */
-  --color-primary: #10b981;
+  --color-primary: #2D5A42;
   /* Vibrant Emerald */
   --color-primary-hover: #059669;
   /* Darker Emerald */
@@ -85,4 +85,24 @@ body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8) rotate(0deg);
+    background-color: rgb(21, 128, 61);
+    /* Green-700 */
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(0deg);
+    background-color: rgb(74, 222, 128);
+    /* Green-400 */
+    opacity: 0;
+  }
+}
+
+.animate-ripple-custom {
+  animation: ripple-expand 3s infinite ease-out;
 }

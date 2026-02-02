@@ -7,12 +7,14 @@ import { Star, ShoppingBag, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCartStore } from '@/presentation/store/cart.store';
 import { useState } from 'react';
+import { Button } from './button';
 
 interface PlantCardProps {
     plant: Plant;
+    badgeTitle?: string;
 }
 
-export const PlantCard = ({ plant }: PlantCardProps) => {
+export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
     const price = plant.price || 0;
     const discountPrice = plant.discountPrice;
 
@@ -42,10 +44,10 @@ export const PlantCard = ({ plant }: PlantCardProps) => {
     };
 
     return (
-        <div className="group block h-full bg-[var(--color-surface-hover)] rounded-[10px] p-2 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-black/20 flex flex-col border border-white/5">
-            <Link href={`/plants/${plant.id}`} className="block relative mb-6">
+        <div className="group block h-full bg-[var(--color-surface-hover)] p-1 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]">
+            <Link href={`/plants/${plant.id}`} className="block relative mb-3">
                 {/* Image Container */}
-                <div className="aspect-square bg-[#FAF9F6] relative overflow-hidden rounded-[15px]">
+                <div className="aspect-square bg-[#FAF9F6] relative overflow-hidden rounded-[10px]">
                     {plant.images[0] ? (
                         <img
                             src={plant.images[0]}
@@ -60,24 +62,18 @@ export const PlantCard = ({ plant }: PlantCardProps) => {
                     )}
 
                     {/* Badge */}
-                    <div className="absolute top-4 left-4 z-20">
-                        {isNew ? (
-                            <span className="bg-[#2D5A42] text-white text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
-                                <Star size={10} fill="white" className="text-white" /> Bestseller
+                    {
+                        badgeTitle && (
+                            <div className="absolute top-2 left-2 z-20">
+                            <span className="bg-[#2D5A42] text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
+                                <Star size={10} fill="white" className="text-white" /> {badgeTitle}
                             </span>
-                        ) : plant.discountPrice ? (
-                            <span className="bg-[#D36E45] text-white text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
-                                <Star size={10} fill="white" className="text-white" /> Sale
-                            </span>
-                        ) : (
-                            <span className="bg-[#2D5A42] text-white text-[10px] md:text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
-                                <Star size={10} fill="white" className="text-white" /> Bestseller
-                            </span>
-                        )}
                     </div>
+                        )
+                    }
 
                     {/* Like button overlay */}
-                    <div className="absolute top-4 right-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-4 right-4 z-20 opacity-100 transition-opacity">
                         <FavoriteButton
                             plant={plant}
                             className="bg-white/90 backdrop-blur-md shadow-sm"
@@ -87,34 +83,26 @@ export const PlantCard = ({ plant }: PlantCardProps) => {
             </Link>
 
             {/* Content */}
-            <div className="flex flex-col flex-1 px-2 pb-2">
-                <span className="text-[10px] md:text-[11px] font-bold text-[var(--color-primary-light)] uppercase tracking-[0.1em] mb-2 font-sans opacity-80">
+            <div className="flex flex-col flex-1 px-2 pb-1">
+                <span className="text-[10px] md:text-[11px] font-bold text-[#D36E45] uppercase tracking-[0.1em] mb-1 font-sans opacity-80">
                     {categoryLabel}
                 </span>
 
                 <Link href={`/plants/${plant.id}`}>
-                    <h3 className="font-serif text-lg md:text-xl font-bold text-[var(--color-text-primary)] hover:text-[var(--color-primary)] transition-colors line-clamp-1 mb-2">
+                    <h3 className="font-serif text-lg md:text-xl font-bold text-[var(--color-text-primary)] hover:text-[var(--color-primary)] transition-colors line-clamp-1 mb-1">
                         {plant.name}
                     </h3>
                 </Link>
 
                 {/* Rating */}
-                <div className="flex items-center gap-1.5 mb-4 font-sans">
+                <div className="flex items-center gap-1.5 mb-2 font-sans">
                     <Star size={14} fill="#D36E45" className="text-[#D36E45]" />
                     <span className="text-sm font-bold text-[var(--color-text-primary)]">{rating}</span>
                     <span className="text-[var(--color-text-muted)] text-sm">•</span>
                     <span className="text-[var(--color-text-muted)] text-sm">{reviewCount} reviews</span>
                 </div>
 
-                {/* Sub-info / Care Tags */}
-                <div className="flex items-center gap-2 mb-6 text-xs font-medium text-[var(--color-text-muted)] font-sans">
-                    <span className="text-[var(--color-secondary)] font-bold">Easy Care</span>
-                    <span className="text-[var(--color-text-muted)] opacity-50">•</span>
-                    <div className="flex items-center gap-1">
-                        <Star size={12} className="text-[var(--color-text-muted)]" />
-                        <span>Medium Light</span>
-                    </div>
-                </div>
+                
 
                 <div className="mt-auto flex items-center justify-between gap-4">
                     <div className="flex items-baseline gap-2 font-sans">
@@ -124,16 +112,11 @@ export const PlantCard = ({ plant }: PlantCardProps) => {
                         )}
                     </div>
 
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={isAdding}
-                        className={cn(
-                            "bg-[var(--color-secondary)] text-white p-3 rounded-[18px] shadow-lg hover:bg-[#B85C36] transition-all transform active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed",
-                            isAdding && "bg-[#B85C36]"
-                        )}
-                    >
+<Button onClick={handleAddToCart} disabled={isAdding}>
                         {isAdding ? <Loader2 size={20} className="animate-spin" /> : <ShoppingBag size={20} />}
-                    </button>
+
+</Button>
+                    
                 </div>
             </div>
         </div>

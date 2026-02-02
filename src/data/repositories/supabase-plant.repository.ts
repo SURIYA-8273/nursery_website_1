@@ -121,6 +121,10 @@ export class SupabasePlantRepository implements IPlantRepository {
         // 3. Insert Variants
         if (plant.variants && plant.variants.length > 0) {
             const variantsToInsert = plant.variants.map(v => ({
+                // Let's passed 'id' if 'v.id' is present and looks like a UUID (or valid string ID). 
+                // Since Page handles generation, let's just pass it if we want to enforce it.
+                id: v.id,
+
                 plant_id: plantData.id,
                 size: v.size,
                 price: v.price,
@@ -135,6 +139,7 @@ export class SupabasePlantRepository implements IPlantRepository {
                 growth_rate: v.growthRate,
                 height: v.height,
                 weight: v.weight
+                // pot_size removed as it's not in schema
             }));
 
             const { error: variantsError } = await supabase
@@ -143,7 +148,7 @@ export class SupabasePlantRepository implements IPlantRepository {
 
             if (variantsError) {
                 console.error("Error inserting variants", variantsError);
-                // Optional: rollback plant creation? 
+                throw variantsError; // Fail the creation if variants fail
             }
         }
 
@@ -197,7 +202,8 @@ export class SupabasePlantRepository implements IPlantRepository {
                     display_order: index
                 }));
 
-                await supabase.from('plant_images').insert(imagesToInsert);
+                const { error: imageError } = await supabase.from('plant_images').insert(imagesToInsert);
+                if (imageError) throw imageError;
             }
         }
 
@@ -207,11 +213,15 @@ export class SupabasePlantRepository implements IPlantRepository {
         // This is destructive but ensures consistency with the provided array.
         if (plant.variants) {
             // Delete existing
-            await supabase.from('plant_variants').delete().eq('plant_id', id);
+            const { error: deleteError } = await supabase.from('plant_variants').delete().eq('plant_id', id);
+            if (deleteError) throw deleteError;
 
             // Insert new
             if (plant.variants.length > 0) {
                 const variantsToInsert = plant.variants.map(v => ({
+                    // Include ID to preserve it (since we just deleted the row with this ID, we can re-insert it)
+                    // The Page ensures IDs are valid UUIDs (existing or new).
+                    id: v.id,
                     plant_id: id,
                     size: v.size,
                     price: v.price,
@@ -223,9 +233,14 @@ export class SupabasePlantRepository implements IPlantRepository {
                     growth_rate: v.growthRate,
                     height: v.height,
                     weight: v.weight
+                    // pot_size removed as it's not in schema
                 }));
 
-                await supabase.from('plant_variants').insert(variantsToInsert);
+                const { error: insertError } = await supabase.from('plant_variants').insert(variantsToInsert);
+                if (insertError) {
+                    console.error("Error inserting variants during update", insertError);
+                    throw insertError;
+                }
             }
         }
 
@@ -279,6 +294,7 @@ export class SupabasePlantRepository implements IPlantRepository {
                 growthRate: v.growth_rate,
                 height: v.height,
                 weight: v.weight,
+                // potSize: v.pot_size, // removed
                 quantityInStock: v.stock, // db column is 'stock' now? check schema.
                 // Schema says: stock integer variants.stock
                 // Previous code: v.quantity_in_stock ??

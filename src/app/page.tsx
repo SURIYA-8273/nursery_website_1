@@ -7,31 +7,43 @@ import { NewsletterSection } from '@/presentation/components/home/newsletter-sec
 import { ContactSection } from '@/presentation/components/home/contact-section';
 import { FeaturedPlants } from '@/presentation/components/home/featured-plants';
 import { TestimonialsSection } from '@/presentation/components/home/testimonials-section';
+import { GallerySection } from '@/presentation/components/home/gallery-section';
 import HeroSection2 from '@/presentation/components/home/hero/hero_section_2';
 
 // Force dynamic since we might want fresh random data or if we add randomization
 export const revalidate = 60;
+
+// ... imports
+// (Make sure SupabasePlantRepository is imported, it is at line 1)
 
 async function getFeaturedPlants() {
   const repo = new SupabasePlantRepository();
   return await repo.getFeaturedPlants();
 }
 
+async function getCategories() {
+  const repo = new SupabasePlantRepository();
+  const categories = await repo.getCategories();
+  // Return only top 4
+  return categories.slice(0, 4);
+}
+
 export default async function Home() {
   const plants = await getFeaturedPlants();
+  const categories = await getCategories();
 
   return (
     <main className="min-h-screen">
       {/* 1. Hero Section */}
-      <HeroSection1 />
+      <HeroSection2 />
 
-<div className='mt-10'></div>
+      <div className='mt-10'></div>
       {/* 2. Features / Why Choose Us */}
       <FeaturesSection />
-<div className='mt-10'></div>
+      <div className='mt-10'></div>
       {/* 3. Browse By Category */}
-      <BrowseByCategory viewAllLink="/plants" />
-<div className='mt-10'></div>
+      <BrowseByCategory viewAllLink="/plants" categories={categories} />
+      <div className='mt-10'></div>
       {/* 4. Best Selling Plants (Featured) */}
       <FeaturedPlants
         title="Best Selling Plants"
@@ -39,14 +51,17 @@ export default async function Home() {
         plants={plants}
         viewAllLink="/plants"
       />
-<div className='mt-10'></div>
+      <div className='mt-10'></div>
       {/* 5. Testimonials */}
       <TestimonialsSection />
-<div className='mt-10'></div>
-      {/* 6. Contact Section */}
+      <div className='mt-10'></div>
+      {/* 6. Gallery Section */}
+      <GallerySection />
+      <div className='mt-10'></div>
+      {/* 7. Contact Section */}
       <ContactSection />
 
-     
+
     </main>
   );
 }

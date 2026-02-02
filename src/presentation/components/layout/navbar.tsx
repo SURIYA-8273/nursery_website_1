@@ -8,6 +8,7 @@ import { ShoppingBag, Heart, Menu, X, Leaf } from 'lucide-react';
 import { useCartStore } from '@/presentation/store/cart.store';
 import { useWishlistStore } from '@/presentation/store/wishlist.store';
 import { ThemeToggle } from '@/presentation/components/ui/theme-toggle';
+import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -16,9 +17,23 @@ export const Navbar = () => {
     const { cart } = useCartStore();
     const { wishlist, refreshWishlist } = useWishlistStore();
 
-    // Init stores
+    const [businessName, setBusinessName] = useState('Inner Loop Technologies');
+    const [logoUrl, setLogoUrl] = useState<string | null>(null);
+
+    // Init stores & fetch settings
     useEffect(() => {
         refreshWishlist();
+
+        const fetchSettings = async () => {
+            const repo = new SupabaseSettingsRepository();
+            const data = await repo.getSettings();
+            console.log(data);
+            if (data) {
+                if (data.businessName) setBusinessName(data.businessName);
+                if (data.logoUrl) setLogoUrl(data.logoUrl);
+            }
+        };
+        fetchSettings();
     }, [refreshWishlist]);
 
     // Handle scroll effect
@@ -50,11 +65,15 @@ export const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 group">
-                    <div className="bg-[#2F4F4F] text-white p-2.5 rounded-full transition-colors">
-                        <Leaf size={20} fill="none" strokeWidth={2} />
+                    <div className="bg-[#2F4F4F] text-white  rounded-full transition-colors overflow-hidden flex items-center justify-center w-10 h-10">
+                        {logoUrl ? (
+                            <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                        ) : (
+                            <Leaf size={20} fill="none" strokeWidth={2} />
+                        )}
                     </div>
-                    <span className="font-serif text-2xl font-bold tracking-tight text-[#1A2F2F]">
-                        Inner Loop Technologies
+                    <span className="font-serif text-xl font-bold tracking-tight text-[#1A2F2F] sm:block">
+                        {businessName}
                     </span>
                 </Link>
 

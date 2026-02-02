@@ -5,6 +5,7 @@ import { supabase } from '@/data/datasources/supabase.client';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { Loader2, Save, Upload, Info } from 'lucide-react';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
+import { toast } from 'sonner';
 
 export default function SettingsPage() {
     const [loading, setLoading] = useState(false);
@@ -55,28 +56,15 @@ export default function SettingsPage() {
             if (logoFile) {
                 const fileName = `logo-${Date.now()}`;
                 const { error: uploadError } = await supabase.storage
-                    .from('app-assets') // Assuming 'app-assets' bucket exists, or use 'plants' for now if specific bucket not ready
+                    .from('common_images')
                     .upload(fileName, logoFile);
 
-                if (uploadError) {
-                    // Fallback to 'plants' bucket if 'app-assets' doesn't exist/fails
-                    // Ideally check bucket existence but let's try standard path
-                    const { error: retryError } = await supabase.storage
-                        .from('plants')
-                        .upload(`settings/${fileName}`, logoFile);
+                if (uploadError) throw uploadError;
 
-                    if (retryError) throw retryError;
-
-                    const { data: { publicUrl } } = supabase.storage
-                        .from('plants')
-                        .getPublicUrl(`settings/${fileName}`);
-                    logoUrl = publicUrl;
-                } else {
-                    const { data: { publicUrl } } = supabase.storage
-                        .from('app-assets')
-                        .getPublicUrl(fileName);
-                    logoUrl = publicUrl;
-                }
+                const { data: { publicUrl } } = supabase.storage
+                    .from('common_images')
+                    .getPublicUrl(fileName);
+                logoUrl = publicUrl;
             }
 
             // 2. Update Settings
@@ -86,11 +74,11 @@ export default function SettingsPage() {
                 logoUrl,
             });
 
-            alert('Settings updated successfully!');
+            toast.success('Settings updated successfully!');
 
         } catch (error: any) {
             console.error(error);
-            alert('Error updating settings: ' + error.message);
+            toast.error('Error updating settings: ' + error.message);
         } finally {
             setLoading(false);
         }
@@ -159,7 +147,7 @@ export default function SettingsPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Mobile Number</label>
+                            <label className="text-sm font-bold text-text-secondary">Primary Mobile Number</label>
                             <input
                                 name="mobileNumber"
                                 value={settings.mobileNumber}
@@ -168,6 +156,57 @@ export default function SettingsPage() {
                                 placeholder="+91 98765 43210"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Secondary Mobile Number</label>
+                            <input
+                                name="secondaryNumber"
+                                value={settings.secondaryNumber}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="+91 98765 43210"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">WhatsApp Number</label>
+                            <input
+                                name="whatsappNumber"
+                                value={settings.whatsappNumber}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="+91 98765 43210"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Email Address</label>
+                            <input
+                                name="email"
+                                type="email"
+                                value={settings.email}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="contact@example.com"
+                            />
+                        </div>
+
+                        <div className="md:col-span-2 space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Store Address</label>
+                            <textarea
+                                name="address"
+                                rows={3}
+                                value={settings.address}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
+                                placeholder="123 Plant Street, Green City..."
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Social Media */}
+                <section className="space-y-6">
+                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Social Media</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-2">
                             <label className="text-sm font-bold text-text-secondary">Instagram URL</label>
                             <input
@@ -178,15 +217,24 @@ export default function SettingsPage() {
                                 placeholder="https://instagram.com/..."
                             />
                         </div>
-                        <div className="md:col-span-2 space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Store Address</label>
-                            <textarea
-                                name="address"
-                                rows={3}
-                                value={settings.address}
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Facebook URL</label>
+                            <input
+                                name="facebookUrl"
+                                value={settings.facebookUrl}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
-                                placeholder="123 Plant Street, Green City..."
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="https://facebook.com/..."
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">YouTube URL</label>
+                            <input
+                                name="youtubeUrl"
+                                value={settings.youtubeUrl}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="https://youtube.com/..."
                             />
                         </div>
                     </div>

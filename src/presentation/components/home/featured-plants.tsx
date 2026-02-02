@@ -20,7 +20,7 @@ export const FeaturedPlants = ({ title, subtitle, plants, viewAllLink }: Feature
                 {plants.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
                         {plants.map((plant) => (
-                            <PlantCard key={plant.id} plant={plant} />
+                            <PlantCard key={plant.id} plant={plant} badgeTitle="Best Selling" />
                         ))}
                     </div>
                 ) : (
@@ -37,7 +37,7 @@ export const FeaturedPlants = ({ title, subtitle, plants, viewAllLink }: Feature
                         >
                             <Button
                                 variant="default"
-                                className=""
+                                 className="rounded-md"
                                 
                             >
                                 Explore All <ArrowRight size={20} />

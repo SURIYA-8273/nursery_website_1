@@ -17,7 +17,7 @@ export const ProductGallery = ({ images, name, discount }: ProductGalleryProps) 
     return (
         <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-white shadow-soft relative group">
+            <div className="aspect-[4/4] rounded-3xl overflow-hidden bg-white shadow-soft relative group">
                 {validImages[selectedIndex] ? (
                     <img
                         src={validImages[selectedIndex]}

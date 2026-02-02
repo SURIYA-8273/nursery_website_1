@@ -45,27 +45,31 @@ export default function EditPlantPage() {
         fetchData();
     }, [plantId, router]);
 
-    const handleSubmit = async (formData: PlantFormData, imageFile: File | null) => {
+    const handleSubmit = async (formData: PlantFormData, newImages: File[], keptExistingImages: string[]) => {
         setLoading(true);
 
         try {
-            let imageUrls: string[] = initialData?.images || [];
+            let imageUrls: string[] = [...keptExistingImages];
 
-            // Upload new image if provided
-            if (imageFile) {
-                const fileName = `plant-${Date.now()}`;
-                const { data, error } = await supabase.storage
-                    .from('plants')
-                    .upload(fileName, imageFile);
+            // Upload new images if provided
+            if (newImages.length > 0) {
+                const uploadPromises = newImages.map(async (file) => {
+                    const fileName = `plant-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+                    const { error } = await supabase.storage
+                        .from('plants')
+                        .upload(fileName, file);
 
-                if (error) throw error;
+                    if (error) throw error;
 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('plants')
-                    .getPublicUrl(fileName);
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('plants')
+                        .getPublicUrl(fileName);
 
-                // Add new image to start of array
-                imageUrls = [publicUrl, ...imageUrls];
+                    return publicUrl;
+                });
+
+                const newUploadedUrls = await Promise.all(uploadPromises);
+                imageUrls = [...imageUrls, ...newUploadedUrls];
             }
 
             // Update Plant
@@ -79,12 +83,13 @@ export default function EditPlantPage() {
                 discountPrice: formData.discount ? parseFloat(formData.discount) : undefined,
                 description: formData.description,
                 careInstructions: formData.careInstructions,
+                fertilizingInfo: formData.fertilizingInfo,
                 categoryId: formData.categoryId,
                 images: imageUrls,
                 stock: stock,
                 isActive: formData.isActive,
                 // Add tag fields if needed
-                tags: [],
+                tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
 
                 // Map variants
                 variants: formData.variants.map(v => ({
@@ -99,6 +104,10 @@ export default function EditPlantPage() {
                     size: v.size,
                     price: parseFloat(v.price) || price,
                     discountPrice: v.discount ? parseFloat(v.discount) : undefined,
+                    growthRate: undefined, // Or add to form if needed
+                    height: v.height,
+                    weight: v.weight,
+                    potSize: undefined, // Removed from form
                     quantityInStock: parseInt(v.stock) || stock,
                     isAvailable: v.isAvailable,
                     coverImages: [] // Can extend later

@@ -2,53 +2,128 @@ import { BusinessSettings } from '@/domain/entities/settings.entity';
 import { supabase } from '../datasources/supabase.client';
 
 export class SupabaseSettingsRepository {
-    private readonly SINGLETON_ID = '1';
 
     async getSettings(): Promise<BusinessSettings | null> {
         const { data, error } = await supabase
             .from('settings')
-            .select('*')
-            .eq('id', this.SINGLETON_ID)
-            .single();
+            .select('*');
 
-        if (error || !data) return null;
+        if (error) return null; // Or throw
 
-        return this._mapToEntity(data);
+        // Default empty settings
+        const settings: BusinessSettings = {
+            id: 'global', // KV store doesn't really have a single row ID
+            businessName: '',
+            updatedAt: new Date()
+        };
+
+        // Map KV rows to entity
+        data.forEach((row: any) => {
+            switch (row.setting_key) {
+                // ... other cases
+                case 'business_name':
+                    settings.businessName = row.setting_value;
+                    break;
+                case 'logo_url':
+                    settings.logoUrl = row.setting_value;
+                    break;
+                case 'instagram_url':
+                    settings.instagramUrl = row.setting_value;
+                    break;
+                case 'mobile_number':
+                    settings.mobileNumber = row.setting_value;
+                    break;
+                case 'secondary_number':
+                    settings.secondaryNumber = row.setting_value;
+                    break;
+                case 'whatsapp_number':
+                    settings.whatsappNumber = row.setting_value;
+                    break;
+                case 'email':
+                    settings.email = row.setting_value;
+                    break;
+                case 'address':
+                    settings.address = row.setting_value;
+                    break;
+                case 'facebook_url':
+                    settings.facebookUrl = row.setting_value;
+                    break;
+                case 'youtube_url':
+                    settings.youtubeUrl = row.setting_value;
+                    break;
+            }
+
+            // Map gallery images
+            if (row.setting_key.startsWith('gallery_image_')) {
+                const index = parseInt(row.setting_key.split('_')[2]) - 1;
+                if (!settings.galleryImages) settings.galleryImages = [];
+                try {
+                    settings.galleryImages[index] = JSON.parse(row.setting_value);
+                } catch (e) {
+                    console.error('Failed to parse gallery image', e);
+                }
+            }
+        });
+
+        // Ensure array has 6 slots even if empty
+        if (!settings.galleryImages) {
+            settings.galleryImages = new Array(6).fill(null);
+        } else {
+            // Fill holes if any
+            for (let i = 0; i < 6; i++) {
+                if (!settings.galleryImages[i]) settings.galleryImages[i] = null as any;
+            }
+        }
+
+        return settings;
+    }
+
+    async saveGalleryImage(index: number, image: any): Promise<void> {
+        const key = `gallery_image_${index + 1}`;
+        const { error } = await supabase.from('settings').upsert({
+            setting_key: key,
+            setting_value: JSON.stringify(image),
+            setting_type: 'text',
+            updated_at: new Date().toISOString()
+        }, { onConflict: 'setting_key' });
+
+        if (error) throw error;
     }
 
     async updateSettings(settings: Partial<BusinessSettings>): Promise<BusinessSettings> {
-        const updates: any = { updated_at: new Date().toISOString() };
+        const updates: PromiseLike<any>[] = [];
 
-        if (settings.businessName !== undefined) updates.business_name = settings.businessName;
-        if (settings.logoUrl !== undefined) updates.logo_url = settings.logoUrl;
-        if (settings.instagramUrl !== undefined) updates.instagram_url = settings.instagramUrl;
-        if (settings.mobileNumber !== undefined) updates.mobile_number = settings.mobileNumber;
-        if (settings.address !== undefined) updates.address = settings.address;
-
-        // Upsert logic: try to update, if not found (and using fixed ID), insert?
-        // Actually for simplicity, let's assume specific ID '1' exists or we create it.
-        // We'll use upsert with the ID.
-
-        const { data, error } = await supabase
-            .from('settings')
-            .upsert({ id: this.SINGLETON_ID, ...updates })
-            .select()
-            .single();
-
-        if (error) throw error;
-
-        return this._mapToEntity(data);
-    }
-
-    private _mapToEntity(row: any): BusinessSettings {
-        return {
-            id: row.id,
-            businessName: row.business_name,
-            logoUrl: row.logo_url,
-            instagramUrl: row.instagram_url,
-            mobileNumber: row.mobile_number,
-            address: row.address,
-            updatedAt: new Date(row.updated_at),
+        // Helper to queue upsert
+        const queueUpdate = (key: string, value: string | undefined, type: string) => {
+            if (value !== undefined) {
+                updates.push(supabase.from('settings').upsert({
+                    setting_key: key,
+                    setting_value: value,
+                    setting_type: type,
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'setting_key' }).then());
+            }
         };
+
+        queueUpdate('business_name', settings.businessName, 'text');
+        queueUpdate('logo_url', settings.logoUrl, 'url');
+        queueUpdate('instagram_url', settings.instagramUrl, 'url');
+        queueUpdate('facebook_url', settings.facebookUrl, 'url');
+        queueUpdate('youtube_url', settings.youtubeUrl, 'url');
+
+        queueUpdate('mobile_number', settings.mobileNumber, 'phone');
+        queueUpdate('secondary_number', settings.secondaryNumber, 'phone');
+        queueUpdate('whatsapp_number', settings.whatsappNumber, 'phone');
+
+        queueUpdate('email', settings.email, 'email');
+        queueUpdate('address', settings.address, 'text');
+
+        await Promise.all(updates);
+
+        const fresh = await this.getSettings();
+        if (!fresh) throw new Error('Failed to retrieve settings after update');
+        return fresh;
     }
+
+    // _mapToEntity is no longer needed in the same way as before
 }
