@@ -35,14 +35,18 @@ export default async function Home() {
   return (
     <main className="min-h-screen">
       {/* 1. Hero Section */}
-      <HeroSection2 />
+      <div id="home" className="scroll-mt-28">
+        <HeroSection2 />
+      </div>
 
-      <div className='mt-10'></div>
+      <div className='mt-2'></div>
       {/* 2. Features / Why Choose Us */}
       <FeaturesSection />
       <div className='mt-10'></div>
       {/* 3. Browse By Category */}
-      <BrowseByCategory viewAllLink="/plants" categories={categories} />
+      <div id="categories" className="scroll-mt-28">
+        <BrowseByCategory viewAllLink="/plants" categories={categories} />
+      </div>
       <div className='mt-10'></div>
       {/* 4. Best Selling Plants (Featured) */}
       <FeaturedPlants
@@ -56,10 +60,14 @@ export default async function Home() {
       <TestimonialsSection />
       <div className='mt-10'></div>
       {/* 6. Gallery Section */}
-      <GallerySection />
+      <div id="gallery" className="scroll-mt-28">
+        <GallerySection />
+      </div>
       <div className='mt-10'></div>
       {/* 7. Contact Section */}
-      <ContactSection />
+      <div id="contact" className="scroll-mt-28">
+        <ContactSection />
+      </div>
 
 
     </main>

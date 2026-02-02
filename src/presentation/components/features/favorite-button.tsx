@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useWishlistStore } from '@/presentation/store/wishlist.store';
 import { Plant } from '@/domain/entities/plant.entity';
 import { Heart } from 'lucide-react';
@@ -15,11 +15,14 @@ interface Props {
 export const FavoriteButton = ({ plant, className, iconSize = 20 }: Props) => {
     const { isInWishlist, addToWishlist, removeFromWishlist, refreshWishlist } = useWishlistStore();
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         refreshWishlist();
     }, [refreshWishlist]);
 
-    const active = isInWishlist(plant.id);
+    const active = mounted && isInWishlist(plant.id);
 
     const toggleWishlist = async (e: React.MouseEvent) => {
         e.preventDefault();

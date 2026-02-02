@@ -78,21 +78,23 @@ export function DataTable<T>({
     loading = false,
     emptyMessage = 'No data found.',
     rowKey,
-    minWidth = '800px',
+
     pagination,
 }: DataTableProps<T>) {
     return (
         <div className="space-y-6">
             {/* Unified Table & Pagination Card */}
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-secondary/10 overflow-hidden">
+            <div className="bg-white rounded-md md:rounded-md shadow-sm border border-black/20 overflow-hidden">
                 <div className="overflow-x-auto scrollbar-hide">
-                    <table className="w-full text-left border-collapse" style={{ minWidth }}>
-                        <thead className="bg-secondary/5 border-b border-secondary/10">
+
+
+                    <table className="w-full text-center border-collapse">
+                        <thead className="border-b border-black/20 bg-black/5">
                             <tr>
                                 {headers.map((header, idx) => (
                                     <th
                                         key={idx}
-                                        className={`px-3 py-4 md:px-4 md:py-5 lg:p-6 font-bold text-text-secondary whitespace-nowrap text-[10px] sm:text-xs md:text-sm tracking-wider uppercase ${header.className || ''} ${header.headerClassName || ''} ${header.align === 'right' ? 'text-right' : header.align === 'center' ? 'text-center' : ''
+                                        className={`px-3 py-4 font-bold text-black  text-[10px] sm:text-xs md:text-sm tracking-wider uppercase ${header.className || ''} ${header.headerClassName || ''} ${header.align === 'right' ? 'text-right' : header.align === 'center' ? 'text-center' : ''
                                             }`}
                                     >
                                         {header.label}
@@ -100,7 +102,10 @@ export function DataTable<T>({
                                 ))}
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-secondary/5">
+
+
+
+                        <tbody className="divide-y divide-black/10">
                             {loading ? (
                                 <tr>
                                     <td
@@ -133,7 +138,7 @@ export function DataTable<T>({
                                             return (
                                                 <td
                                                     key={idx}
-                                                    className={`px-3 py-4 md:px-4 md:py-5 lg:p-6 text-xs md:text-sm lg:text-base text-text-primary ${headerConfig?.className || ''} ${cell.className || ''} ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : ''
+                                                    className={`px-3 py-4 text-xs md:text-sm lg:text-base text-text-primary ${headerConfig?.className || ''} ${cell.className || ''} ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : ''
                                                         }`}
                                                 >
                                                     <div className={`flex items-center gap-2 md:gap-3 ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : ''}`}>
@@ -158,7 +163,7 @@ export function DataTable<T>({
 
                 {/* Pagination (Integrated) */}
                 {pagination && !loading && data.length > 0 && (
-                    <div className="border-t border-secondary/10">
+                    <div className="border-t border-black/10">
                         <Pagination
                             currentPage={pagination.currentPage}
                             totalPages={pagination.totalPages}

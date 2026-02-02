@@ -81,6 +81,10 @@
 }
 
 /* Reset setup */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-surface);
   color: var(--color-text-primary);

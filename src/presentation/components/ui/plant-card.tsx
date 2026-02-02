@@ -73,7 +73,7 @@ export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
                     }
 
                     {/* Like button overlay */}
-                    <div className="absolute top-4 right-4 z-20 opacity-100 transition-opacity">
+                    <div className="absolute top-2 right-2 z-20 opacity-100 transition-opacity">
                         <FavoriteButton
                             plant={plant}
                             className="bg-white/90 backdrop-blur-md shadow-sm"

@@ -7,6 +7,7 @@ import { Button } from '../ui/button';
 import { useState, useEffect } from 'react';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
+import { Heading } from './heading';
 
 export const ContactSection = () => {
     const [settings, setSettings] = useState<Partial<BusinessSettings>>({});
@@ -23,26 +24,24 @@ export const ContactSection = () => {
     }, []);
 
     return (
-        <section className="bg-[var(--color-surface)]">
+        <section className="bg-[var(--color-surface)] ">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div className=" items-center">
 
                     {/* Left Column: Info */}
-                    <div className="space-y-8 md:space-y-12">
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-2 text-[#D36E45] font-bold tracking-widest uppercase text-xs">
-                                <Mail size={16} fill="currentColor" />
-                                <span>Get in Touch</span>
-                            </div>
-                            <h2 className="font-serif text-4xl md:text-6xl font-bold text-[var(--color-text-primary)] leading-tight">
-                                We'd Love to Hear From You
-                            </h2>
-                            <p className="text-[var(--color-text-secondary)] text-lg max-w-lg leading-relaxed">
-                                Have questions about plant care or need help choosing the perfect plant? Our team of plant experts is here to help!
-                            </p>
-                        </div>
+                    <div className="space-y-4 md:space-y-12">
 
-                        <div className="space-y-6">
+                         {/* Header */}
+                                        <Heading title="We'd Love to Hear From You" subtitle="Have questions about plant care or need help choosing the perfect plant? Our team of plant experts is here to help!" />
+                                        
+
+                                        <div className="flex justify-center items-center text-[#D36E45] font-bold uppercase text-xs mb-4">
+                                            <MapPin size={14} fill="currentColor" strokeWidth={0} />
+                                            Get in Touch
+                                        </div>
+                        
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <ContactInfoItem
                                 icon={<MapPin size={20} />}
                                 title="Visit Our Shop"
@@ -71,45 +70,7 @@ export const ContactSection = () => {
                         </div>
                     </div>
 
-                    {/* Right Column: Form Card */}
-                    <div className="bg-[var(--color-surface-hover)] p-8 md:p-12 rounded-[40px] shadow-xl shadow-black/20 border border-white/5">
-                        <h3 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-8">Send Us a Message</h3>
-
-                        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Your Name</label>
-                                <input
-                                    type="text"
-                                    placeholder="John Doe"
-                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Email Address</label>
-                                <input
-                                    type="email"
-                                    placeholder="john@example.com"
-                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)]"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-[var(--color-text-primary)] ml-1">Your Message</label>
-                                <textarea
-                                    rows={4}
-                                    placeholder="Tell us how we can help..."
-                                    className="w-full bg-[var(--color-surface)] border border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--color-primary)] transition-all outline-none text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] resize-none"
-                                />
-                            </div>
-
-                            <Button className='w-full rounded-md'>
-                                Send Message
-                                <Send size={18} />
-                            </Button>
-
-                        </form>
-                    </div>
+                 
 
                 </div>
             </div>

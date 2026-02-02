@@ -33,7 +33,7 @@ const HeroSection2 = () => {
               </Link>
             </div>
             <div className="flex justify-center lg:justify-start">
-              <Link href="/contact">
+              <Link href="#contact">
                 <Button
                   variant="default"
                   size="lg"

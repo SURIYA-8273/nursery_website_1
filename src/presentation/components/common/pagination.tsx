@@ -58,8 +58,8 @@ export const Pagination = ({
                     className={cn(
                         "p-2 rounded-lg transition-colors",
                         currentPage === 1
-                            ? "text-text-muted cursor-not-allowed"
-                            : "text-text-primary hover:bg-secondary/10"
+                            ? "text-black cursor-not-allowed"
+                            : "text-black hover:bg-black/10"
                     )}
                 >
                     <ChevronLeft size={20} />
@@ -85,8 +85,8 @@ export const Pagination = ({
                                 className={cn(
                                     "min-w-[40px] h-10 rounded-lg font-medium transition-colors",
                                     currentPage === pageNum
-                                        ? "bg-primary text-white"
-                                        : "text-text-primary hover:bg-secondary/10"
+                                        ? "bg-black text-white"
+                                        : "text-black bg-black/10 hover:bg-black/30"
                                 )}
                             >
                                 {pageNum}
@@ -101,8 +101,8 @@ export const Pagination = ({
                     className={cn(
                         "p-2 rounded-lg transition-colors",
                         currentPage === totalPages || totalPages === 0
-                            ? "text-text-muted cursor-not-allowed"
-                            : "text-text-primary hover:bg-secondary/10"
+                            ? "text-black cursor-not-allowed"
+                            : "text-black hover:bg-black/10"
                     )}
                 >
                     <ChevronRight size={20} />

@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import { Category, Plant, PlantVariant } from '@/domain/entities/plant.entity';
 import { supabase } from '@/data/datasources/supabase.client';
 import { Upload, Loader2, Save, Plus, Trash2 } from 'lucide-react';
+import { Input } from '@/presentation/components/admin/form/input';
+import { Select } from '@/presentation/components/admin/form/select';
+import { Button } from '@/presentation/components/admin/button';
+import { TextArea } from '@/presentation/components/admin/form/text_area';
 
 export interface PlantFormData {
     name: string;
@@ -153,40 +157,36 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
         <form onSubmit={handleSubmit} className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-secondary/10 space-y-8">
 
             {/* Basic Info */}
-            <section className="space-y-4">
+            <section className="">
                 <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Basic Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Plant Name *</label>
-                        <input
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
+                    <div className="">
+                        <Input
+                            label="Plant Name"
                             name="name"
                             required
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                             placeholder="e.g. Monstera Deliciosa"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Category *</label>
-                        <select
+                    <div className="">
+                        <Select
+                            label="Category"
                             name="categoryId"
-                            required
                             value={formData.categoryId}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-white"
-                        >
-                            <option value="">Select Category</option>
-                            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                        </select>
+                            options={
+                                categories.map(c => ({ value: c.id, label: c.name }))
+                            }
+                        />
                     </div>
-                    <div className="md:col-span-2 space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Tags</label>
-                        <input
+                    <div className="">
+                        <Input
+                            label="Tags"
                             name="tags"
                             value={formData.tags}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                             placeholder="e.g. Indoor, Pet Friendly, Low Light (Comma separated)"
                         />
                     </div>
@@ -195,43 +195,79 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
 
 
             {/* Pricing & Stock (Defaults) */}
-            <section className="space-y-4">
+            <section className="">
                 <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Base Pricing & Stock</h3>
                 <p className="text-xs text-text-secondary -mt-3">These values are used as defaults or if no variants are defined.</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Base Price (₹) *</label>
-                        <input
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-6">
+                    <div className="">
+                        <Input
+                            label="Base Price (₹)"
                             name="price"
                             type="number"
                             required
                             value={formData.price}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                             placeholder="0.00"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Discount Price</label>
-                        <input
+                    <div className="">
+                        <Input
+                            label="Discount Price"
                             name="discount"
                             type="number"
                             value={formData.discount}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                             placeholder="0.00"
                         />
                     </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Base Stock *</label>
-                        <input
+                    <div className="">
+                        <Input
+                            label="Base Stock"
                             name="stock"
                             type="number"
                             required
                             value={formData.stock}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                             placeholder="10"
+                        />
+                    </div>
+                </div>
+            </section>
+             {/* Details */}
+            <section className="space-y-4">
+                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Description & Care</h3>
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <TextArea
+                            label="Description"
+                            name="description"
+                            required
+                            rows={3}
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Description"
+                        />
+
+                    </div>
+
+                    <div className="space-y-2">
+                        <TextArea
+                            label="Care Instructions"
+                            name="careInstructions"
+                            rows={3}
+                            value={formData.careInstructions}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="space-y-2">
+                        <TextArea
+                            label="Fertilizing Info"
+                            name="fertilizingInfo"
+                            rows={3}
+                            value={formData.fertilizingInfo}
+                            onChange={handleChange}
+                            placeholder="Compost requirements..."
                         />
                     </div>
                 </div>
@@ -241,13 +277,9 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
             <section className="space-y-4">
                 <div className="flex items-center justify-between border-b border-secondary/10 pb-2">
                     <h3 className="text-lg font-serif font-bold text-primary">Product Variants</h3>
-                    <button
-                        type="button"
-                        onClick={addVariant}
-                        className="text-sm bg-secondary/10 hover:bg-secondary/20 text-primary px-3 py-1.5 rounded-lg font-bold flex items-center gap-1 transition-colors"
-                    >
+                    <Button onClick={addVariant}>
                         <Plus size={16} /> Add Variant
-                    </button>
+                    </Button>
                 </div>
 
                 {formData.variants.length === 0 ? (
@@ -260,82 +292,88 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                             <div key={variant.id} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-gray-50 p-4 rounded-xl items-end relative group">
                                 <div className="md:col-span-3 space-y-2">
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-text-secondary">Size *</label>
-                                        <input
-                                            type="text"
-                                            placeholder="Small..."
+                                        <Input
+                                            label="Size"
+                                            name="size"
+                                            required
                                             value={variant.size}
                                             onChange={(e) => handleVariantChange(variant.id, 'size', e.target.value)}
-                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                                            required
+                                            placeholder="Small..."
                                         />
+
                                     </div>
                                     <div className="grid grid-cols-2 gap-2">
                                         <div className="space-y-1">
-                                            <label className="text-xs font-bold text-text-secondary">Height</label>
-                                            <input
-                                                type="text"
-                                                placeholder="18-24in"
+                                            <Input
+                                                label="Height"
+                                                name="height"
                                                 value={variant.height}
                                                 onChange={(e) => handleVariantChange(variant.id, 'height', e.target.value)}
-                                                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                                                placeholder="18-24in"
                                             />
+
                                         </div>
                                         <div className="space-y-1">
-                                            <label className="text-xs font-bold text-text-secondary">Weight</label>
-                                            <input
-                                                type="text"
-                                                placeholder="1.5 kg"
+                                            <Input
+                                                label="Weight"
+                                                name="weight"
                                                 value={variant.weight}
                                                 onChange={(e) => handleVariantChange(variant.id, 'weight', e.target.value)}
-                                                className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                                                placeholder="1.5 kg"
                                             />
+
+
                                         </div>
                                     </div>
                                 </div>
                                 <div className="md:col-span-3 grid grid-cols-2 gap-2">
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-text-secondary">Price *</label>
-                                        <input
+                                        <Input
+                                            label="Price"
+                                            name="price"
                                             type="number"
-                                            placeholder="0.00"
+                                            required
                                             value={variant.price}
                                             onChange={(e) => handleVariantChange(variant.id, 'price', e.target.value)}
-                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                                            required
+                                            placeholder="0.00"
                                         />
+
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-text-secondary">Discount</label>
-                                        <input
+                                        <Input
+                                            label="Discount"
+                                            name="discount"
                                             type="number"
-                                            placeholder="0.00"
                                             value={variant.discount}
                                             onChange={(e) => handleVariantChange(variant.id, 'discount', e.target.value)}
-                                            className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                                            placeholder="0.00"
                                         />
+
                                     </div>
                                 </div>
                                 <div className="md:col-span-2 space-y-1">
-                                    <label className="text-xs font-bold text-text-secondary">Stock</label>
-                                    <input
+                                    <Input
+                                        label="Stock"
+                                        name="stock"
                                         type="number"
-                                        placeholder="10"
                                         value={variant.stock}
                                         onChange={(e) => handleVariantChange(variant.id, 'stock', e.target.value)}
-                                        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                                        placeholder="10"
                                     />
+
                                 </div>
                                 <div className="md:col-span-2 space-y-1">
-                                    <label className="text-xs font-bold text-text-secondary">Active</label>
-                                    <select
+                                    <Select
+                                        label="Active"
+                                        name="isAvailable"
                                         value={variant.isAvailable ? 'true' : 'false'}
                                         onChange={(e) => handleVariantChange(variant.id, 'isAvailable', e.target.value === 'true')}
-                                        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
-                                    >
-                                        <option value="true">Yes</option>
-                                        <option value="false">No</option>
-                                    </select>
+                                        options={[
+                                            { value: 'true', label: 'Yes' },
+                                            { value: 'false', label: 'No' },
+                                        ]}
+                                    />
+
                                 </div>
                                 <div className="md:col-span-2 flex justify-end pb-1">
                                     <button
@@ -352,47 +390,7 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                 )}
             </section>
 
-            {/* Details */}
-            <section className="space-y-4">
-                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Description & Care</h3>
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Description *</label>
-                        <textarea
-                            name="description"
-                            required
-                            rows={4}
-                            value={formData.description}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
-                            placeholder="Describe the plant..."
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Care Instructions</label>
-                        <textarea
-                            name="careInstructions"
-                            rows={3}
-                            value={formData.careInstructions}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Fertilizing Info</label>
-                        <textarea
-                            name="fertilizingInfo"
-                            rows={3}
-                            value={formData.fertilizingInfo}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
-                            placeholder="Compost requirements..."
-                        />
-                    </div>
-                </div>
-            </section>
+           
 
             {/* Images */}
             <section className="space-y-4">

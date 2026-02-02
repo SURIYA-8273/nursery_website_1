@@ -93,9 +93,9 @@ export default function AdminCategoriesPage() {
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const headers: TableHeader[] = [
-        { label: 'Name', className: 'font-bold text-text-primary' },
-        { label: 'Description', className: 'text-text-muted max-w-xs md:max-w-md truncate' },
-        { label: 'Actions', align: 'right' }
+        { label: 'Name' },
+        { label: 'Description' },
+        { label: 'Actions   ' }
     ];
 
     const renderRow = (cat: Category) => [
