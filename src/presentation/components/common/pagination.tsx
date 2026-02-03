@@ -27,19 +27,19 @@ export const Pagination = ({
     return (
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-secondary/10 bg-white">
             {/* Items info and page size selector */}
-            <div className="flex items-center gap-4 text-sm text-text-secondary">
+            <div className="flex items-center gap-4 text-sm text-black">
                 <span>
                     Showing {startItem} to {endItem} of {totalItems} items
                 </span>
                 <div className="flex items-center gap-2">
-                    <label htmlFor="pageSize" className="text-text-muted">
+                    <label htmlFor="pageSize" className="text-black">
                         Per page:
                     </label>
                     <select
                         id="pageSize"
                         value={pageSize}
                         onChange={(e) => onPageSizeChange(Number(e.target.value))}
-                        className="border border-secondary/20 rounded-lg px-3 py-1.5 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        className="border border-black/20 rounded-lg px-3 py-1.5 text-black focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     >
                         {pageSizes.map((size) => (
                             <option key={size} value={size}>

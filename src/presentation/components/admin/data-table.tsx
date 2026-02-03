@@ -110,7 +110,7 @@ export function DataTable<T>({
                                 <tr>
                                     <td
                                         colSpan={headers.length}
-                                        className="p-8 md:p-12 text-center text-text-muted"
+                                        className="p-8 md:p-12 text-center text-black"
                                     >
                                         <div className="flex flex-col items-center gap-3">
                                             <div className="w-6 h-6 md:w-8 md:h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
@@ -122,7 +122,7 @@ export function DataTable<T>({
                                 <tr>
                                     <td
                                         colSpan={headers.length}
-                                        className="p-8 md:p-12 text-center text-text-muted"
+                                        className="p-8 md:p-12 text-center text-black"
                                     >
                                         <div className="flex flex-col items-center gap-2">
                                             <span className="text-sm md:text-base">{emptyMessage}</span>
@@ -131,14 +131,14 @@ export function DataTable<T>({
                                 </tr>
                             ) : (
                                 data.map((item) => (
-                                    <tr key={rowKey(item)} className="group hover:bg-surface/50 transition-colors">
+                                    <tr key={rowKey(item)} className="group hover:bg-black/10 transition-colors">
                                         {renderRow(item).map((cell, idx) => {
                                             const headerConfig = headers[idx];
                                             const align = cell.align || headerConfig?.align;
                                             return (
                                                 <td
                                                     key={idx}
-                                                    className={`px-3 py-4 text-xs md:text-sm lg:text-base text-text-primary ${headerConfig?.className || ''} ${cell.className || ''} ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : ''
+                                                    className={`px-3 py-4 text-xs md:text-sm lg:text-base text-black ${headerConfig?.className || ''} ${cell.className || ''} ${align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : ''
                                                         }`}
                                                 >
                                                     <div className={`flex items-center gap-2 md:gap-3 ${align === 'right' ? 'justify-end' : align === 'center' ? 'justify-center' : ''}`}>
@@ -163,7 +163,7 @@ export function DataTable<T>({
 
                 {/* Pagination (Integrated) */}
                 {pagination && !loading && data.length > 0 && (
-                    <div className="border-t border-black/10">
+                    <div className="border-t border-black/10 text-black">
                         <Pagination
                             currentPage={pagination.currentPage}
                             totalPages={pagination.totalPages}

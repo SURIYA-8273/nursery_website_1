@@ -59,7 +59,6 @@ export default function GalleryEditPage({ params }: PageProps) {
                 setImage({
                     src: '',
                     alt: '',
-                    tag: '',
                     className: '' // Will use default based on index
                 });
             }
@@ -107,7 +106,6 @@ export default function GalleryEditPage({ params }: PageProps) {
             const newImage: GalleryImage = {
                 src: imageUrl,
                 alt: image?.alt || '',
-                tag: image?.tag || '',
                 // Preserve className if needed, or let component handle it
                 className: image?.className
             };
@@ -155,9 +153,9 @@ export default function GalleryEditPage({ params }: PageProps) {
                 </Link>
                 <Heading1 title="Edit Slot" headingClassName="text-xl" />
             </div>
-            
-             
-             {/* <ImagePicker  /> */}
+
+
+            {/* <ImagePicker  /> */}
 
 
 
@@ -180,7 +178,7 @@ export default function GalleryEditPage({ params }: PageProps) {
                                 />
                             </div>
                         ) : (
-                            
+
                             <div className="flex flex-col items-center text-gray-400">
                                 <Upload size={40} className="mb-2" />
                                 <span className="text-sm">Click to upload image</span>
@@ -198,7 +196,7 @@ export default function GalleryEditPage({ params }: PageProps) {
 
 
                 <div className="flex items-center gap-2 justify-between">
-                    <Button  onClick={handleDelete} className='w-full' >
+                    <Button onClick={handleDelete} className='w-full' >
                         <Trash size={16} className="mr-2" />
                         Remove Image
                     </Button>

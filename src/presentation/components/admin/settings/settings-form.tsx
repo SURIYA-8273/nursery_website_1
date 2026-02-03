@@ -2,8 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, Upload, Building, Instagram, Phone, MapPin } from 'lucide-react';
+import { Loader2, Save, Building, Instagram, Phone, MapPin } from 'lucide-react';
 import { SupabaseStoreSettingsRepository, StoreSettings } from '@/data/repositories/supabase-store-settings.repository';
+import { Input } from '@/presentation/components/admin/form/input';
+import { TextArea } from '@/presentation/components/admin/form/text_area';
+import { ImagePicker } from '@/presentation/components/admin/form/image_picker';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
 
 export function SettingsForm() {
     const router = useRouter();
@@ -88,98 +92,74 @@ export function SettingsForm() {
 
     return (
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-8 bg-white p-6 rounded-xl shadow-sm border border-secondary/10">
-            <div className="space-y-2">
-                <h2 className="text-2xl font-serif font-bold text-black">Store Settings</h2>
-                <p className="text-secondary">Manage your store details and branding.</p>
-            </div>
+            <Heading1
+                title="Store Settings"
+                description="Manage your store details and branding."
+            />
 
             {/* Logo Upload */}
             <div className="space-y-4">
                 <label className="block text-sm font-medium text-text-primary">Store Logo</label>
                 <div className="flex items-center gap-6">
-                    <div className="relative w-32 h-32 rounded-lg border-2 border-dashed border-secondary/30 flex items-center justify-center overflow-hidden bg-surface group hover:border-primary/50 transition-colors">
+                    <div className="w-32 h-32">
                         {previewUrl ? (
-                            <img src={previewUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                            <div className="relative w-full h-full rounded-lg border-2 border-secondary/30 overflow-hidden bg-surface">
+                                <img src={previewUrl} alt="Store Logo" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                    <ImagePicker
+                                        handleImageChange={handleLogoChange}
+                                        title="Change"
+                                    />
+                                </div>
+                            </div>
                         ) : (
-                            <Upload className="w-8 h-8 text-secondary group-hover:text-primary transition-colors" />
+                            <ImagePicker
+                                handleImageChange={handleLogoChange}
+                                title="Upload Logo"
+                            />
                         )}
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleLogoChange}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-sm font-medium text-black">Upload new logo</p>
-                        <p className="text-xs text-secondary">Recommended size: 500x500px. JPG, PNG allowed.</p>
                     </div>
                 </div>
             </div>
 
             <div className="grid gap-6">
-                {/* Business Name */}
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                        <Building className="w-4 h-4 text-primary" />
-                        Business Name
-                    </label>
-                    <input
-                        type="text"
-                        value={settings.business_name}
-                        onChange={(e) => setSettings({ ...settings, business_name: e.target.value })}
-                        className="w-full px-4 py-2 rounded-lg border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-secondary/50"
-                        placeholder="My Awesome Nursery"
-                        required
-                    />
-                </div>
+                <Input
+                    label="Business Name"
+                    name="business_name"
+                    value={settings.business_name}
+                    onChange={(e) => setSettings({ ...settings, business_name: e.target.value })}
+                    placeholder="My Awesome Nursery"
+                    required
+                    leadingIcon={<Building className="w-4 h-4 text-primary" />}
+                />
 
-                {/* Instagram ID */}
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                        <Instagram className="w-4 h-4 text-primary" />
-                        Instagram ID
-                    </label>
-                    <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary">@</span>
-                        <input
-                            type="text"
-                            value={settings.instagram_id}
-                            onChange={(e) => setSettings({ ...settings, instagram_id: e.target.value })}
-                            className="w-full pl-8 pr-4 py-2 rounded-lg border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-secondary/50"
-                            placeholder="username"
-                        />
-                    </div>
-                </div>
+                <Input
+                    label="Instagram ID"
+                    name="instagram_id"
+                    value={settings.instagram_id}
+                    onChange={(e) => setSettings({ ...settings, instagram_id: e.target.value })}
+                    placeholder="username"
+                    leadingIcon={<Instagram className="w-4 h-4 text-primary" />}
+                />
 
-                {/* Mobile Number */}
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                        <Phone className="w-4 h-4 text-primary" />
-                        Mobile Number
-                    </label>
-                    <input
-                        type="tel"
-                        value={settings.mobile_number}
-                        onChange={(e) => setSettings({ ...settings, mobile_number: e.target.value })}
-                        className="w-full px-4 py-2 rounded-lg border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-secondary/50"
-                        placeholder="+91 98765 43210"
-                    />
-                </div>
+                <Input
+                    label="Mobile Number"
+                    name="mobile_number"
+                    value={settings.mobile_number}
+                    onChange={(e) => setSettings({ ...settings, mobile_number: e.target.value })}
+                    placeholder="+91 98765 43210"
+                    leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                />
 
-                {/* Address */}
-                <div className="space-y-2">
-                    <label className="flex items-center gap-2 text-sm font-medium text-text-primary">
-                        <MapPin className="w-4 h-4 text-primary" />
-                        Store Address
-                    </label>
-                    <textarea
-                        value={settings.address}
-                        onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-                        className="w-full px-4 py-2 rounded-lg border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-secondary/50 min-h-[100px] resize-none"
-                        placeholder="123 Green Street, Garden City..."
-                    />
-                </div>
+                <TextArea
+                    label="Store Address"
+                    name="address"
+                    value={settings.address}
+                    onChange={(e) => setSettings({ ...settings, address: e.target.value })}
+                    placeholder="123 Green Street, Garden City..."
+                    leadingIcon={<MapPin className="w-4 h-4 text-primary" />}
+                    rows={4}
+                />
             </div>
 
             <div className="pt-4 flex justify-end">

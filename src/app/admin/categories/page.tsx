@@ -11,6 +11,7 @@ import { DataTable, TableHeader } from '@/presentation/components/admin/data-tab
 import { Heading1 } from '@/presentation/components/admin/heading_1';
 import { Button } from '@/presentation/components/admin/button';
 import { Input } from '@/presentation/components/admin/form/input';
+import { ConfirmationDialog } from '@/presentation/components/admin/confirmation-dialog';
 
 export default function AdminCategoriesPage() {
     const router = useRouter();
@@ -60,23 +61,27 @@ export default function AdminCategoriesPage() {
         fetchData();
     }, [fetchCategories, searchQuery, currentPage, pageSize]);
 
-    const handleDelete = async (cat: Category) => {
-        if (!confirm(`Are you sure you want to delete "${cat.name}"? This action cannot be undone.`)) {
-            return;
-        }
+    const [deleteCategory, setDeleteCategory] = useState<Category | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
 
+    const handleDeleteClick = (cat: Category) => {
+        setDeleteCategory(cat);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!deleteCategory) return;
+
+        setIsDeleting(true);
         try {
             const repo = new SupabaseCategoryRepository();
-            await repo.deleteCategory(cat.id);
-
-            // Refresh the list
+            await repo.deleteCategory(deleteCategory.id);
             fetchCategories();
-
-            // Show success message
-            alert('Category deleted successfully!');
         } catch (error) {
             console.error('Error deleting category:', error);
             alert('Failed to delete category. It may be in use by existing plants.');
+        } finally {
+            setIsDeleting(false);
+            setDeleteCategory(null);
         }
     };
 
@@ -114,7 +119,7 @@ export default function AdminCategoriesPage() {
                 {
                     label: 'Delete',
                     icon: <Trash2 size={18} />,
-                    onClick: () => handleDelete(cat),
+                    onClick: () => handleDeleteClick(cat),
                     variant: 'danger' as const
                 }
             ]
@@ -136,7 +141,7 @@ export default function AdminCategoriesPage() {
 
             {/* Search */}
             <Input value={searchQuery}
-            className='mt-4 mb-4'
+                className='mt-4 mb-4'
                 name="search"
                 type='search'
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -146,7 +151,7 @@ export default function AdminCategoriesPage() {
 
             {/* Categories Table */}
             <DataTable<Category>
-                
+
                 data={categories}
                 headers={headers}
                 renderRow={renderRow}
@@ -164,6 +169,15 @@ export default function AdminCategoriesPage() {
                     onPageChange: handlePageChange,
                     onPageSizeChange: handlePageSizeChange
                 }}
+            />
+
+            <ConfirmationDialog
+                isOpen={!!deleteCategory}
+                onClose={() => setDeleteCategory(null)}
+                onConfirm={handleConfirmDelete}
+                title="Delete Category"
+                message={`Are you sure you want to delete "${deleteCategory?.name}"? This action cannot be undone.`}
+                isLoading={isDeleting}
             />
         </div>
     );

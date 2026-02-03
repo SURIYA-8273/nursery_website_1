@@ -1,7 +1,7 @@
 export interface GalleryImage {
     src: string;
     alt: string;
-    tag: string;
+    // tag removed
     className?: string; // Optional, might be fixed by slot index
 }
 

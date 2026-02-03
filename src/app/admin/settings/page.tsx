@@ -3,9 +3,14 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/data/datasources/supabase.client';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
-import { Loader2, Save, Upload, Info } from 'lucide-react';
+import { Loader2, Save, Upload, Info, Building, Instagram, Phone, MapPin, Mail, Globe, Facebook, Youtube } from 'lucide-react';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
 import { toast } from 'sonner';
+import { Input } from '@/presentation/components/admin/form/input';
+import { TextArea } from '@/presentation/components/admin/form/text_area';
+import { ImagePicker } from '@/presentation/components/admin/form/image_picker';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { Button } from '@/presentation/components/admin/button';
 
 export default function SettingsPage() {
     const [loading, setLoading] = useState(false);
@@ -17,6 +22,11 @@ export default function SettingsPage() {
         address: '',
         mapUrl: '',
         mapEmbedUrl: '',
+        secondaryNumber: '',
+        whatsappNumber: '',
+        email: '',
+        facebookUrl: '',
+        youtubeUrl: ''
     });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [previewLogo, setPreviewLogo] = useState<string | null>(null);
@@ -96,48 +106,58 @@ export default function SettingsPage() {
 
     return (
         <div className="max-w-4xl mx-auto pb-20">
-            <div className="mb-8">
-                <h1 className="font-serif text-3xl font-bold text-primary">Business Settings</h1>
-                <p className="text-text-secondary mt-2">Manage your app's global configuration.</p>
+            <div className="mb-4">
+                <Heading1
+                    title="Business Settings"
+                    description="Manage your app's global configuration."
+                />
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-sm border border-secondary/10 space-y-8">
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-md shadow-sm border border-black/30 space-y-8">
 
                 {/* Branding Section */}
                 <section className="space-y-6">
-                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Branding</h2>
-
+                    
+                    <Heading1
+                        title="Branding" headingClassName='text-xl'
+                        
+                    />
+                   
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-4">
-                            <label className="text-sm font-bold text-text-secondary">App Logo</label>
-                            <div className="flex flex-col gap-4">
-                                {previewLogo && (
-                                    <div className="w-32 h-32 bg-gray-50 rounded-xl border border-secondary/20 flex items-center justify-center p-2 overflow-hidden relative group">
-                                        <img src={previewLogo} alt="Logo Preview" className="max-w-full max-h-full object-contain" />
-                                    </div>
-                                )}
-                                <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-secondary/30 rounded-xl hover:bg-surface/50 transition-colors cursor-pointer text-text-secondary hover:text-primary">
-                                    <Upload size={20} />
-                                    <span className="text-sm font-medium">Change Logo</span>
-                                    <input type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-                                </label>
+                            
+                            <div className="flex flex-col gap-4 justify-center items-center">
+                                <div className="w-32 h-32">
+                                    {previewLogo ? (
+                                        <div className="relative w-full h-full rounded-lg border-2 border-secondary/30 overflow-hidden bg-black/30 group">
+                                            <img src={previewLogo} alt="Logo Preview" className="w-full h-full object-contain" />
+                                            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                <ImagePicker
+                                                    handleImageChange={handleLogoChange}
+                                                    title="Change"
+                                                />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <ImagePicker
+                                            handleImageChange={handleLogoChange}
+                                            title="Upload Logo"
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-text-secondary">Business Name</label>
-                                <input
+                        <div className="">
+                            <div className="">
+                                <Input
+                                    label="Business Name"
                                     name="businessName"
                                     value={settings.businessName || ''}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="e.g. Inner Loop Technologies"
+                                    leadingIcon={<Building className="w-4 h-4 text-primary" />}
                                 />
-                            </div>
-                            <div className="p-4 bg-blue-50 text-blue-700 rounded-xl text-sm flex gap-3">
-                                <Info className="shrink-0 mt-0.5" size={18} />
-                                <p>Used in invoices, page titles, and footers.</p>
                             </div>
                         </div>
                     </div>
@@ -145,142 +165,161 @@ export default function SettingsPage() {
 
                 {/* Contact Information */}
                 <section className="space-y-6">
-                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Contact Information</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Primary Mobile Number</label>
-                            <input
-                                name="mobileNumber"
-                                value={settings.mobileNumber || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="+91 98765 43210"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Secondary Mobile Number</label>
-                            <input
-                                name="secondaryNumber"
-                                value={settings.secondaryNumber || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="+91 98765 43210"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">WhatsApp Number</label>
-                            <input
-                                name="whatsappNumber"
-                                value={settings.whatsappNumber || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="+91 98765 43210"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Email Address</label>
-                            <input
-                                name="email"
-                                type="email"
-                                value={settings.email || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="contact@example.com"
-                            />
-                        </div>
+                    <Heading1
+                        headingClassName="text-xl"
+                        title="Contact Information"
+                        
+                    />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <Input
+                            label="Primary Mobile Number"
+                            name="mobileNumber"
+                            value={settings.mobileNumber || ''}
+                            onChange={handleChange}
+                            placeholder="+91 98765 43210"
+                            leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                        />
+
+                        <Input
+                            label="Secondary Mobile Number"
+                            name="secondaryNumber"
+                            value={settings.secondaryNumber || ''}
+                            onChange={handleChange}
+                            placeholder="+91 98765 43210"
+                            leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                        />
+
+                        <Input
+                            label="WhatsApp Number"
+                            name="whatsappNumber"
+                            value={settings.whatsappNumber || ''}
+                            onChange={handleChange}
+                            placeholder="+91 98765 43210"
+                            leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                        />
+
+                        <Input
+                            label="Email Address"
+                            name="email"
+                            type="email"
+                            value={settings.email || ''}
+                            onChange={handleChange}
+                            placeholder="contact@example.com"
+                            leadingIcon={<Mail className="w-4 h-4 text-primary" />}
+                        />
 
                         <div className="md:col-span-2 space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Store Address</label>
-                            <textarea
+                            <TextArea
+                                label="Store Address"
                                 name="address"
-                                rows={3}
                                 value={settings.address || ''}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
                                 placeholder="123 Plant Street, Green City..."
+                                leadingIcon={<MapPin className="w-4 h-4 text-primary" />}
+                                rows={3}
                             />
                         </div>
                     </div>
                 </section>
 
                 {/* Map Settings */}
-                <section className="space-y-6">
-                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Map Configuration</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Map Short Link</label>
-                            <input
+                <section className="">
+
+                    <Heading1
+                        headingClassName="text-xl"
+                        title="Map Configuration"
+
+                    />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div className="">
+                            <Input
+                                label="Map Short Link"
                                 name="mapUrl"
                                 value={settings.mapUrl || ''}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="https://maps.app.goo.gl/..."
+                                leadingIcon={<Globe className="w-4 h-4 text-primary" />}
                             />
-                            <p className="text-xs text-text-muted">Used for the 'Open in Google Maps' button.</p>
+                            <p className="text-xs text-black/60 ">Used for the 'Open in Google Maps' button.</p>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Map Embed URL (src)</label>
-                            <input
+                        <div className="">
+                            <Input
+                                label="Map Embed URL (src)"
                                 name="mapEmbedUrl"
                                 value={settings.mapEmbedUrl || ''}
                                 onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="https://maps.google.com/maps?q=..."
+                                leadingIcon={<Globe className="w-4 h-4 text-primary" />}
                             />
-                            <p className="text-xs text-text-muted">The 'src' attribute for the iframe.</p>
+                            <p className="text-xs text-black/60 ">The 'src' attribute for the iframe.</p>
                         </div>
                     </div>
                 </section>
 
                 {/* Social Media */}
-                <section className="space-y-6">
-                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Social Media</h2>
+                <section className="">
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Instagram URL</label>
-                            <input
-                                name="instagramUrl"
-                                value={settings.instagramUrl || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="https://instagram.com/..."
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">Facebook URL</label>
-                            <input
-                                name="facebookUrl"
-                                value={settings.facebookUrl || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="https://facebook.com/..."
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-bold text-text-secondary">YouTube URL</label>
-                            <input
-                                name="youtubeUrl"
-                                value={settings.youtubeUrl || ''}
-                                onChange={handleChange}
-                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
-                                placeholder="https://youtube.com/..."
-                            />
-                        </div>
+                    
+                        <Heading1
+                        headingClassName="text-xl"
+                            title="Social Media"
+                            
+                        />
+                
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <Input
+                            label="Instagram URL"
+                            name="instagramUrl"
+                            value={settings.instagramUrl || ''}
+                            onChange={handleChange}
+                            placeholder="https://instagram.com/..."
+                            leadingIcon={<Instagram className="w-4 h-4 text-primary" />}
+                        />
+
+                        <Input
+                            label="Facebook URL"
+                            name="facebookUrl"
+                            value={settings.facebookUrl || ''}
+                            onChange={handleChange}
+                            placeholder="https://facebook.com/..."
+                            leadingIcon={<Facebook className="w-4 h-4 text-primary" />}
+                        />
+
+                        <Input
+                            label="YouTube URL"
+                            name="youtubeUrl"
+                            value={settings.youtubeUrl || ''}
+                            onChange={handleChange}
+                            placeholder="https://youtube.com/..."
+                            leadingIcon={<Youtube className="w-4 h-4 text-primary" />}
+                        />
                     </div>
                 </section>
 
-                <div className="pt-4 border-t border-secondary/10 flex justify-end">
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary-hover shadow-lg hover:shadow-soft active:scale-95 transition-all text-lg flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
-                    >
-                        {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-                        {loading ? 'Saving...' : 'Save Settings'}
-                    </button>
-                </div>
+                <Button
+                    type="submit"
+                    
+                   className='w-full'
+                    
+                >
+                    {loading ? (
+                        <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Saving...
+                        </>
+                    ) : (
+                        <>
+                            <Save className="w-4 h-4 mr-2" />
+                            Save Changes
+                        </>
+                    )}
+                </Button>
+
+                
 
             </form>
         </div>

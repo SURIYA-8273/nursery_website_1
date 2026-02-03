@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-surface">
+            <div className="min-h-screen flex items-center justify-center bg-white">
                 <Loader2 className="w-8 h-8 text-black animate-spin" />
             </div>
         );
@@ -44,11 +44,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     // If on login page, don't show sidebar
     if (pathname === APP_CONFIG.routes.admin.login) {
-        return <div className="min-h-screen bg-surface">{children}</div>;
+        return <div className="min-h-screen bg-white">{children}</div>;
     }
 
     return (
-        <div className="min-h-screen bg-surface flex flex-col md:flex-row">
+        <div className="min-h-screen bg-white flex flex-col md:flex-row">
             {/* Mobile Header */}
             <div className="md:hidden bg-white border-b border-secondary/10 p-4 flex items-center justify-between sticky top-0 z-40">
                 <h1 className="font-serif text-xl font-bold text-black tracking-tight">
@@ -56,7 +56,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </h1>
                 <button
                     onClick={() => setIsSidebarOpen(true)}
-                    className="p-2 text-text-primary hover:bg-secondary/10 rounded-lg transition-colors"
+                    className="p-2 text-black hover:bg-secondary/10 rounded-lg transition-colors"
                 >
                     <Menu size={24} />
                 </button>
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 onClose={() => setIsSidebarOpen(false)}
             />
 
-            <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto w-full">
+            <main className="flex-1 md:ml-64 p-4 md:p-8 overflow-y-auto w-full text-black bg-white">
                 {children}
             </main>
         </div>

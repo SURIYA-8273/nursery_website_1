@@ -68,7 +68,7 @@ export const AdminSidebar = ({ isOpen, onClose }: AdminSidebarProps) => {
                                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium",
                                     isActive
                                         ? "bg-black text-white shadow-md shadow-black/20"
-                                        : "text-text-secondary hover:bg-neutral-100 hover:text-black"
+                                        : "text-black hover:bg-neutral-100 hover:text-black"
                                 )}
                             >
                                 <item.icon size={20} />
