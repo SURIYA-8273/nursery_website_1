@@ -9,6 +9,7 @@ import { FeaturedPlants } from '@/presentation/components/home/featured-plants';
 import { TestimonialsSection } from '@/presentation/components/home/testimonials-section';
 import { GallerySection } from '@/presentation/components/home/gallery-section';
 import HeroSection2 from '@/presentation/components/home/hero/hero_section_2';
+import { MapSection } from '@/presentation/components/home/map-section';
 
 // Force dynamic since we might want fresh random data or if we add randomization
 export const revalidate = 60;
@@ -68,6 +69,9 @@ export default async function Home() {
       <div id="contact" className="scroll-mt-28">
         <ContactSection />
       </div>
+      <div className='mt-10'></div>
+      {/* 8. Map Section */}
+      <MapSection />
 
 
     </main>

@@ -8,6 +8,7 @@ import { supabase } from '@/data/datasources/supabase.client';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { PlantForm, PlantFormData } from '../../_components/plant-form';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
 
 export default function EditPlantPage() {
     const router = useRouter();
@@ -134,12 +135,12 @@ export default function EditPlantPage() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto p-6 md:p-8 pb-20">
-            <div className="flex items-center gap-4 mb-8">
-                <Link href="/admin/plants" className="p-2 hover:bg-black/5 rounded-full transition-colors">
+        <div className="max-w-4xl mx-auto  md:p-8 pb-20">
+            <div className="flex gap-4">
+                <Link href="/admin/plants" className="mt-1">
                     <ArrowLeft size={24} />
                 </Link>
-                <h1 className="font-serif text-3xl font-bold text-primary">Edit Plant</h1>
+                <Heading1 title="Edit Plant" headingClassName="text-xl" />
             </div>
 
             <PlantForm

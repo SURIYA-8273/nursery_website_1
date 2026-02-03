@@ -18,6 +18,8 @@ export interface BusinessSettings {
     whatsappNumber?: string;
     email?: string;
     address?: string;
+    mapUrl?: string; // Short link e.g. maps.app.goo.gl...
+    mapEmbedUrl?: string; // Embed iframe src
 
     galleryImages?: GalleryImage[]; // Array of 6 images
 

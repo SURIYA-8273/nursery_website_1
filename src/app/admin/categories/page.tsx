@@ -5,9 +5,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SupabaseCategoryRepository } from '@/data/repositories/supabase-category.repository';
 import { Category } from '@/domain/entities/plant.entity';
-import { Plus, Edit3, Trash2 } from 'lucide-react';
+import { Plus, Edit3, Trash2, ArrowLeft, Search } from 'lucide-react';
 import { SearchInput } from '@/presentation/components/common/search-input';
 import { DataTable, TableHeader } from '@/presentation/components/admin/data-table';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { Button } from '@/presentation/components/admin/button';
+import { Input } from '@/presentation/components/admin/form/input';
 
 export default function AdminCategoriesPage() {
     const router = useRouter();
@@ -119,31 +122,31 @@ export default function AdminCategoriesPage() {
     ];
 
     return (
-        <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto md:p-6 lg:p-8">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
-                <div>
-                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-black">Categories</h1>
-                    <p className="text-sm md:text-base text-text-secondary">Manage plant categories</p>
-                </div>
 
-                <Link href="/admin/categories/new" className="w-full md:w-auto bg-black text-white px-6 py-2.5 rounded-full font-bold hover:bg-neutral-800 shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all text-sm md:text-base">
-                    <Plus size={20} />
-                    Add Category
-                </Link>
-            </div>
+            <Heading1 title="Categories" description="Manage plant categories" />
+
+            <Button href="/admin/categories/new" className='w-full'>
+                <Plus size={20} />
+                Add Category
+            </Button>
+
+
 
             {/* Search */}
-            <div className="bg-white rounded-2xl shadow-sm border border-secondary/10 p-4 md:p-6 mb-6">
-                <SearchInput
-                    value={searchQuery}
-                    onChange={setSearchQuery}
-                    placeholder="Search by name, slug, or description..."
-                />
-            </div>
+            <Input value={searchQuery}
+            className='mt-4 mb-4'
+                name="search"
+                type='search'
+                onChange={(e) => setSearchQuery(e.target.value)}
+                leadingIcon={<Search size={20} />}
+                placeholder="Search by name or description..." />
+
 
             {/* Categories Table */}
             <DataTable<Category>
+                
                 data={categories}
                 headers={headers}
                 renderRow={renderRow}

@@ -48,10 +48,10 @@ const HeroSection2 = () => {
 
         {/* Right Content - Hero Image */}
         {/* Right Content - Plant Cluster */}
-        <div className="flex justify-center items-end relative h-[450px] md:h-[600px] w-full mt-4 lg:mt-0">
+        <div className="flex justify-center items-end relative w-full h-[450px] md:h-[600px] mt-4 lg:mt-0">
 
           {/* Animated Center Element */}
-          <div className="absolute top-[80%] left-[85%] sm:left-[75%] md:left-[80%] -translate-x-1/2 -translate-y-1/2 -z-10">
+          <div className="absolute top-[80%] left-[92%] sm:left-[80%] md:left-[80%] -translate-x-1/2 -translate-y-1/2 -z-10">
             <div className="w-[300px] h-[300px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] lg:w-[350px] lg:h-[350px] bg-green-600/30 rounded-[30px] animate-ripple-custom" />
           </div>
 

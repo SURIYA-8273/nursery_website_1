@@ -212,7 +212,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
 
             {/* Product Details Cards */}
             <div className="grid grid-cols-3 gap-3 md:gap-4 py-2">
-                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
+                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
                         <Maximize size={16} />
                     </div>
@@ -221,7 +221,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                         <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.size || '-'}</p>
                     </div>
                 </div>
-                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
+                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
                         <ArrowUpToLine size={16} />
                     </div>
@@ -230,7 +230,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                         <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.height || '-'} CM</p>
                     </div>
                 </div>
-                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
+                <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
                         <Weight size={16} />
                     </div>
@@ -297,7 +297,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
             {/* Care & Fertilizing Info */}
             <div className="space-y-4 pt-2">
                 {plant.careInstructions && (
-                    <div className="bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]">
+                    <div className="bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)]">
                         <h4 className="font-serif font-bold text-lg text-primary mb-4 flex items-center gap-3">
                             <div className="p-2 bg-blue-100 rounded-full text-blue-600">
                                 <Droplets size={18} />
@@ -318,7 +318,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                 )}
 
                 {plant.fertilizingInfo && (
-                    <div className="bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]">
+                    <div className="bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)]">
                         <h4 className="font-serif font-bold text-lg text-primary mb-4 flex items-center gap-3">
                             <div className="p-2 bg-green-100 rounded-full text-green-600">
                                 <Sprout size={18} />
@@ -347,12 +347,6 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                     </div>
                 )}
             </div>
-
-
-
-
-
-
         </div >
     );
 };

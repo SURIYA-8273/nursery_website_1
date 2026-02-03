@@ -41,7 +41,7 @@ export const ContactSection = () => {
                                         </div>
                         
 
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                             <ContactInfoItem
                                 icon={<MapPin size={20} />}
                                 title="Visit Our Shop"

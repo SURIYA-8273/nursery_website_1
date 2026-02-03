@@ -6,8 +6,10 @@ import Image from 'next/image';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { BusinessSettings, GalleryImage } from '@/domain/entities/settings.entity';
 import { supabase } from '@/data/datasources/supabase.client';
-import { Loader2, ArrowLeft, Upload, Save, Trash } from 'lucide-react';
-import { Button } from '@/presentation/components/ui/button';
+import { Loader2, ArrowLeft, Upload, Save, Trash, Link } from 'lucide-react';
+import { Button } from '@/presentation/components/admin/button';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { ImagePicker } from '@/presentation/components/admin/form/image_picker';
 
 
 
@@ -145,15 +147,21 @@ export default function GalleryEditPage({ params }: PageProps) {
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
-            <div className="flex items-center gap-4 mb-6">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
+
+
+            <div className="flex gap-4">
+                <Link href="/admin/gallery" className="pt-1">
                     <ArrowLeft size={20} />
-                </Button>
-                <div>
-                    <h1 className="text-2xl font-serif font-bold text-black">Edit Slot #{slotId}</h1>
-                    <p className="text-text-secondary text-sm">{layoutDescriptions[index] || "Standard Layout"}</p>
-                </div>
+                </Link>
+                <Heading1 title="Edit Slot" headingClassName="text-xl" />
             </div>
+            
+             
+             {/* <ImagePicker  /> */}
+
+
+
+
 
             <div className="bg-white p-6 rounded-2xl border border-secondary/10 shadow-sm space-y-6">
 
@@ -172,6 +180,7 @@ export default function GalleryEditPage({ params }: PageProps) {
                                 />
                             </div>
                         ) : (
+                            
                             <div className="flex flex-col items-center text-gray-400">
                                 <Upload size={40} className="mb-2" />
                                 <span className="text-sm">Click to upload image</span>
@@ -188,13 +197,13 @@ export default function GalleryEditPage({ params }: PageProps) {
 
 
 
-                <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                    <Button variant="destructive" onClick={handleDelete} className="bg-white text-red-500 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300">
+                <div className="flex items-center gap-2 justify-between">
+                    <Button  onClick={handleDelete} className='w-full' >
                         <Trash size={16} className="mr-2" />
                         Remove Image
                     </Button>
 
-                    <Button onClick={handleSave} disabled={saving || (!file && !image?.src)}>
+                    <Button onClick={handleSave} className='w-full'>
                         {saving ? (
                             <>
                                 <Loader2 size={16} className="animate-spin mr-2" />

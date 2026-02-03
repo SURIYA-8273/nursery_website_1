@@ -14,7 +14,7 @@ interface PlantCardProps {
     badgeTitle?: string;
 }
 
-export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
+export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
     const price = plant.price || 0;
     const discountPrice = plant.discountPrice;
 
@@ -44,7 +44,7 @@ export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
     };
 
     return (
-        <div className="group block h-full bg-[var(--color-surface-hover)] p-1 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]">
+        <div className="group block h-full bg-[var(--color-surface-hover)] p-1 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)]">
             <Link href={`/plants/${plant.id}`} className="block relative mb-3">
                 {/* Image Container */}
                 <div className="aspect-square bg-[#FAF9F6] relative overflow-hidden rounded-[10px]">
@@ -65,10 +65,10 @@ export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
                     {
                         badgeTitle && (
                             <div className="absolute top-2 left-2 z-20">
-                            <span className="bg-[#2D5A42] text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
-                                <Star size={10} fill="white" className="text-white" /> {badgeTitle}
-                            </span>
-                    </div>
+                                <span className="bg-[#2D5A42] text-white text-[10px] md:text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 shadow-lg border border-white/10 backdrop-blur-sm">
+                                    <Star size={10} fill="white" className="text-white" /> {badgeTitle}
+                                </span>
+                            </div>
                         )
                     }
 
@@ -101,22 +101,17 @@ export const PlantCard = ({ plant,badgeTitle }: PlantCardProps) => {
                     <span className="text-[var(--color-text-muted)] text-sm">•</span>
                     <span className="text-[var(--color-text-muted)] text-sm">{reviewCount} reviews</span>
                 </div>
-
-                
-
-                <div className="mt-auto flex items-center justify-between gap-4">
+                <div className="mt-auto flex items-center justify-between gap-1">
                     <div className="flex items-baseline gap-2 font-sans">
-                        <span className="text-2xl font-bold text-[var(--color-text-primary)]">₹{discountPrice || price}</span>
+                        <span className="text-xl font-bold text-[var(--color-text-primary)]">₹{discountPrice || price}</span>
                         {discountPrice && (
                             <span className="text-sm text-[var(--color-text-muted)] line-through font-medium">₹{price}</span>
                         )}
                     </div>
-
-<Button onClick={handleAddToCart} disabled={isAdding}>
+                    <Button onClick={handleAddToCart} disabled={isAdding} className='px-3'>
                         {isAdding ? <Loader2 size={20} className="animate-spin" /> : <ShoppingBag size={20} />}
 
-</Button>
-                    
+                    </Button>
                 </div>
             </div>
         </div>

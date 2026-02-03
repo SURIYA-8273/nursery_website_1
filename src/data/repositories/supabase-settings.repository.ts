@@ -51,6 +51,12 @@ export class SupabaseSettingsRepository {
                 case 'youtube_url':
                     settings.youtubeUrl = row.setting_value;
                     break;
+                case 'map_url':
+                    settings.mapUrl = row.setting_value;
+                    break;
+                case 'map_embed_url':
+                    settings.mapEmbedUrl = row.setting_value;
+                    break;
             }
 
             // Map gallery images
@@ -117,6 +123,8 @@ export class SupabaseSettingsRepository {
 
         queueUpdate('email', settings.email, 'email');
         queueUpdate('address', settings.address, 'text');
+        queueUpdate('map_url', settings.mapUrl, 'url');
+        queueUpdate('map_embed_url', settings.mapEmbedUrl, 'url');
 
         await Promise.all(updates);
 

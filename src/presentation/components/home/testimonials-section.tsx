@@ -1,9 +1,11 @@
 "use client";
 
-import { Star, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, MapPin, ChevronLeft, ChevronRight, } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRef, useEffect, useState } from "react";
 import { Heading } from "./heading";
+import { Button } from "../ui/button";
+import { FaGoogle } from "react-icons/fa";
 
 interface Testimonial {
     id: string;
@@ -179,6 +181,23 @@ export const TestimonialsSection = () => {
     // Example: 5 items, 4 visible. Active 0,1,2,3 -> Page 0. Active 4 -> Page 1.
     const activePage = Math.floor(activeIndex / visibleCards);
 
+    // Fetch Map settings
+    const [mapUrl, setMapUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            const { SupabaseSettingsRepository } = await import('@/data/repositories/supabase-settings.repository');
+            const repo = new SupabaseSettingsRepository();
+            const settings = await repo.getSettings();
+            if (settings && settings.mapUrl) {
+                setMapUrl(settings.mapUrl);
+            }
+        };
+        fetchSettings();
+    }, []);
+
+    const defaultMapLink = "https://maps.app.goo.gl/YJNygrs16EQ2uaZM6";
+
     return (
         <section
             className="bg-[var(--color-surface)] overflow-hidden"
@@ -205,10 +224,10 @@ export const TestimonialsSection = () => {
                         {extendedTestimonials.map((item, index) => (
                             <div
                                 key={`${item.id}-${index}`}
-                                className="w-[calc((100%-24px)/2)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
+                                className="w-[calc((100%-0px)/1)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
                             >
-                                <div className="bg-[var(--color-surface-hover)] p-4 rounded-[10px] shadow-sm hover:shadow-md transition-all flex flex-col h-full border border-white/5">
-                                    <div className="flex flex-col gap-3 lg:flex-row items-center justify-between mb-6">
+                                <div className="bg-[var(--color-surface-hover)] p-4 rounded-[10px] shadow-sm  hover:shadow-md transition-all flex flex-col h-full border border-primary/50">
+                                    <div className="flex flex-col gap-3 lg:flex-row items-center justify-between mb-4">
 
 
                                         <div className="flex items-center gap-4">
@@ -243,7 +262,7 @@ export const TestimonialsSection = () => {
                     </div>
 
                     {/* Indicators */}
-                    <div className="flex justify-center gap-2 mt-8">
+                    <div className="flex justify-center gap-2 md:mt-2">
                         {Array.from({ length: pageCount }).map((_, index) => (
                             <div
                                 key={index}
@@ -258,6 +277,19 @@ export const TestimonialsSection = () => {
                         ))}
                     </div>
                 </div>
+
+                <div className="flex justify-center items-center mt-4">
+                    <Button
+                        variant="default"
+                        className="gap-2 rounded-md"
+                        onClick={() => window.open(mapUrl || defaultMapLink, "_blank")}
+                    >
+                        <FaGoogle size={14} fill="currentColor" strokeWidth={0} />
+                        View on Google Maps
+                    </Button>
+                </div>
+
+
             </div>
         </section>
     );

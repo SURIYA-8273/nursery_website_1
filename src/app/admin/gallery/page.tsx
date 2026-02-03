@@ -8,6 +8,7 @@ import { BusinessSettings, GalleryImage } from '@/domain/entities/settings.entit
 import { Loader2, Plus, Edit2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/presentation/components/ui/button';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
 
 export default function AdminGalleryPage() {
     const [loading, setLoading] = useState(true);
@@ -52,14 +53,9 @@ export default function AdminGalleryPage() {
 
     return (
         <div className="space-y-8 max-w-5xl mx-auto">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-serif font-bold text-black">Gallery Management</h1>
-                    <p className="text-text-secondary mt-1">Manage the 6 images displayed on the home page gallery.</p>
-                </div>
-            </div>
+            <Heading1 title="Gallery Management" description='Manage the 6 images displayed on the home page gallery.' />
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white rounded-2xl border border-secondary/10 shadow-sm">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-2 bg-white rounded-2xl border border-secondary/10 shadow-sm">
                 {galleryImages.map((image: GalleryImage | null, index: number) => {
                     const slotId = index + 1;
                     // Use layout classes but enforce min-height for visibility in admin
@@ -114,16 +110,6 @@ export default function AdminGalleryPage() {
                         </div>
                     );
                 })}
-            </div>
-
-            <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl text-sm text-blue-700">
-                <p className="font-bold mb-1">💡 Layout Guide</p>
-                <ul className="list-disc list-inside space-y-1 opacity-80">
-                    <li>Slot 1 is the <strong>Featured Large Image</strong> (2x2 grid size).</li>
-                    <li>Slot 4 is a <strong>Tall Vertical Image</strong> (1x2 grid size).</li>
-                    <li>All other slots are standard squares/rectangles.</li>
-                    <li>Use high-quality images for best results.</li>
-                </ul>
             </div>
         </div>
     );

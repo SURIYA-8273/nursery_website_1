@@ -25,7 +25,7 @@ export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCateg
                             <Link
                                 key={cat.id}
                                 href={`/plants?category=${cat.id}`}
-                                className={`group bg-[var(--color-surface-hover)] p-4 md:p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-black/10 shadow-sm hover:border-[var(--color-primary)]`}
+                                className={`group bg-[var(--color-surface-hover)] p-4 md:p-6 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)]`}
                             >
                                 <div className="flex flex-col items-center justify-center h-full">
                                     <div className="mb-4 text-[var(--color-primary)]">
@@ -39,12 +39,12 @@ export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCateg
                                             <Leaf size={32} />
                                         )}
                                     </div>
-                                    <h3 className="font-serif text-center text-xl md:text-2xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors pb-2">
+                                    <h3 className="font-serif text-center text-md md:text-2xl font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors pb-2">
                                         {cat.name}
                                     </h3>
-                                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed opacity-70 text-center line-clamp-2 mb-4">
+                                    {/* <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed opacity-70 text-center line-clamp-2 mb-4">
                                         {cat.description || "Discover our beautiful selection of " + cat.name.toLowerCase() + " plants."}
-                                    </p>
+                                    </p> */}
                                     <div className="mt-auto">
                                         <Button
                                             variant="link"

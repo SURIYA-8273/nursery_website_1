@@ -15,6 +15,8 @@ export default function SettingsPage() {
         instagramUrl: '',
         mobileNumber: '',
         address: '',
+        mapUrl: '',
+        mapEmbedUrl: '',
     });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [previewLogo, setPreviewLogo] = useState<string | null>(null);
@@ -127,7 +129,7 @@ export default function SettingsPage() {
                                 <label className="text-sm font-bold text-text-secondary">Business Name</label>
                                 <input
                                     name="businessName"
-                                    value={settings.businessName}
+                                    value={settings.businessName || ''}
                                     onChange={handleChange}
                                     className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="e.g. Inner Loop Technologies"
@@ -150,7 +152,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">Primary Mobile Number</label>
                             <input
                                 name="mobileNumber"
-                                value={settings.mobileNumber}
+                                value={settings.mobileNumber || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="+91 98765 43210"
@@ -160,7 +162,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">Secondary Mobile Number</label>
                             <input
                                 name="secondaryNumber"
-                                value={settings.secondaryNumber}
+                                value={settings.secondaryNumber || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="+91 98765 43210"
@@ -170,7 +172,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">WhatsApp Number</label>
                             <input
                                 name="whatsappNumber"
-                                value={settings.whatsappNumber}
+                                value={settings.whatsappNumber || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="+91 98765 43210"
@@ -181,7 +183,7 @@ export default function SettingsPage() {
                             <input
                                 name="email"
                                 type="email"
-                                value={settings.email}
+                                value={settings.email || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="contact@example.com"
@@ -193,11 +195,40 @@ export default function SettingsPage() {
                             <textarea
                                 name="address"
                                 rows={3}
-                                value={settings.address}
+                                value={settings.address || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
                                 placeholder="123 Plant Street, Green City..."
                             />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Map Settings */}
+                <section className="space-y-6">
+                    <h2 className="text-xl font-bold text-primary border-b border-secondary/10 pb-2">Map Configuration</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Map Short Link</label>
+                            <input
+                                name="mapUrl"
+                                value={settings.mapUrl || ''}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="https://maps.app.goo.gl/..."
+                            />
+                            <p className="text-xs text-text-muted">Used for the 'Open in Google Maps' button.</p>
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-bold text-text-secondary">Map Embed URL (src)</label>
+                            <input
+                                name="mapEmbedUrl"
+                                value={settings.mapEmbedUrl || ''}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                                placeholder="https://maps.google.com/maps?q=..."
+                            />
+                            <p className="text-xs text-text-muted">The 'src' attribute for the iframe.</p>
                         </div>
                     </div>
                 </section>
@@ -211,7 +242,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">Instagram URL</label>
                             <input
                                 name="instagramUrl"
-                                value={settings.instagramUrl}
+                                value={settings.instagramUrl || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="https://instagram.com/..."
@@ -221,7 +252,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">Facebook URL</label>
                             <input
                                 name="facebookUrl"
-                                value={settings.facebookUrl}
+                                value={settings.facebookUrl || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="https://facebook.com/..."
@@ -231,7 +262,7 @@ export default function SettingsPage() {
                             <label className="text-sm font-bold text-text-secondary">YouTube URL</label>
                             <input
                                 name="youtubeUrl"
-                                value={settings.youtubeUrl}
+                                value={settings.youtubeUrl || ''}
                                 onChange={handleChange}
                                 className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                                 placeholder="https://youtube.com/..."

@@ -8,7 +8,7 @@ interface CartSummaryProps {
 
 export const CartSummary = ({ totalPrice, checkoutUrl }: CartSummaryProps) => {
     return (
-        <div className="bg-[var(--color-surface-hover)] p-4 md:p-6 rounded-[10px] border border-white/5 h-fit shadow-sm">
+        <div className="bg-[var(--color-surface-hover)] p-4 md:p-6 rounded-[10px] border border-primary/50 h-fit shadow-sm">
             <h2 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-4">Order Summary</h2>
 
             <div className="space-y-2 mb-4">

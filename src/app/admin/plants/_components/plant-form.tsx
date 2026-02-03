@@ -8,6 +8,9 @@ import { Input } from '@/presentation/components/admin/form/input';
 import { Select } from '@/presentation/components/admin/form/select';
 import { Button } from '@/presentation/components/admin/button';
 import { TextArea } from '@/presentation/components/admin/form/text_area';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { ImagePicker } from '@/presentation/components/admin/form/image_picker';
+import { Radio } from '@/presentation/components/admin/form/radio';
 
 export interface PlantFormData {
     name: string;
@@ -88,9 +91,9 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
-        if (type === 'checkbox') {
-            const checked = (e.target as HTMLInputElement).checked;
-            setFormData(prev => ({ ...prev, [name]: checked }));
+
+        if (type === 'radio' && name === 'isActive') {
+            setFormData(prev => ({ ...prev, [name]: value === 'true' }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
@@ -154,11 +157,11 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-4 md:p-8 rounded-3xl shadow-sm border border-secondary/10 space-y-8">
+        <form onSubmit={handleSubmit} className="bg-white p-4 md:p-8 rounded-md shadow-sm border border-primary/30 space-y-3">
 
             {/* Basic Info */}
             <section className="">
-                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Basic Information</h3>
+                <Heading1 title="Basic Information" headingClassName="text-xl" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
                     <div className="">
                         <Input
@@ -196,8 +199,8 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
 
             {/* Pricing & Stock (Defaults) */}
             <section className="">
-                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Base Pricing & Stock</h3>
-                <p className="text-xs text-text-secondary -mt-3">These values are used as defaults or if no variants are defined.</p>
+                <Heading1 title="Base Pricing & Stock" description='These values are used as defaults or if no variants are defined.' headingClassName="text-xl" />
+
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-6">
                     <div className="">
                         <Input
@@ -233,9 +236,9 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                     </div>
                 </div>
             </section>
-             {/* Details */}
+            {/* Details */}
             <section className="space-y-4">
-                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Description & Care</h3>
+                <Heading1 title="Description & Care" headingClassName="text-xl" />
                 <div className="space-y-4">
                     <div className="space-y-2">
                         <TextArea
@@ -254,6 +257,7 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                         <TextArea
                             label="Care Instructions"
                             name="careInstructions"
+                            placeholder='Care Instructions'
                             rows={3}
                             value={formData.careInstructions}
                             onChange={handleChange}
@@ -267,7 +271,7 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                             rows={3}
                             value={formData.fertilizingInfo}
                             onChange={handleChange}
-                            placeholder="Compost requirements..."
+                            placeholder="Compost requirements"
                         />
                     </div>
                 </div>
@@ -275,21 +279,21 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
 
             {/* Variants Section */}
             <section className="space-y-4">
-                <div className="flex items-center justify-between border-b border-secondary/10 pb-2">
-                    <h3 className="text-lg font-serif font-bold text-primary">Product Variants</h3>
+                <div className="flex items-center justify-between">
+                    <Heading1 title="Product Variants" headingClassName="text-xl" />
                     <Button onClick={addVariant}>
                         <Plus size={16} /> Add Variant
                     </Button>
                 </div>
 
                 {formData.variants.length === 0 ? (
-                    <div className="text-center py-6 bg-gray-50 rounded-xl border-2 border-dashed border-gray-100 text-gray-400 text-sm">
+                    <div className="text-center py-4 bg-white rounded-xl border-2 border-dashed border-black/30 text-black text-sm">
                         No variants added. Base pricing will be used.
                     </div>
                 ) : (
                     <div className="space-y-3">
                         {formData.variants.map((variant, index) => (
-                            <div key={variant.id} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-gray-50 p-4 rounded-xl items-end relative group">
+                            <div key={variant.id} className="grid grid-cols-1 md:grid-cols-12 gap-3 bg-white p-4 rounded-md items-end relative group border border-primary/30 shadow-sm">
                                 <div className="md:col-span-3 space-y-2">
                                     <div className="space-y-1">
                                         <Input
@@ -390,15 +394,15 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                 )}
             </section>
 
-           
+
 
             {/* Images */}
             <section className="space-y-4">
-                <h3 className="text-lg font-serif font-bold text-primary border-b border-secondary/10 pb-2">Media</h3>
+                <Heading1 title="Media" headingClassName="text-xl" />
 
                 {(existingImages.length > 0 || newImages.length > 0) && (
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-text-secondary">Images</label>
+
                         <div className="flex gap-4 flex-wrap">
                             {existingImages.map((img, idx) => (
                                 <div key={`existing-${idx}`} className="relative group">
@@ -428,50 +432,27 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                     </div>
                 )}
 
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-text-secondary">
-                        Upload Images
-                    </label>
-                    <div className="border-2 border-dashed border-secondary/30 rounded-xl p-6 md:p-8 text-center hover:bg-surface/50 transition-colors cursor-pointer relative">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            onChange={handleImageChange}
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <div className="flex flex-col items-center gap-2 text-text-muted">
-                            <Upload size={32} />
-                            <span>Click or Drag to upload images (Multiple allowed)</span>
-                        </div>
-                    </div>
+                <div className="">
+                    <ImagePicker handleImageChange={handleImageChange} title="Click or Drag to upload images (Multiple allowed)" multiple={true} acceptFormat="image/*" />
                 </div>
             </section>
 
             {/* Status Toggles */}
-            <div className="flex gap-6 p-4 bg-gray-50 rounded-xl">
-                <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                        type="checkbox"
-                        name="isActive"
-                        checked={formData.isActive}
-                        onChange={handleChange}
-                        className="w-5 h-5 rounded border-secondary/20 text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm font-medium text-text-secondary">Active</span>
-                </label>
+            <div className="">
+                <Heading1 title="Status" headingClassName="text-xl" />
+                <Radio
+                    
+                    onChange={handleChange}
+                    fields={[
+                        { label: 'Active', value: 'true', checked: formData.isActive, name: 'isActive' },
+                        { label: 'Inactive', value: 'false', checked: !formData.isActive, name: 'isActive' },
+                    ]}
+                />
             </div>
-
-            <div className="pt-4 flex items-center justify-end">
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full md:w-auto bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary-hover shadow-lg hover:shadow-soft active:scale-95 transition-all text-lg flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-wait"
-                >
-                    {isLoading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
-                    {submitLabel}
-                </button>
-            </div>
+            <Button type="submit" className='w-full'>
+                <Save size={20} />
+                Save
+            </Button>
         </form>
     );
 };

@@ -69,7 +69,7 @@ export function CartClient({ relatedPlants }: CartClientProps) {
                             {cart.items.map((item) => {
                                 const price = item.selectedVariant ? item.selectedVariant.price : item.plant.price;
                                 return (
-                                    <div key={`${item.plant.id}-${item.selectedVariant?.id || 'default'}`} className="flex gap-4 md:gap-8 p-2 md:p-4 bg-[var(--color-surface-hover)] rounded-[10px] border border-black/10 shadow-sm group relative">
+                                    <div key={`${item.plant.id}-${item.selectedVariant?.id || 'default'}`} className="flex gap-4 md:gap-8 p-2 md:p-4 bg-[var(--color-surface-hover)] rounded-[10px] border border-primary/50 shadow-sm group relative">
                                         {/* Image */}
                                         <div className="w-24 h-24 md:w-40 md:h-40 bg-[var(--color-surface)] rounded-2xl md:rounded-[24px] overflow-hidden shrink-0 relative shadow-sm">
                                             {item.plant.images[0] && (
@@ -105,10 +105,10 @@ export function CartClient({ relatedPlants }: CartClientProps) {
 
                                             <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5 md:border-none">
                                                 {/* Quantity Selector */}
-                                                <div className="flex items-center gap-4 bg-[var(--color-surface)] rounded-full px-2 py-1 shadow-sm border border-white/5">
+                                                <div className="flex items-center gap-4 bg-[var(--color-surface)] rounded-full px-2 py-1 shadow-sm border border-primary">
                                                     <button
                                                         onClick={() => updateQuantity(item.plant.id, Math.max(1, item.quantity - 1), item.selectedVariant?.id)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors disabled:opacity-30"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors disabled:opacity-30 border border-primary"
                                                         disabled={item.quantity <= 1}
                                                     >
                                                         <Minus size={14} />
@@ -116,7 +116,7 @@ export function CartClient({ relatedPlants }: CartClientProps) {
                                                     <span className="font-bold w-4 text-center text-sm md:text-base text-[var(--color-text-primary)]">{item.quantity}</span>
                                                     <button
                                                         onClick={() => updateQuantity(item.plant.id, item.quantity + 1, item.selectedVariant?.id)}
-                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors"
+                                                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[var(--color-surface-hover)] text-[var(--color-text-primary)] transition-colors border border-primary"
                                                     >
                                                         <Plus size={14} />
                                                     </button>

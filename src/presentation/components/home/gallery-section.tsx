@@ -4,7 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import { SupabaseSettingsRepository } from "@/data/repositories/supabase-settings.repository";
 import { GalleryImage } from "@/domain/entities/settings.entity";
 import { Heading } from "./heading";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
+import { ICONS } from "@/core/config/icons";
 
 export const GallerySection = async () => {
     const repository = new SupabaseSettingsRepository();
@@ -81,15 +82,15 @@ export const GallerySection = async () => {
                     subtitle="Get inspired by how our community styles their spaces with nature."
                 />
 
-               
+
 
                 {/* Bento Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 auto-rows-[minmax(140px,auto)] md:auto-rows-[240px]">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-6 auto-rows-[minmax(140px,auto)] md:auto-rows-[240px]">
                     {galleryItems.map((item) => (
                         <div
                             key={item.id}
                             className={cn(
-                                "group relative overflow-hidden rounded-[24px] md:rounded-[32px] cursor-pointer",
+                                "group relative overflow-hidden rounded-[6px] md:rounded-[8px] cursor-pointer",
                                 item.className
                             )}
                         >
@@ -111,16 +112,18 @@ export const GallerySection = async () => {
                     ))}
                 </div>
 
-                 <div className="flex justify-center items-center mt-6">
-                    
-                    <Button
-                        variant="default"
-                        className="rounded-md"
-                        // onClick={() => window.open("https://instagram.com", "_blank")}
+                <div className="flex justify-center items-center mt-6">
+
+                    <a
+                        href={settings?.instagramUrl || "https://instagram.com"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(buttonVariants({ variant: 'default' }), "rounded-md gap-2")}
                     >
+                        <ICONS.instagram/>
                         View on Instagram
                         <ArrowUpRight size={18} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </Button>
+                    </a>
                 </div>
 
             </div>

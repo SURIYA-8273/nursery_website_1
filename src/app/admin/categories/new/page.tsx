@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation';
 import { SupabaseCategoryRepository } from '@/data/repositories/supabase-category.repository';
 import { ArrowLeft, Loader2, Save } from 'lucide-react';
 import Link from 'next/link';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { Input } from '@/presentation/components/admin/form/input';
+import { TextArea } from '@/presentation/components/admin/form/text_area';
+import { Button } from '@/presentation/components/admin/button';
 
 export default function NewCategoryPage() {
     const router = useRouter();
@@ -45,49 +49,51 @@ export default function NewCategoryPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 md:p-8 pb-20">
-            <div className="flex items-center gap-4 mb-8">
-                <Link href="/admin/categories" className="p-2 hover:bg-black/5 rounded-full transition-colors">
+        <div className="max-w-4xl mx-auto md:p-8 pb-20">
+
+
+<div className="flex gap-4">
+                <Link href="/admin/categories" className="pt-1">
                     <ArrowLeft size={24} />
                 </Link>
-                <h1 className="font-serif text-3xl font-bold text-primary">Add New Category</h1>
+                <Heading1 title="Add New Category" headingClassName="text-xl" />
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-3xl shadow-sm border border-secondary/10 space-y-6">
 
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-text-secondary">Category Name</label>
-                    <input
+          
+            <form onSubmit={handleSubmit} className="bg-white p-4 rounded-md shadow-sm border border-black/30 space-y-4">
+
+                <div className="">
+
+                    <Input 
+                        label="Category Name"
                         name="name"
                         required
                         value={formData.name}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none"
                         placeholder="e.g. Indoor Plants"
                     />
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-bold text-text-secondary">Description</label>
-                    <textarea
+                <div className="">
+                    <TextArea 
+                        label="Description"
                         name="description"
                         rows={4}
                         value={formData.description}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
                         placeholder="Describe this category..."
                     />
                 </div>
 
-                <div className="pt-4 flex items-center justify-end">
-                    <button
+                <div className="">
+                    <Button
                         type="submit"
-                        disabled={loading}
-                        className="bg-primary text-white font-bold px-8 py-3 rounded-xl hover:bg-primary-hover shadow-lg hover:shadow-soft active:scale-95 transition-all text-lg flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+                        className='w-full'
                     >
                         {loading ? <Loader2 className="animate-spin" /> : <Save size={20} />}
                         {loading ? 'Creating...' : 'Save Category'}
-                    </button>
+                    </Button>
                 </div>
 
             </form>

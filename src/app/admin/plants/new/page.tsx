@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { APP_CONFIG } from '@/core/config/constants';
 import Link from 'next/link';
 import { PlantForm, PlantFormData } from '../_components/plant-form';
+import { Heading1 } from '@/presentation/components/admin/heading_1';
 
 export default function NewPlantPage() {
     const router = useRouter();
@@ -97,12 +98,12 @@ export default function NewPlantPage() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8 pb-20">
-            <div className="flex items-center gap-4 mb-6 md:mb-8">
-                <Link href={APP_CONFIG.routes.admin.dashboard} className="p-2 hover:bg-black/5 rounded-full transition-colors">
+        <div className="max-w-4xl mx-auto md:p-6 lg:p-8 pb-20">
+            <div className="flex gap-4">
+                <Link href={APP_CONFIG.routes.admin.dashboard} className="mt-1">
                     <ArrowLeft size={24} />
                 </Link>
-                <h1 className="font-serif text-2xl md:text-3xl font-bold text-primary">Add New Plant</h1>
+                <Heading1 title="Add New Plant" headingClassName="text-xl" />
             </div>
 
             <PlantForm
