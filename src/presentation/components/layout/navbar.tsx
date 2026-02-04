@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { ShoppingBag, Heart, Menu, X, Leaf, Instagram, Facebook, Youtube, Home, LayoutGrid, Sprout, Image as ImageIcon, Phone } from 'lucide-react';
+import { ShoppingBag, Heart, Menu, X, Leaf, Instagram, Facebook, Youtube, Home, LayoutGrid, Sprout, Image as ImageIcon, Phone, ClipboardList } from 'lucide-react';
 import { useCartStore } from '@/presentation/store/cart.store';
 import { useWishlistStore } from '@/presentation/store/wishlist.store';
 import { ThemeToggle } from '@/presentation/components/ui/theme-toggle';
@@ -75,6 +75,7 @@ export const Navbar = () => {
         { name: 'Home', href: isHome ? '#home' : '/#home', icon: <Home size={20} /> },
         { name: 'Category', href: isHome ? '#categories' : '/#categories', icon: <LayoutGrid size={20} /> },
         { name: 'Plants', href: '/plants', icon: <Sprout size={20} /> },
+        { name: 'Catalog', href: '/product-catalog', icon: <ClipboardList size={20} /> },
         { name: 'Gallery', href: isHome ? '#gallery' : '/#gallery', icon: <ImageIcon size={20} /> },
         { name: 'Contact', href: isHome ? '#contact' : '/#contact', icon: <Phone size={20} /> },
     ];

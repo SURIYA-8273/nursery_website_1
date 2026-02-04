@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Leaf, List, Settings, LogOut, X, Image as ImageIcon, Star, LayoutTemplate } from 'lucide-react';
+import { LayoutDashboard, Leaf, List, Settings, LogOut, X, Image as ImageIcon, Star, LayoutTemplate, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/data/datasources/supabase.client';
 import { useRouter } from 'next/navigation';
