@@ -7,6 +7,8 @@ import { Heading } from "./heading";
 import { Button } from "../ui/button";
 import { FaGoogle } from "react-icons/fa";
 
+import { SupabaseGoogleReviewsRepository } from "@/data/repositories/supabase-google-reviews.repository";
+
 interface Testimonial {
     id: string;
     name: string;
@@ -17,62 +19,84 @@ interface Testimonial {
     avatarColor: string;
 }
 
-const testimonials: Testimonial[] = [
-    {
-        id: "1",
-        name: "Sarah M.",
-        initial: "S",
-        date: "2 weeks ago",
-        rating: 5,
-        text: "Absolutely love this plant shop! The quality of their plants is exceptional, and the staff is incredibly knowledgeable. My Monstera arrived in perfect condition.",
-        avatarColor: "bg-[#E8F5E9] text-[#2D5A42]"
-    },
-    {
-        id: "2",
-        name: "James K.",
-        initial: "J",
-        date: "1 month ago",
-        rating: 5,
-        text: "Best plant shop in town! The care guides they provide are so helpful. Already ordered three times and never been disappointed.",
-        avatarColor: "bg-[#F3E5F5] text-[#7B1FA2]"
-    },
-    {
-        id: "3",
-        name: "Emily R.",
-        initial: "E",
-        date: "3 weeks ago",
-        rating: 4,
-        text: "Great selection and beautiful packaging. Shipping was fast and the plant was well-protected. Will definitely order again!",
-        avatarColor: "bg-[#E1F5FE] text-[#0288D1]"
-    },
-    {
-        id: "4",
-        name: "Michael T.",
-        initial: "M",
-        date: "1 month ago",
-        rating: 5,
-        text: "The Fiddle Leaf Fig I ordered is stunning! It came with detailed care instructions and has been thriving for months now.",
-        avatarColor: "bg-[#FFF3E0] text-[#E65100]"
-    },
-    {
-        id: "5",
-        name: "Lisa C.",
-        initial: "L",
-        date: "2 weeks ago",
-        rating: 5,
-        text: "Exceptional customer service! They helped me choose the perfect low-light plants for my apartment. Highly recommend!",
-        avatarColor: "bg-[#F1F8E9] text-[#33691E]"
-    }
+const AVATAR_COLORS = [
+    "bg-[#E8F5E9] text-[#2D5A42]",
+    "bg-[#F3E5F5] text-[#7B1FA2]",
+    "bg-[#E1F5FE] text-[#0288D1]",
+    "bg-[#FFF3E0] text-[#E65100]",
+    "bg-[#F1F8E9] text-[#33691E]",
+    "bg-[#FFEBEE] text-[#C62828]",
+    "bg-[#E0F7FA] text-[#006064]",
+    "bg-[#FFF8E1] text-[#FF8F00]"
 ];
+
+const getAvatarColor = (name: string) => {
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % AVATAR_COLORS.length;
+    return AVATAR_COLORS[index];
+};
+
+function timeAgo(dateString: string): string {
+    if (!dateString) return '';
+
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) {
+        return Math.floor(interval) + " years ago";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " months ago";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " days ago";
+    }
+    return "Today";
+}
 
 export const TestimonialsSection = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [visibleCards, setVisibleCards] = useState(4); // Default to desktop
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const repo = new SupabaseGoogleReviewsRepository();
+                const reviews = await repo.getReviews();
+                const activeReviews = reviews.filter(r => r.isActive);
+
+                const formatted: Testimonial[] = activeReviews.map(r => ({
+                    id: r.id,
+                    name: r.name,
+                    initial: r.name.charAt(0).toUpperCase(),
+                    date: timeAgo(r.timeline || ''),
+                    rating: r.rating,
+                    text: r.review || '',
+                    avatarColor: getAvatarColor(r.name)
+                }));
+
+                setTestimonials(formatted);
+            } catch (error) {
+                console.error("Failed to fetch reviews:", error);
+            }
+        };
+
+        fetchReviews();
+    }, []);
 
     // Create a TRIPLED list for infinite loop illusion
-    const extendedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+    // Only extend if we have testimonials
+    const extendedTestimonials = testimonials.length > 0 ? [...testimonials, ...testimonials, ...testimonials] : [];
 
     // Handle resize to update visible card count
     useEffect(() => {
@@ -214,69 +238,75 @@ export const TestimonialsSection = () => {
                 </div>
 
                 {/* Slider Container */}
-                <div className="relative group/slider">
-                    <div
-                        ref={scrollContainerRef}
-                        onScroll={handleScroll}
-                        className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 no-scrollbar scroll-smooth"
-                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                    >
-                        {extendedTestimonials.map((item, index) => (
-                            <div
-                                key={`${item.id}-${index}`}
-                                className="w-[calc((100%-0px)/1)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
-                            >
-                                <div className="bg-[var(--color-surface-hover)] p-4 rounded-[10px] shadow-sm  hover:shadow-md transition-all flex flex-col h-full border border-primary/50">
-                                    <div className="flex flex-col gap-3 lg:flex-row items-center justify-between mb-4">
+                {testimonials.length > 0 ? (
+                    <div className="relative group/slider">
+                        <div
+                            ref={scrollContainerRef}
+                            onScroll={handleScroll}
+                            className="flex gap-6 overflow-x-auto snap-x snap-mandatory pb-8 no-scrollbar scroll-smooth"
+                            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                        >
+                            {extendedTestimonials.map((item, index) => (
+                                <div
+                                    key={`${item.id}-${index}`}
+                                    className="w-[calc((100%-0px)/1)] md:w-[calc((100%-48px)/3)] lg:w-[calc((100%-72px)/4)] snap-start shrink-0"
+                                >
+                                    <div className="bg-[var(--color-surface-hover)] p-4 rounded-[10px] shadow-sm  hover:shadow-md transition-all flex flex-col h-full border border-primary/50">
+                                        <div className="flex flex-col gap-3 lg:flex-row items-center justify-between mb-4">
 
 
-                                        <div className="flex items-center gap-4">
-                                            <div className={cn(
-                                                "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-gray-800",
-                                                item.avatarColor
-                                            )}>
-                                                {item.initial}
+                                            <div className="flex items-center gap-4">
+                                                <div className={cn(
+                                                    "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-gray-800",
+                                                    item.avatarColor
+                                                )}>
+                                                    {item.initial}
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-[var(--color-text-primary)]">{item.name}</h4>
+                                                    <p className="text-xs text-[var(--color-text-muted)]">{item.date}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h4 className="font-bold text-[var(--color-text-primary)]">{item.name}</h4>
-                                                <p className="text-xs text-[var(--color-text-muted)]">{item.date}</p>
+                                            <div className="flex gap-0.5">
+                                                {[...Array(5)].map((_, i) => (
+                                                    <Star
+                                                        key={i}
+                                                        size={14}
+                                                        fill={i < Math.round(item.rating) ? "#D36E45" : "transparent"}
+                                                        className={i < Math.round(item.rating) ? "text-[#D36E45]" : "text-gray-600"}
+                                                    />
+                                                ))}
                                             </div>
                                         </div>
-                                        <div className="flex gap-0.5">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    size={14}
-                                                    fill={i < item.rating ? "#D36E45" : "transparent"}
-                                                    className={i < item.rating ? "text-[#D36E45]" : "text-gray-600"}
-                                                />
-                                            ))}
-                                        </div>
+                                        <p className="text-[var(--color-text-secondary)] text-center leading-relaxed italic flex-1 line-clamp-4">
+                                            "{item.text}"
+                                        </p>
                                     </div>
-                                    <p className="text-[var(--color-text-secondary)] text-center leading-relaxed italic flex-1 line-clamp-4">
-                                        "{item.text}"
-                                    </p>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
 
-                    {/* Indicators */}
-                    <div className="flex justify-center gap-2 md:mt-2">
-                        {Array.from({ length: pageCount }).map((_, index) => (
-                            <div
-                                key={index}
-                                className={cn(
-                                    "h-2 rounded-full transition-all duration-300",
-                                    // Make the dot active if the current page matches logical page
-                                    activePage === index
-                                        ? "w-8 bg-[#D36E45]"
-                                        : "w-2 bg-gray-600"
-                                )}
-                            />
-                        ))}
+                        {/* Indicators */}
+                        <div className="flex justify-center gap-2 md:mt-2">
+                            {Array.from({ length: pageCount }).map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={cn(
+                                        "h-2 rounded-full transition-all duration-300",
+                                        // Make the dot active if the current page matches logical page
+                                        activePage === index
+                                            ? "w-8 bg-[#D36E45]"
+                                            : "w-2 bg-gray-600"
+                                    )}
+                                />
+                            ))}
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <div className="text-center py-12 text-gray-500">
+                        <p>No reviews available yet.</p>
+                    </div>
+                )}
 
                 <div className="flex justify-center items-center mt-4">
                     <Button

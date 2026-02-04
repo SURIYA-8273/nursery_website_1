@@ -3,10 +3,13 @@ import { supabase } from '../datasources/supabase.client';
 export interface StoreSettings {
     id?: number;
     business_name: string;
-    instagram_id: string;
+    instagram_url: string; // Renamed from instagram_id
     mobile_number: string;
+    whatsapp_number: string; // New
     address: string;
+    map_url: string; // New
     logo_url?: string;
+    store_hours?: string; // New
 }
 
 export class SupabaseStoreSettingsRepository {
@@ -38,10 +41,13 @@ export class SupabaseStoreSettingsRepository {
                 .from('store_settings')
                 .update({
                     business_name: settings.business_name,
-                    instagram_id: settings.instagram_id,
+                    instagram_url: settings.instagram_url,
                     mobile_number: settings.mobile_number,
+                    whatsapp_number: settings.whatsapp_number,
                     address: settings.address,
-                    logo_url: settings.logo_url
+                    map_url: settings.map_url,
+                    logo_url: settings.logo_url,
+                    store_hours: settings.store_hours
                 })
                 .eq('id', existing.id)
                 .select()
@@ -54,10 +60,13 @@ export class SupabaseStoreSettingsRepository {
                 .from('store_settings')
                 .insert({
                     business_name: settings.business_name,
-                    instagram_id: settings.instagram_id,
+                    instagram_url: settings.instagram_url,
                     mobile_number: settings.mobile_number,
+                    whatsapp_number: settings.whatsapp_number,
                     address: settings.address,
-                    logo_url: settings.logo_url
+                    map_url: settings.map_url,
+                    logo_url: settings.logo_url,
+                    store_hours: settings.store_hours
                 })
                 .select()
                 .single();

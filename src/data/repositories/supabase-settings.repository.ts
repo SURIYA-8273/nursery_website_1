@@ -57,6 +57,26 @@ export class SupabaseSettingsRepository {
                 case 'map_embed_url':
                     settings.mapEmbedUrl = row.setting_value;
                     break;
+                case 'store_hours':
+                    settings.storeHours = row.setting_value;
+                    break;
+                case 'hero_title':
+                    settings.heroTitle = row.setting_value;
+                    break;
+                case 'hero_description':
+                    settings.heroDescription = row.setting_value;
+                    break;
+                case 'about_us_description':
+                    settings.aboutUsDescription = row.setting_value;
+                    break;
+                case 'about_us_features':
+                    try {
+                        settings.aboutUsFeatures = JSON.parse(row.setting_value);
+                    } catch (e) {
+                        console.error('Failed to parse about_us_features', e);
+                        settings.aboutUsFeatures = [];
+                    }
+                    break;
             }
 
             // Map gallery images
@@ -125,6 +145,16 @@ export class SupabaseSettingsRepository {
         queueUpdate('address', settings.address, 'text');
         queueUpdate('map_url', settings.mapUrl, 'url');
         queueUpdate('map_embed_url', settings.mapEmbedUrl, 'url');
+        queueUpdate('store_hours', settings.storeHours, 'text');
+
+        queueUpdate('hero_title', settings.heroTitle, 'text');
+        queueUpdate('hero_description', settings.heroDescription, 'text');
+
+        queueUpdate('about_us_description', settings.aboutUsDescription, 'text');
+
+        if (settings.aboutUsFeatures) {
+            queueUpdate('about_us_features', JSON.stringify(settings.aboutUsFeatures), 'text');
+        }
 
         await Promise.all(updates);
 

@@ -18,6 +18,16 @@ export default function AdminDashboardPage() {
             value: stats.activePlants,
             href: '/admin/plants',
         },
+        {
+            title: 'Categories',
+            value: stats.totalCategories,
+            href: '/admin/categories',
+        },
+        {
+            title: 'Google Reviews',
+            value: stats.totalReviews,
+            href: '/admin/reviews',
+        },
     ];
 
     return (

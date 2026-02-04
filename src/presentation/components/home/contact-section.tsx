@@ -31,15 +31,15 @@ export const ContactSection = () => {
                     {/* Left Column: Info */}
                     <div className="space-y-4 md:space-y-12">
 
-                         {/* Header */}
-                                        <Heading title="We'd Love to Hear From You" subtitle="Have questions about plant care or need help choosing the perfect plant? Our team of plant experts is here to help!" />
-                                        
+                        {/* Header */}
+                        <Heading title="We'd Love to Hear From You" subtitle="Have questions about plant care or need help choosing the perfect plant? Our team of plant experts is here to help!" />
 
-                                        <div className="flex justify-center items-center text-[#D36E45] font-bold uppercase text-xs mb-4">
-                                            <MapPin size={14} fill="currentColor" strokeWidth={0} />
-                                            Get in Touch
-                                        </div>
-                        
+
+                        <div className="flex justify-center items-center text-[#D36E45] font-bold uppercase text-xs mb-4">
+                            <MapPin size={14} fill="currentColor" strokeWidth={0} />
+                            Get in Touch
+                        </div>
+
 
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
                             <ContactInfoItem
@@ -62,15 +62,23 @@ export const ContactSection = () => {
                                 title="Store Hours"
                                 detail={
                                     <div className="flex flex-col">
-                                        <span>Mon - Sat: 9am - 7pm</span>
-                                        <span>Sunday: 10am - 5pm</span>
+                                        {settings.storeHours ? (
+                                            settings.storeHours.split(',').map((line, i) => (
+                                                <span key={i} className="block">{line.trim()}</span>
+                                            ))
+                                        ) : (
+                                            <>
+                                                <span>Mon - Sat: 9am - 7pm</span>
+                                                <span>Sunday: 10am - 5pm</span>
+                                            </>
+                                        )}
                                     </div>
                                 }
                             />
                         </div>
                     </div>
 
-                 
+
 
                 </div>
             </div>

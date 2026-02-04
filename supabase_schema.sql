@@ -136,3 +136,27 @@ create policy "Public Image Read" on storage.objects for select using ( bucket_i
 
 drop policy if exists "Admin Image Upload" on storage.objects;
 create policy "Admin Image Upload" on storage.objects for insert with check ( bucket_id in ('plants', 'common_images') and auth.role() = 'authenticated' );
+
+-- Google Reviews Table
+create table public.google_reviews (
+  id uuid not null default gen_random_uuid (),
+  name text not null,
+  timeline text null,
+  rating numeric not null,
+  review text null,
+  is_active boolean not null default true,
+  created_at timestamp with time zone not null default now(),
+  updated_at timestamp with time zone not null default now(),
+  
+  constraint google_reviews_pkey primary key (id)
+);
+
+-- Google Reviews Policies
+alter table public.google_reviews enable row level security;
+
+create policy "Public Google Reviews Read" on public.google_reviews 
+  for select using (true);
+
+create policy "Admin Google Reviews All" on public.google_reviews 
+  for all using (auth.role() = 'authenticated');
+

@@ -26,7 +26,8 @@ export default function SettingsPage() {
         whatsappNumber: '',
         email: '',
         facebookUrl: '',
-        youtubeUrl: ''
+        youtubeUrl: '',
+        storeHours: ''
     });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [previewLogo, setPreviewLogo] = useState<string | null>(null);
@@ -59,6 +60,18 @@ export default function SettingsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validation
+        if (!settings.businessName || !settings.mobileNumber || !settings.whatsappNumber || !settings.address || !settings.mapUrl || !settings.instagramUrl || !settings.mapEmbedUrl) {
+            toast.error('Please fill in all required fields.');
+            return;
+        }
+
+        if (!settings.logoUrl && !logoFile && !previewLogo) {
+            toast.error('Store Logo is required.');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -117,15 +130,15 @@ export default function SettingsPage() {
 
                 {/* Branding Section */}
                 <section className="space-y-6">
-                    
+
                     <Heading1
                         title="Branding" headingClassName='text-xl'
-                        
+
                     />
-                   
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="space-y-4">
-                            
+                            <label className="block text-sm font-medium text-black">Store Logo <span className="text-red-500">*</span></label>
                             <div className="flex flex-col gap-4 justify-center items-center">
                                 <div className="w-32 h-32">
                                     {previewLogo ? (
@@ -157,11 +170,13 @@ export default function SettingsPage() {
                                     onChange={handleChange}
                                     placeholder="e.g. Inner Loop Technologies"
                                     leadingIcon={<Building className="w-4 h-4 text-primary" />}
+                                    required
                                 />
                             </div>
                         </div>
                     </div>
                 </section>
+
 
                 {/* Contact Information */}
                 <section className="space-y-6">
@@ -169,7 +184,7 @@ export default function SettingsPage() {
                     <Heading1
                         headingClassName="text-xl"
                         title="Contact Information"
-                        
+
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -180,6 +195,7 @@ export default function SettingsPage() {
                             onChange={handleChange}
                             placeholder="+91 98765 43210"
                             leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                            required
                         />
 
                         <Input
@@ -198,6 +214,7 @@ export default function SettingsPage() {
                             onChange={handleChange}
                             placeholder="+91 98765 43210"
                             leadingIcon={<Phone className="w-4 h-4 text-primary" />}
+                            required
                         />
 
                         <Input
@@ -219,6 +236,18 @@ export default function SettingsPage() {
                                 placeholder="123 Plant Street, Green City..."
                                 leadingIcon={<MapPin className="w-4 h-4 text-primary" />}
                                 rows={3}
+                                required
+                            />
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <Input
+                                label="Store Hours"
+                                name="storeHours"
+                                value={settings.storeHours || ''}
+                                onChange={handleChange}
+                                placeholder="Mon - Sat: 9:00 AM - 7:00 PM"
+                                leadingIcon={<Building className="w-4 h-4 text-primary" />}
                             />
                         </div>
                     </div>
@@ -236,12 +265,13 @@ export default function SettingsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div className="">
                             <Input
-                                label="Map Short Link"
+                                label="Map Link"
                                 name="mapUrl"
                                 value={settings.mapUrl || ''}
                                 onChange={handleChange}
                                 placeholder="https://maps.app.goo.gl/..."
                                 leadingIcon={<Globe className="w-4 h-4 text-primary" />}
+                                required
                             />
                             <p className="text-xs text-black/60 ">Used for the 'Open in Google Maps' button.</p>
                         </div>
@@ -253,6 +283,7 @@ export default function SettingsPage() {
                                 onChange={handleChange}
                                 placeholder="https://maps.google.com/maps?q=..."
                                 leadingIcon={<Globe className="w-4 h-4 text-primary" />}
+                                required
                             />
                             <p className="text-xs text-black/60 ">The 'src' attribute for the iframe.</p>
                         </div>
@@ -262,22 +293,23 @@ export default function SettingsPage() {
                 {/* Social Media */}
                 <section className="">
 
-                    
-                        <Heading1
+
+                    <Heading1
                         headingClassName="text-xl"
-                            title="Social Media"
-                            
-                        />
-                
+                        title="Social Media"
+
+                    />
+
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                         <Input
-                            label="Instagram URL"
+                            label="Instagram Link"
                             name="instagramUrl"
                             value={settings.instagramUrl || ''}
                             onChange={handleChange}
                             placeholder="https://instagram.com/..."
                             leadingIcon={<Instagram className="w-4 h-4 text-primary" />}
+                            required
                         />
 
                         <Input
@@ -302,9 +334,9 @@ export default function SettingsPage() {
 
                 <Button
                     type="submit"
-                    
-                   className='w-full'
-                    
+
+                    className='w-full'
+
                 >
                     {loading ? (
                         <>
@@ -319,7 +351,7 @@ export default function SettingsPage() {
                     )}
                 </Button>
 
-                
+
 
             </form>
         </div>

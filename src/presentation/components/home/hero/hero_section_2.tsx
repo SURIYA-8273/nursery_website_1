@@ -1,8 +1,27 @@
+'use client';
+
 import Image from "next/image";
 import { Button } from "../../ui/button";
 import Link from "next/link";
 
+import { useState, useEffect } from 'react';
+import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
+import { BusinessSettings } from '@/domain/entities/settings.entity';
+
 const HeroSection2 = () => {
+  const [settings, setSettings] = useState<Partial<BusinessSettings>>({});
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const repo = new SupabaseSettingsRepository();
+      const data = await repo.getSettings();
+      if (data) {
+        setSettings(data);
+      }
+    };
+    fetchSettings();
+  }, []);
+
   return (
     <section className="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden">
 
@@ -11,11 +30,11 @@ const HeroSection2 = () => {
         <div className="space-y-6  md:space-y-8 text-center lg:text-left pt-10 md:pt-0">
           {/* Main Heading */}
           <div className="space-y-4 md:space-y-6">
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl text-center lg:text-[4rem]   text-[var(--color-text-primary)]">
-              A Beautiful Plant Is Like Having A Friend Around The House.
+            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl text-center lg:text-[4rem]   text-[var(--color-text-primary)] whitespace-pre-line">
+              {settings.heroTitle || "A Beautiful Plant Is Like Having A Friend Around The House."}
             </h1>
-            <p className="text-md md:text-lg text-[var(--color-text-primary)] text-center leading-relaxed max-w-md mx-auto lg:mx-0">
-              Discover everything you need to know about your plants, treat them with kindness and they will take care of you.
+            <p className="text-md md:text-lg text-[var(--color-text-primary)] text-center leading-relaxed max-w-md mx-auto lg:mx-0 whitespace-pre-line">
+              {settings.heroDescription || "Discover everything you need to know about your plants, treat them with kindness and they will take care of you."}
             </p>
           </div>
 

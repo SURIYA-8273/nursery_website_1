@@ -5,6 +5,11 @@ export interface GalleryImage {
     className?: string; // Optional, might be fixed by slot index
 }
 
+export interface AboutUsFeature {
+    title: string;
+    description: string;
+}
+
 export interface BusinessSettings {
     id: string; // usually '1' or singleton
     businessName: string;
@@ -12,6 +17,14 @@ export interface BusinessSettings {
     instagramUrl?: string;
     facebookUrl?: string;
     youtubeUrl?: string;
+    storeHours?: string;
+
+    heroTitle?: string;
+    heroDescription?: string;
+
+    aboutUsDescription?: string;
+
+    aboutUsFeatures?: AboutUsFeature[];
 
     mobileNumber?: string;
     secondaryNumber?: string;

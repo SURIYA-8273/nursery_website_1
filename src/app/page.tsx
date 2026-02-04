@@ -1,6 +1,6 @@
 import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
 import { HeroSection1 } from '@/presentation/components/home/hero/hero-section_1';
-import { FeaturesSection } from '@/presentation/components/home/features-section';
+import { AboutUsSection} from '@/presentation/components/home/aboutus-section';
 import { CategoryHighlights } from '@/presentation/components/home/category-highlights';
 import { BrowseByCategory } from '@/presentation/components/home/browse-by-category';
 import { NewsletterSection } from '@/presentation/components/home/newsletter-section';
@@ -42,7 +42,7 @@ export default async function Home() {
 
       <div className='mt-2'></div>
       {/* 2. Features / Why Choose Us */}
-      <FeaturesSection />
+      <AboutUsSection />
       <div className='mt-10'></div>
       {/* 3. Browse By Category */}
       <div id="categories" className="scroll-mt-28">
