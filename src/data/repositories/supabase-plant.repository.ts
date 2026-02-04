@@ -177,6 +177,9 @@ export class SupabasePlantRepository implements IPlantRepository {
 
         if (plant.tags) updates.tags = plant.tags;
 
+        if (plant.averageRating !== undefined) updates.average_rating = plant.averageRating;
+        if (plant.totalReviews !== undefined) updates.total_reviews = plant.totalReviews;
+
         updates.updated_at = new Date().toISOString();
 
         const { data, error } = await supabase
@@ -324,6 +327,10 @@ export class SupabasePlantRepository implements IPlantRepository {
             isActive: row.is_active,
 
             variants: variants,
+
+            // Rating fields
+            averageRating: row.average_rating || 0,
+            totalReviews: row.total_reviews || 0,
 
             // Legacy fields
             price: row.price,

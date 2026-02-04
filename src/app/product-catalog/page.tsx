@@ -65,7 +65,6 @@ export default function ProductCatalogPage() {
         { label: 'S.No', align: 'center' as const, className: 'w-16 md:w-24' },
         { label: 'English Name', align: 'left' as const },
         { label: 'Tamil Name', align: 'left' as const },
-        { label: 'Category', align: 'left' as const },
     ];
 
     const renderRow = (plant: Plant): TableCell[] => {
@@ -79,14 +78,7 @@ export default function ProductCatalogPage() {
             { content: <span className="font-medium text-[var(--color-text-secondary)]">{sNo}</span>, align: 'center' },
             { content: <span className="font-semibold text-[var(--color-text-primary)]">{plant.name}</span>, align: 'left' },
             { content: <span className="italic text-[var(--color-text-secondary)]">-</span>, align: 'left' },
-            {
-                content: (
-                    <span className="inline-block px-2 py-1 bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] text-xs rounded-md uppercase tracking-wider">
-                        {plant.category || 'Uncategorized'}
-                    </span>
-                ),
-                align: 'left'
-            },
+           
         ];
     };
 

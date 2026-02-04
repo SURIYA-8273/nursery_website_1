@@ -12,7 +12,7 @@ import { Heading1 } from '@/presentation/components/admin/heading_1';
 import { Input } from '@/presentation/components/admin/form/input';
 import { ImagePicker } from '@/presentation/components/admin/form/image_picker';
 import { ConfirmationDialog } from '@/presentation/components/admin/confirmation-dialog';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 
 export default function AdminGalleryPage() {
     const [loading, setLoading] = useState(true);
@@ -211,7 +211,7 @@ export default function AdminGalleryPage() {
                                             />
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-3">
                                                 <span className="text-white font-bold text-sm">Slot #{slotId}</span>
-                                               
+
                                             </div>
                                             <div className="absolute bottom-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-sm">
                                                 Slot #{slotId}

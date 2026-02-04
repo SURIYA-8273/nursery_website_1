@@ -5,7 +5,7 @@ import { supabase } from '@/data/datasources/supabase.client';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { Loader2, Save, Upload, Info, Building, Instagram, Phone, MapPin, Mail, Globe, Facebook, Youtube } from 'lucide-react';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { Input } from '@/presentation/components/admin/form/input';
 import { TextArea } from '@/presentation/components/admin/form/text_area';
 import { ImagePicker } from '@/presentation/components/admin/form/image_picker';

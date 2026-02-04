@@ -5,7 +5,7 @@ import { supabase } from '@/data/datasources/supabase.client';
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { Loader2, Save, Info } from 'lucide-react';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 import { Input } from '@/presentation/components/admin/form/input';
 import { TextArea } from '@/presentation/components/admin/form/text_area';
 import { Heading1 } from '@/presentation/components/admin/heading_1';

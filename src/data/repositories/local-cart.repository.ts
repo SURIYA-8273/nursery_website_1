@@ -73,8 +73,8 @@ export class LocalCartRepository implements ICartRepository {
     private _updateTotals(cart: Cart): void {
         cart.totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         cart.totalPrice = cart.items.reduce((sum, item) => {
-            const price = item.selectedVariant?.price
-                ? item.selectedVariant.price
+            const price = item.selectedVariant
+                ? (item.selectedVariant.discountPrice || item.selectedVariant.price)
                 : (item.plant.discountPrice || item.plant.price || 0);
             return sum + (price * item.quantity);
         }, 0);

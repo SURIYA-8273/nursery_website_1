@@ -1,26 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Heading } from './heading';
 import { Button } from '@/presentation/components/ui/button';
 import { MapPin } from 'lucide-react';
-import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
+
+import { useSettings } from '@/presentation/context/settings-context';
 
 export const MapSection = () => {
-    const [mapUrl, setMapUrl] = useState<string | null>(null);
-    const [mapEmbedUrl, setMapEmbedUrl] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            const repo = new SupabaseSettingsRepository();
-            const settings = await repo.getSettings();
-            if (settings) {
-                setMapUrl(settings.mapUrl || null);
-                setMapEmbedUrl(settings.mapEmbedUrl || null);
-            }
-        };
-        fetchSettings();
-    }, []);
+    const { settings } = useSettings();
+    const mapUrl = settings?.mapUrl;
+    const mapEmbedUrl = settings?.mapEmbedUrl;
 
     // Fallbacks
     const defaultEmbed = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15555.543594165565!2d79.1325!3d12.9165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b006f03f3e2df35%3A0x56be015a4ee2de72!2sPrasanth%20Nursery%20Garden%2C%20Melanilaivayal%2C%20Tamil%20Nadu%20622202!5e0!3m2!1sen!2sin!4v1700000000000";

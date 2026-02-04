@@ -7,6 +7,7 @@ import { SidebarFilters } from '@/presentation/components/features/plants/sideba
 import { Search, SlidersHorizontal, ChevronDown, LayoutGrid, List as ListIcon, Loader2, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { Button } from '@/presentation/components/ui/button';
 
 interface PlantsClientProps {
     initialPlants: Plant[];
@@ -182,19 +183,19 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                         </div>
 
                         {filteredPlants.length > 0 ? (
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                                 {filteredPlants.map((plant) => (
                                     <PlantCard key={plant.id} plant={plant} />
                                 ))}
                             </div>
                         ) : (
-                            <div className="py-20 text-center bg-[#FAF9F6] rounded-[40px] border border-dashed border-secondary/10">
-                                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
-                                    <X className="text-gray-400" size={24} />
-                                </div>
+                            <div className="pt-20 text-center bg-[#FAF9F6] rounded-[40px] border border-dashed border-secondary/10">
+            
                                 <h3 className="text-xl font-bold text-[#1A2E26] mb-2">No plants found</h3>
                                 <p className="text-[#4A5D54] mb-8">Try adjusting your filters or search terms.</p>
-                                <button
+                                
+                                <Button
+                                    variant="default"
                                     onClick={() => {
                                         setSearchQuery('');
                                         setFilters({
@@ -207,7 +208,7 @@ export function PlantsClient({ initialPlants, categories }: PlantsClientProps) {
                                     className="bg-[#2D5A42] text-white px-8 py-3 rounded-full font-bold shadow-lg"
                                 >
                                     Clear all filters
-                                </button>
+                                </Button>
                             </div>
                         )}
                     </div>

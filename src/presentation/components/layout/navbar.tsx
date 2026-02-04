@@ -5,48 +5,28 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { ShoppingBag, Heart, Menu, X, Leaf, Instagram, Facebook, Youtube, Home, LayoutGrid, Sprout, Image as ImageIcon, Phone, ClipboardList } from 'lucide-react';
-import { useCartStore } from '@/presentation/store/cart.store';
-import { useWishlistStore } from '@/presentation/store/wishlist.store';
+import { useCart } from '@/presentation/context/cart-context';
+import { useWishlist } from '@/presentation/context/wishlist-context';
+import { useSettings } from '@/presentation/context/settings-context';
 import { ThemeToggle } from '@/presentation/components/ui/theme-toggle';
-import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { ICONS } from '@/core/config/icons';
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const pathname = usePathname();
-    const { cart } = useCartStore();
-    const { wishlist, refreshWishlist } = useWishlistStore();
+    const { cart } = useCart();
+    const { wishlist } = useWishlist();
+    const { settings } = useSettings();
 
-    const [businessName, setBusinessName] = useState('Inner Loop Technologies');
-    const [logoUrl, setLogoUrl] = useState<string | null>(null);
-    const [socialLinks, setSocialLinks] = useState<{
-        instagram?: string;
-        facebook?: string;
-        youtube?: string;
-        whatsapp?: string;
-    }>({});
-
-    // Init stores & fetch settings
-    useEffect(() => {
-        refreshWishlist();
-
-        const fetchSettings = async () => {
-            const repo = new SupabaseSettingsRepository();
-            const data = await repo.getSettings();
-            if (data) {
-                if (data.businessName) setBusinessName(data.businessName);
-                if (data.logoUrl) setLogoUrl(data.logoUrl);
-                setSocialLinks({
-                    instagram: data.instagramUrl,
-                    facebook: data.facebookUrl,
-                    youtube: data.youtubeUrl,
-                    whatsapp: data.whatsappNumber,
-                });
-            }
-        };
-        fetchSettings();
-    }, [refreshWishlist]);
+    const businessName = settings?.businessName || "";
+    const logoUrl = settings?.logoUrl || null;
+    const socialLinks = {
+        instagram: settings?.instagramUrl,
+        facebook: settings?.facebookUrl,
+        youtube: settings?.youtubeUrl,
+        whatsapp: settings?.whatsappNumber,
+    };
 
     // Handle scroll effect
     useEffect(() => {
@@ -125,7 +105,7 @@ export const Navbar = () => {
                             {logoUrl ? (
                                 <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                             ) : (
-                                <Leaf size={20} fill="none" strokeWidth={2} />
+                                <span className="text-white font-bold text-xl">{businessName.charAt(0).toUpperCase()}</span>
                             )}
                         </div>
                         <span className="font-serif text-md md:text-xl font-extrabold  text-[var(--color-text-primary)] sm:block">
@@ -162,9 +142,9 @@ export const Navbar = () => {
                         {/* Cart */}
                         <Link href="/cart" className="relative group p-2">
                             <ShoppingBag size={24} className="text-[var(--color-text-primary)] group-hover:text-[#D36E45] transition-colors" />
-                            {cart.totalItems >= 0 && (
+                            {cart.items.length > 0 && (
                                 <span className="absolute top-0 right-0 bg-[#D36E45] text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">
-                                    {cart.totalItems}
+                                    {cart.items.length}
                                 </span>
                             )}
                         </Link>

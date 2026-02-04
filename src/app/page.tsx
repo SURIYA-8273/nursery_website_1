@@ -1,9 +1,7 @@
-import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
-import { HeroSection1 } from '@/presentation/components/home/hero/hero-section_1';
-import { AboutUsSection} from '@/presentation/components/home/aboutus-section';
-import { CategoryHighlights } from '@/presentation/components/home/category-highlights';
+// import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
+// import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
+import { AboutUsSection } from '@/presentation/components/home/aboutus-section';
 import { BrowseByCategory } from '@/presentation/components/home/browse-by-category';
-import { NewsletterSection } from '@/presentation/components/home/newsletter-section';
 import { ContactSection } from '@/presentation/components/home/contact-section';
 import { FeaturedPlants } from '@/presentation/components/home/featured-plants';
 import { TestimonialsSection } from '@/presentation/components/home/testimonials-section';
@@ -15,23 +13,11 @@ import { MapSection } from '@/presentation/components/home/map-section';
 export const revalidate = 60;
 
 // ... imports
-// (Make sure SupabasePlantRepository is imported, it is at line 1)
+// Note: Removed SupabaseSettingsRepository import if unused
 
-async function getFeaturedPlants() {
-  const repo = new SupabasePlantRepository();
-  return await repo.getFeaturedPlants();
-}
-
-async function getCategories() {
-  const repo = new SupabasePlantRepository();
-  const categories = await repo.getCategories();
-  // Return only top 4
-  return categories.slice(0, 4);
-}
+// ... imports
 
 export default async function Home() {
-  const plants = await getFeaturedPlants();
-  const categories = await getCategories();
 
   return (
     <main className="min-h-screen">
@@ -46,14 +32,13 @@ export default async function Home() {
       <div className='mt-10'></div>
       {/* 3. Browse By Category */}
       <div id="categories" className="scroll-mt-28">
-        <BrowseByCategory viewAllLink="/plants" categories={categories} />
+        <BrowseByCategory viewAllLink="/plants" />
       </div>
       <div className='mt-10'></div>
       {/* 4. Best Selling Plants (Featured) */}
       <FeaturedPlants
         title="Best Selling Plants"
         subtitle="Loved by thousands of happy plant parents"
-        plants={plants}
         viewAllLink="/plants"
       />
       <div className='mt-10'></div>
@@ -72,8 +57,6 @@ export default async function Home() {
       <div className='mt-10'></div>
       {/* 8. Map Section */}
       <MapSection />
-
-
     </main>
   );
 }

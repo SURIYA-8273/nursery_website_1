@@ -16,11 +16,26 @@ export const metadata: Metadata = {
   description: 'Fresh & Calming plants for your home',
 };
 
-export default function RootLayout({
+import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
+import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
+import { GetSettingsUseCase } from '@/domain/usecases/get-settings.usecase';
+import { GetCatalogDataUseCase } from '@/domain/usecases/get-catalog-data.usecase';
+
+// ... (imports)
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settingsRepo = new SupabaseSettingsRepository();
+  const getSettings = new GetSettingsUseCase(settingsRepo);
+  const settings = await getSettings.execute();
+
+  const plantRepo = new SupabasePlantRepository();
+  const getCatalogData = new GetCatalogDataUseCase(plantRepo);
+  const { featuredPlants, categories } = await getCatalogData.execute();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(
@@ -34,7 +49,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LayoutWrapper>
+          <LayoutWrapper
+            settings={settings}
+            featuredPlants={featuredPlants}
+            categories={categories}
+          >
             {children}
           </LayoutWrapper>
         </ThemeProvider>

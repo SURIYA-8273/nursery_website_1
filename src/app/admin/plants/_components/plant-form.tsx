@@ -23,6 +23,8 @@ export interface PlantFormData {
     stock: string;
     isActive: boolean;
     tags: string;
+    averageRating: string;
+    totalReviews: string;
     variants: {
         id: string; // temp id for key
         size: string;
@@ -58,6 +60,8 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
         categoryId: '',
         stock: '10',
         isActive: true,
+        averageRating: '0',
+        totalReviews: '0',
         variants: []
     });
 
@@ -74,6 +78,8 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                 categoryId: initialData.categoryId || '',
                 stock: (initialData.stock || 0).toString(),
                 isActive: initialData.isActive,
+                averageRating: (initialData.averageRating || 0).toString(),
+                totalReviews: (initialData.totalReviews || 0).toString(),
                 variants: initialData.variants?.map(v => ({
                     id: v.id,
                     size: v.size,
@@ -232,6 +238,33 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
                             value={formData.stock}
                             onChange={handleChange}
                             placeholder="10"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-6 mt-4">
+                    <div className="">
+                        <Input
+                            label="Average Rating (0-5)"
+                            name="averageRating"
+                            type="number"
+                            step="0.1"
+                            min="0"
+                            max="5"
+                            value={formData.averageRating}
+                            onChange={handleChange}
+                            placeholder="0.0"
+                        />
+                    </div>
+                    <div className="">
+                        <Input
+                            label="Total Reviews"
+                            name="totalReviews"
+                            type="number"
+                            min="0"
+                            value={formData.totalReviews}
+                            onChange={handleChange}
+                            placeholder="0"
                         />
                     </div>
                 </div>
@@ -441,7 +474,7 @@ export const PlantForm = ({ initialData, categories, onSubmit, isLoading, submit
             <div className="">
                 <Heading1 title="Status" headingClassName="text-xl" />
                 <Radio
-                    
+
                     onChange={handleChange}
                     fields={[
                         { label: 'Active', value: 'true', checked: formData.isActive, name: 'isActive' },

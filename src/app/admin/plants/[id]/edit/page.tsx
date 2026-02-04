@@ -89,6 +89,8 @@ export default function EditPlantPage() {
                 images: imageUrls,
                 stock: stock,
                 isActive: formData.isActive,
+                averageRating: formData.averageRating ? parseFloat(formData.averageRating) : 0,
+                totalReviews: formData.totalReviews ? parseInt(formData.totalReviews) : 0,
                 // Add tag fields if needed
                 tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
 

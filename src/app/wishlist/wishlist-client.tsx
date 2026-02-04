@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useWishlistStore } from '@/presentation/store/wishlist.store';
+import { useWishlist } from '@/presentation/context/wishlist-context';
 import { WishlistItem } from '@/presentation/components/features/wishlist-item';
 import { Heart, LayoutGrid, List as ListIcon, Loader2 } from 'lucide-react';
 import Link from 'next/link';
@@ -9,12 +9,8 @@ import { cn } from '@/lib/utils';
 import { Heading } from '@/presentation/components/home/heading';
 
 export function WishlistClient() {
-    const { wishlist, isLoading, refreshWishlist } = useWishlistStore();
+    const { wishlist, isLoading } = useWishlist();
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-
-    useEffect(() => {
-        refreshWishlist();
-    }, [refreshWishlist]);
 
     if (isLoading) {
         return (
@@ -26,12 +22,12 @@ export function WishlistClient() {
 
     if (wishlist.items.length === 0) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-white text-center">
+            <div className="min-h-screen flex flex-col items-center mt-30 p-4 text-center">
                 <div className="w-16 h-16 md:w-20 md:h-20 bg-[#FAF9F6] rounded-full flex items-center justify-center mb-6">
                     <Heart size={32} className="text-[#D36E45]" />
                 </div>
-                <h1 className="font-serif text-3xl md:text-5xl font-bold text-[#1A2E26] mb-4">Your Wishlist is Empty</h1>
-                <p className="text-[#4A5D54] max-w-md mb-8">
+                <h1 className="font-serif text-3xl md:text-5xl font-bold text-[var(--color-text-primary)] mb-4">Your Wishlist is Empty</h1>
+                <p className="text-[var(--color-text-secondary)] max-w-md mb-8">
                     Save your favorite plants to your wishlist and we'll keep them here for you until you're ready to grow your jungle.
                 </p>
                 <Link
@@ -46,9 +42,9 @@ export function WishlistClient() {
 
     return (
         <main className="min-h-screen bg-[var(--color-surface)]">
-              <div className='mb-4'></div>
+            <div className='mb-4'></div>
 
-            
+
             {/* Header Section */}
             <Heading title="Your Wishlist" subtitle={`${wishlist.totalItems} ${wishlist.totalItems === 1 ? 'plant' : 'plants'} saved`} />
 
@@ -78,7 +74,7 @@ export function WishlistClient() {
                 </div>
 
                 <div className={cn(
-                    "gap-4 md:gap-6",
+                    "gap-2 md:gap-6",
                     viewMode === 'list' ? "grid grid-cols-1" : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                 )}>
                     {wishlist.items.map((item) => (

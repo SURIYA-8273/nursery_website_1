@@ -2,28 +2,24 @@
 
 import { useState, useEffect } from 'react';
 import { Plant, PlantVariant } from '@/domain/entities/plant.entity';
-import { AddToCartButton } from './add-to-cart-button';
 import { WhatsAppService } from '@/data/services/whatsapp.service';
-import { Heart, Share2, Star, Tag, Maximize, ArrowUpToLine, Weight, ShoppingBag, Check, Plus, Minus, Droplets, Sprout } from 'lucide-react';
+import { Heart, Share2, Star, Tag, Maximize, ArrowUpToLine, Weight, ShoppingBag, Check, Plus, Minus, Droplets, Sprout, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useWishlistStore } from '@/presentation/store/wishlist.store';
-import { useCartStore } from '@/presentation/store/cart.store';
-import { Button } from '../ui/button';
+import { useWishlist } from '@/presentation/context/wishlist-context';
+import { useCart } from '@/presentation/context/cart-context';
+import { Button } from '@/presentation/components/ui/button';
+import { toast } from 'react-toastify';
 
 interface ProductInfoProps {
     plant: Plant;
 }
 
 export const ProductInfo = ({ plant }: ProductInfoProps) => {
-    const { isInWishlist, addToWishlist, removeFromWishlist, refreshWishlist } = useWishlistStore();
-    const addToCart = useCartStore((state) => state.addToCart);
+    const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
+    const { addToCart } = useCart();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [isCopied, setIsCopied] = useState(false);
-
-    useEffect(() => {
-        refreshWishlist();
-    }, [refreshWishlist]);
 
     const isWishlisted = isInWishlist(plant.id);
 
@@ -34,8 +30,6 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
             await addToWishlist(plant);
         }
     };
-
-    console.log("plant.variants", plant.variants)
 
     // Default to first variant if exists, else undefined
     const [selectedVariant, setSelectedVariant] = useState<PlantVariant | undefined>(
@@ -68,10 +62,14 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                     <span className="px-2.5 py-1 rounded-md bg-[#D36E45]/10 text-[#D36E45] text-xs font-bold uppercase tracking-wider">
                         {plant.category}
                     </span>
-                    <div className="flex items-center gap-1">
-                        <Star size={14} fill="currentColor" className="text-yellow-400" />
-                        <span className="text-xs font-medium text-text-secondary">4.8 (124 reviews)</span>
-                    </div>
+                    {(plant.averageRating && plant.averageRating > 0) && (
+                        <div className="flex items-center gap-1">
+                            <Star size={14} fill="currentColor" className="text-yellow-400" />
+                            <span className="text-xs font-medium text-text-secondary">
+                                {plant.averageRating.toFixed(1)} ({plant.totalReviews || 0} reviews)
+                            </span>
+                        </div>
+                    )}
                 </div>
 
 
@@ -108,9 +106,28 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                                         console.error('Error sharing:', err);
                                     }
                                 } else {
-                                    await navigator.clipboard.writeText(url);
-                                    setIsCopied(true);
-                                    setTimeout(() => setIsCopied(false), 2000);
+                                    try {
+                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                            await navigator.clipboard.writeText(url);
+                                            setIsCopied(true);
+                                            toast.success("Link copied to clipboard!");
+                                            setTimeout(() => setIsCopied(false), 2000);
+                                        } else {
+                                            // Fallback for older browsers or non-secure contexts
+                                            const textArea = document.createElement("textarea");
+                                            textArea.value = url;
+                                            document.body.appendChild(textArea);
+                                            textArea.select();
+                                            document.execCommand('copy');
+                                            document.body.removeChild(textArea);
+                                            setIsCopied(true);
+                                            toast.success("Link copied to clipboard!");
+                                            setTimeout(() => setIsCopied(false), 2000);
+                                        }
+                                    } catch (err) {
+                                        console.error('Failed to copy: ', err);
+                                        toast.error("Failed to copy link.");
+                                    }
                                 }
                             }}
                             className="p-2.5 rounded-full border border-gray-100 hover:border-secondary/20 hover:bg-surface transition-all duration-300 text-text-secondary hover:text-primary active:scale-95 relative"
@@ -217,7 +234,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                         <Maximize size={16} />
                     </div>
                     <div>
-                        <span className="block text-text-muted text-[10px] uppercase font-bold tracking-widest mb-0.5">Size</span>
+                        <span className="block text-text-muted text-[10px] uppercase font-bold tracking-widest mb-0.5">Bag Size</span>
                         <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.size || '-'}</p>
                     </div>
                 </div>
@@ -275,6 +292,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                         setTimeout(() => setIsAddingToCart(false), 1000);
                     }}
                     disabled={isAddingToCart || isOutOfStock}
+                    isLoading={isAddingToCart}
                 >
                     Add to Cart
                 </Button>

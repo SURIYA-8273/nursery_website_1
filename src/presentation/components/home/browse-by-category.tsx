@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import { ArrowRight, Leaf, Image as ImageIcon } from 'lucide-react';
 import { Heading } from './heading';
@@ -6,12 +8,19 @@ import { Category } from '@/domain/entities/plant.entity';
 
 const CARD_COLORS = ['bg-[#ECF1EE]', 'bg-[#F3F5F0]', 'bg-[#F9F7F0]', 'bg-[#F0F5F6]'];
 
+import { useCatalog } from '@/presentation/context/catalog-context';
+
 interface BrowseByCategoryProps {
     viewAllLink?: string;
-    categories?: Category[];
+    // categories?: Category[]; // Deprecated, using context
+    categories?: any; // Keeping for compatibility if needed, but unused
 }
 
-export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCategoryProps) => {
+export const BrowseByCategory = ({ viewAllLink }: BrowseByCategoryProps) => {
+    const { categories } = useCatalog();
+    // Display only top 4 for home page (or whatever logic was there)
+    const displayCategories = categories.slice(0, 4);
+
     return (
         <section className="bg-[var(--color-surface)]">
             <div className="max-w-7xl mx-auto px-4 md:px-8">
@@ -20,8 +29,8 @@ export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCateg
 
                 {/* Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                    {categories.length > 0 ? (
-                        categories.map((cat, i) => (
+                    {displayCategories.length > 0 ? (
+                        displayCategories.map((cat, i) => (
                             <Link
                                 key={cat.id}
                                 href={`/plants?category=${cat.id}`}
@@ -48,7 +57,7 @@ export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCateg
                                     <div className="mt-auto">
                                         <Button
                                             variant="link"
-                                            
+
                                             className="p-0 h-auto font-bold text-[var(--color-primary)]"
                                         >
                                             Shop Now
@@ -67,7 +76,7 @@ export const BrowseByCategory = ({ viewAllLink, categories = [] }: BrowseByCateg
                 <div className="flex justify-center mt-10">
                     {viewAllLink && (
                         <Link href={viewAllLink}>
-                            <Button variant="default"  className="rounded-md">
+                            <Button variant="default" className="rounded-md">
                                 Explore All <ArrowRight size={20} className="ml-2" />
                             </Button>
                         </Link>

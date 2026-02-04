@@ -1,28 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
-import { BusinessSettings } from '@/domain/entities/settings.entity';
 import { ICONS } from '@/core/config/icons';
+import { useSettings } from '@/presentation/context/settings-context';
 
 export const Footer = () => {
-    const [settings, setSettings] = useState<BusinessSettings | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const repo = new SupabaseSettingsRepository();
-                const data = await repo.getSettings();
-                setSettings(data);
-            } catch (error) {
-                console.error("Failed to load settings", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchSettings();
-    }, []);
+    const { settings } = useSettings();
 
     const currentYear = new Date().getFullYear();
 

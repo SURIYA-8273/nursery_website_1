@@ -52,6 +52,10 @@ export interface Plant {
     rating?: number;
     reviewCount?: number;
 
+    // Database rating fields
+    averageRating?: number; // Average rating from 0.0 to 5.0
+    totalReviews?: number; // Total number of reviews
+
     // Summary fields (usually from default variant or root fallback)
     price?: number;
     discountPrice?: number;

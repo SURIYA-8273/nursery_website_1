@@ -1,0 +1,352 @@
+{
+    "name": "Plant Nursery Support Flow",
+    "nodes": [
+        {
+            "id": "start-1",
+            "type": "startNode",
+            "position": {
+                "x": 100,
+                "y": 250
+            },
+            "data": {
+                "label": "Start",
+                "text": "Conversation Start",
+                "options": []
+            }
+        },
+        {
+            "id": "node-welcome",
+            "type": "messageNode",
+            "position": {
+                "x": 350,
+                "y": 200
+            },
+            "data": {
+                "label": "Welcome Message",
+                "text": "Hi there! 👋 Welcome to Inner Loop Technologies. How can I help you today?",
+                "options": [
+                    {
+                        "id": "opt-browse",
+                        "label": "Browse Plants"
+                    },
+                    {
+                        "id": "opt-track",
+                        "label": "Track Order"
+                    },
+                    {
+                        "id": "opt-care",
+                        "label": "Plant Care Tips"
+                    },
+                    {
+                        "id": "opt-offers",
+                        "label": "Offers & Discounts"
+                    },
+                    {
+                        "id": "opt-whatsapp",
+                        "label": "Chat on WhatsApp"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-browse",
+            "type": "messageNode",
+            "position": {
+                "x": 650,
+                "y": 50
+            },
+            "data": {
+                "label": "Browse Plants",
+                "text": "Great choice! 🌿 What type of plants are you looking for?",
+                "options": [
+                    {
+                        "id": "opt-indoor",
+                        "label": "Indoor Plants"
+                    },
+                    {
+                        "id": "opt-outdoor",
+                        "label": "Outdoor Plants"
+                    },
+                    {
+                        "id": "opt-flowering",
+                        "label": "Flowering Plants"
+                    },
+                    {
+                        "id": "opt-bestsellers",
+                        "label": "Best Sellers"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-indoor",
+            "type": "messageNode",
+            "position": {
+                "x": 950,
+                "y": 20
+            },
+            "data": {
+                "label": "Indoor Plants Info",
+                "text": "Indoor plants are perfect for homes & offices! We have Snake Plants, Peace Lilies, and ZZ Plants. Want me to show you our collection?",
+                "options": [
+                    {
+                        "id": "opt-view-indoor",
+                        "label": "View Collection"
+                    },
+                    {
+                        "id": "opt-recommend",
+                        "label": "Recommend a Plant"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-view-indoor",
+            "type": "actionNode",
+            "position": {
+                "x": 1250,
+                "y": 10
+            },
+            "data": {
+                "label": "Open Indoor Collection",
+                "text": "",
+                "actionType": "url",
+                "actionValue": "/plants?category=indoor"
+            }
+        },
+        {
+            "id": "node-care",
+            "type": "messageNode",
+            "position": {
+                "x": 650,
+                "y": 200
+            },
+            "data": {
+                "label": "Plant Care Tips",
+                "text": "Happy plants = happy home 🌱 What do you want to know?",
+                "options": [
+                    {
+                        "id": "opt-water",
+                        "label": "How to Water Plants"
+                    },
+                    {
+                        "id": "opt-sunlight",
+                        "label": "Sunlight Guide"
+                    },
+                    {
+                        "id": "opt-beginner",
+                        "label": "Beginner Tips"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-water",
+            "type": "messageNode",
+            "position": {
+                "x": 950,
+                "y": 150
+            },
+            "data": {
+                "label": "Watering Tips",
+                "text": "Water only when the top soil is dry. Overwatering kills more plants than underwatering! 😄 Check soil moisture before watering.",
+                "options": [
+                    {
+                        "id": "opt-more-tips",
+                        "label": "More Tips"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-track",
+            "type": "messageNode",
+            "position": {
+                "x": 650,
+                "y": 350
+            },
+            "data": {
+                "label": "Track Order",
+                "text": "Please share your order ID on WhatsApp and we'll track it instantly 📦",
+                "options": [
+                    {
+                        "id": "opt-contact-whatsapp",
+                        "label": "Contact on WhatsApp"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-whatsapp",
+            "type": "actionNode",
+            "position": {
+                "x": 950,
+                "y": 350
+            },
+            "data": {
+                "label": "WhatsApp Support",
+                "text": "",
+                "actionType": "whatsapp",
+                "actionValue": "+919876543210"
+            }
+        },
+        {
+            "id": "node-offers",
+            "type": "messageNode",
+            "position": {
+                "x": 650,
+                "y": 500
+            },
+            "data": {
+                "label": "Offers & Discounts",
+                "text": "🔥 We currently have special nursery discounts! Want to see our latest offers?",
+                "options": [
+                    {
+                        "id": "opt-view-offers",
+                        "label": "View Offers"
+                    },
+                    {
+                        "id": "opt-notify",
+                        "label": "Notify Me"
+                    }
+                ]
+            }
+        },
+        {
+            "id": "node-view-offers",
+            "type": "actionNode",
+            "position": {
+                "x": 950,
+                "y": 480
+            },
+            "data": {
+                "label": "Open Offers Page",
+                "text": "",
+                "actionType": "url",
+                "actionValue": "/offers"
+            }
+        },
+        {
+            "id": "node-end",
+            "type": "actionNode",
+            "position": {
+                "x": 950,
+                "y": 580
+            },
+            "data": {
+                "label": "End Conversation",
+                "text": "",
+                "actionType": "end",
+                "actionValue": ""
+            }
+        }
+    ],
+    "edges": [
+        {
+            "id": "edge-start-welcome",
+            "source": "start-1",
+            "target": "node-welcome",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-welcome-browse",
+            "source": "node-welcome",
+            "sourceHandle": "opt-browse",
+            "target": "node-browse",
+            "label": "Browse Plants",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-welcome-care",
+            "source": "node-welcome",
+            "sourceHandle": "opt-care",
+            "target": "node-care",
+            "label": "Plant Care Tips",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-welcome-track",
+            "source": "node-welcome",
+            "sourceHandle": "opt-track",
+            "target": "node-track",
+            "label": "Track Order",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-welcome-offers",
+            "source": "node-welcome",
+            "sourceHandle": "opt-offers",
+            "target": "node-offers",
+            "label": "Offers & Discounts",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-welcome-whatsapp",
+            "source": "node-welcome",
+            "sourceHandle": "opt-whatsapp",
+            "target": "node-whatsapp",
+            "label": "Chat on WhatsApp",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-browse-indoor",
+            "source": "node-browse",
+            "sourceHandle": "opt-indoor",
+            "target": "node-indoor",
+            "label": "Indoor Plants",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-indoor-view",
+            "source": "node-indoor",
+            "sourceHandle": "opt-view-indoor",
+            "target": "node-view-indoor",
+            "label": "View Collection",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-care-water",
+            "source": "node-care",
+            "sourceHandle": "opt-water",
+            "target": "node-water",
+            "label": "How to Water Plants",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-track-whatsapp",
+            "source": "node-track",
+            "sourceHandle": "opt-contact-whatsapp",
+            "target": "node-whatsapp",
+            "label": "Contact on WhatsApp",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-offers-view",
+            "source": "node-offers",
+            "sourceHandle": "opt-view-offers",
+            "target": "node-view-offers",
+            "label": "View Offers",
+            "type": "smoothstep",
+            "animated": true
+        },
+        {
+            "id": "edge-offers-end",
+            "source": "node-offers",
+            "sourceHandle": "opt-notify",
+            "target": "node-end",
+            "label": "Notify Me",
+            "type": "smoothstep",
+            "animated": true
+        }
+    ]
+}

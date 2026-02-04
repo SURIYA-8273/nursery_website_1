@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Leaf, List, Settings, LogOut, X, Image as ImageIcon, Star, LayoutTemplate, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Leaf, List, Settings, LogOut, X, Image as ImageIcon, Star, LayoutTemplate, ClipboardList, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/data/datasources/supabase.client';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ const navItems = [
     { label: 'Categories', href: '/admin/categories', icon: List },
     { label: 'Gallery', href: '/admin/gallery', icon: ImageIcon },
     { label: 'Reviews', href: '/admin/reviews', icon: Star },
+    { label: 'Chatbot', href: '/admin/chatbot', icon: MessageSquare },
     { label: 'Site Content', href: '/admin/home-content', icon: LayoutTemplate },
     { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];

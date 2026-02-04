@@ -4,24 +4,13 @@ import { Mail, MapPin, Phone, Clock, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
-import { useState, useEffect } from 'react';
-import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { BusinessSettings } from '@/domain/entities/settings.entity';
 import { Heading } from './heading';
+import { useSettings } from '@/presentation/context/settings-context';
 
 export const ContactSection = () => {
-    const [settings, setSettings] = useState<Partial<BusinessSettings>>({});
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            const repo = new SupabaseSettingsRepository();
-            const data = await repo.getSettings();
-            if (data) {
-                setSettings(data);
-            }
-        };
-        fetchSettings();
-    }, []);
+    const { settings: contextSettings } = useSettings();
+    const settings = contextSettings || {};
 
     return (
         <section className="bg-[var(--color-surface)] ">

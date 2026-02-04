@@ -7,6 +7,7 @@ export interface CartItem {
         id: string;
         size: string;
         price: number;
+        discountPrice?: number;
     };
 }
 

@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { WishlistItem as WishlistItemType } from '@/domain/entities/wishlist.entity';
 import { Trash2, ShoppingBag, Loader2 } from 'lucide-react';
-import { useCartStore } from '@/presentation/store/cart.store';
-import { useWishlistStore } from '@/presentation/store/wishlist.store';
+import { useCart } from '@/presentation/context/cart-context';
+import { useWishlist } from '@/presentation/context/wishlist-context';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { PlantCard } from '../ui/plant-card';
 
 interface WishlistItemProps {
@@ -14,10 +15,19 @@ interface WishlistItemProps {
 }
 
 export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
-    const { addToCart } = useCartStore();
-    const { removeFromWishlist } = useWishlistStore();
+    const router = useRouter();
+    const { addToCart } = useCart();
+    const { removeFromWishlist } = useWishlist();
     const { plant } = item;
-    const { price, discountPrice } = plant;
+    const { price = 0, discountPrice } = plant;
+
+    // Unified Price Logic
+    const finalPrice = discountPrice || price;
+    const originalPrice = discountPrice ? price : null;
+    const discountPercentage = (discountPrice && price > 0)
+        ? Math.round(((price - discountPrice) / price) * 100)
+        : 0;
+
 
     const [isRemoving, setIsRemoving] = useState(false);
     const [isMoving, setIsMoving] = useState(false);
@@ -27,6 +37,7 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
 
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
+        e.stopPropagation();
         setIsMoving(true);
         await addToCart(plant, 1);
         setIsMoving(false);
@@ -40,14 +51,21 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
         setIsRemoving(false);
     };
 
+    const handleCardClick = () => {
+        router.push(`/plants/${plant.id}`);
+    };
+
     // Alias for the handleAddToCart to match grid view usage
     const handleMoveToCart = handleAddToCart;
 
     if (viewMode === 'list') {
         return (
-            <div className="flex gap-4 md:gap-8 p-2 md:p-6 bg-[var(--color-surface-hover)] rounded-[10px] border border-primary/50 shadow-sm  group relative shadow-sm hover:shadow-md transition-all duration-300">
+            <div
+                onClick={handleCardClick}
+                className="flex gap-4 md:gap-8 p-2 md:p-6 bg-[var(--color-surface-hover)] rounded-[10px] border border-primary/50 shadow-sm group relative hover:shadow-md transition-all duration-300 cursor-pointer"
+            >
                 {/* Image */}
-                <div className="w-32 h-32 md:w-48 md:h-48 bg-[#FAF9F6] rounded-2xl md:rounded-[24px] overflow-hidden shrink-0 relative">
+                <div className="w-28 h-30 md:w-48 md:h-48 bg-[#FAF9F6] rounded-2xl md:rounded-[24px] overflow-hidden shrink-0 relative">
                     {plant.images[0] && (
                         <img
                             src={plant.images[0]}
@@ -55,8 +73,12 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
                             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                         />
                     )}
-                    {/* Bestseller/Sale badge if you have them in data */}
-                    {/* This can be extended later */}
+                    {/* Bestseller/Sale badge */}
+                    {discountPrice && (
+                        <span className="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-[10px] md:text-xs font-bold rounded-full z-10">
+                            {discountPercentage}% OFF
+                        </span>
+                    )}
                 </div>
 
                 {/* Content */}
@@ -70,7 +92,7 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
                         </div>
 
                         <button
-                            onClick={() => removeFromWishlist(plant.id)}
+                            onClick={handleRemove}
                             className="bg-[#FF4D4D] text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-sm active:scale-95"
                             title="Remove from wishlist"
                         >
@@ -79,9 +101,16 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
                     </div>
 
                     <div className="flex items-center justify-between mt-auto">
-                        <span className="font-serif font-bold text-xl md:text-3xl text-[var(--color-text-primary)]">
-                            ₹{plant.price}
-                        </span>
+                        <div className="flex items-baseline gap-2 md:gap-3">
+                            <span className="font-serif font-bold text-xl md:text-3xl text-[var(--color-text-primary)]">
+                                ₹{finalPrice}
+                            </span>
+                            {originalPrice && (
+                                <span className="text-sm md:text-lg text-[var(--color-text-secondary)] line-through decoration-red-500/50">
+                                    ₹{originalPrice}
+                                </span>
+                            )}
+                        </div>
 
                         <button
                             onClick={handleAddToCart}
@@ -109,7 +138,11 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
                             className="w-full rounded-[10px] h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                         />
                     )}
-
+                    {discountPrice && (
+                        <span className="absolute top-2 left-2 px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full z-10">
+                            {discountPercentage}% OFF
+                        </span>
+                    )}
 
                 </div>
 
@@ -119,10 +152,10 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
 
                     <div className="flex items-center justify-between mt-2">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-bold text-[var(--color-text-primary)]">₹{Number(discountPrice || price)}</span>
-                            {/* {discountPrice && (
-                                <span className="text-xs text-[var(--color-text-muted)] line-through">₹{Number(price).toFixed(2)}</span>
-                            )} */}
+                            <span className="text-xl font-bold text-[var(--color-text-primary)]">₹{finalPrice}</span>
+                            {originalPrice && (
+                                <span className="text-xs text-[var(--color-text-muted)] line-through">₹{originalPrice}</span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -146,3 +179,4 @@ export const WishlistItem = ({ item, viewMode }: WishlistItemProps) => {
         </div>
     );
 };
+

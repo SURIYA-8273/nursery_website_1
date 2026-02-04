@@ -61,7 +61,12 @@ function timeAgo(dateString: string): string {
     return "Today";
 }
 
+import { useSettings } from "@/presentation/context/settings-context";
+
 export const TestimonialsSection = () => {
+    const { settings } = useSettings();
+    const mapUrl = settings?.mapUrl;
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -93,7 +98,6 @@ export const TestimonialsSection = () => {
 
         fetchReviews();
     }, []);
-
     // Create a TRIPLED list for infinite loop illusion
     // Only extend if we have testimonials
     const extendedTestimonials = testimonials.length > 0 ? [...testimonials, ...testimonials, ...testimonials] : [];
@@ -205,20 +209,7 @@ export const TestimonialsSection = () => {
     // Example: 5 items, 4 visible. Active 0,1,2,3 -> Page 0. Active 4 -> Page 1.
     const activePage = Math.floor(activeIndex / visibleCards);
 
-    // Fetch Map settings
-    const [mapUrl, setMapUrl] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchSettings = async () => {
-            const { SupabaseSettingsRepository } = await import('@/data/repositories/supabase-settings.repository');
-            const repo = new SupabaseSettingsRepository();
-            const settings = await repo.getSettings();
-            if (settings && settings.mapUrl) {
-                setMapUrl(settings.mapUrl);
-            }
-        };
-        fetchSettings();
-    }, []);
+    // ... useEffects for scroll ...
 
     const defaultMapLink = "https://maps.app.goo.gl/YJNygrs16EQ2uaZM6";
 

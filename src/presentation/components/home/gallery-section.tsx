@@ -6,6 +6,7 @@ import { GalleryImage } from "@/domain/entities/settings.entity";
 import { Heading } from "./heading";
 import { Button, buttonVariants } from "../ui/button";
 import { ICONS } from "@/core/config/icons";
+import { GalleryGrid } from "./gallery-grid";
 
 export const GallerySection = async () => {
     const repository = new SupabaseSettingsRepository();
@@ -77,25 +78,7 @@ export const GallerySection = async () => {
 
 
                 {/* Bento Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-1 md:gap-6 auto-rows-[minmax(140px,auto)] md:auto-rows-[240px]">
-                    {galleryItems.map((item) => (
-                        <div
-                            key={item.id}
-                            className={cn(
-                                "group relative overflow-hidden rounded-[6px] md:rounded-[8px] cursor-pointer",
-                                item.className
-                            )}
-                        >
-                            <Image
-                                src={item.src}
-                                alt={item.alt}
-                                fill
-                                unoptimized
-                                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                            />
-                        </div>
-                    ))}
-                </div>
+                <GalleryGrid items={galleryItems} />
 
                 <div className="flex justify-center items-center mt-6">
 

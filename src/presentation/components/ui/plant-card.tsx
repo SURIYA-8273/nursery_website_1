@@ -1,13 +1,13 @@
 'use client';
 
-import Link from 'next/link';
 import { Plant } from '@/domain/entities/plant.entity';
 import { FavoriteButton } from '@/presentation/components/features/favorite-button';
 import { Star, ShoppingBag, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useCartStore } from '@/presentation/store/cart.store';
+import { useCart } from '@/presentation/context/cart-context';
 import { useState } from 'react';
 import { Button } from './button';
+import { useRouter } from 'next/navigation';
 
 interface PlantCardProps {
     plant: Plant;
@@ -15,20 +15,21 @@ interface PlantCardProps {
 }
 
 export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
+    const router = useRouter();
     const price = plant.price || 0;
     const discountPrice = plant.discountPrice;
 
     // Within last 30 days
     const isNew = new Date().getTime() - new Date(plant.createdAt).getTime() < 30 * 24 * 60 * 60 * 1000;
 
-    // Mock data for ratings/reviews if they don't exist yet in DB
-    const rating = plant.rating || 4.8;
-    const reviewCount = plant.reviewCount || 128;
+    // Use database rating fields with fallback
+    const rating = plant.averageRating || 0;
+    const reviewCount = plant.totalReviews || 0;
 
     // Map categories to display labels
     const categoryLabel = plant.category || "Indoor Plants";
 
-    const addToCart = useCartStore((state) => state.addToCart);
+    const { addToCart } = useCart();
     const [isAdding, setIsAdding] = useState(false);
 
     const handleAddToCart = async (e: React.MouseEvent) => {
@@ -43,9 +44,16 @@ export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
         }, 500);
     };
 
+    const handleCardClick = () => {
+        router.push(`/plants/${plant.id}`);
+    };
+
     return (
-        <div className="group block h-full bg-[var(--color-surface-hover)] p-1 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)]">
-            <Link href={`/plants/${plant.id}`} className="block relative mb-3">
+        <div
+            onClick={handleCardClick}
+            className="group block h-full bg-[var(--color-surface-hover)] p-1 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)] cursor-pointer"
+        >
+            <div className="block relative mb-3">
                 {/* Image Container */}
                 <div className="aspect-square bg-[#FAF9F6] relative overflow-hidden rounded-[10px]">
                     {plant.images[0] ? (
@@ -73,14 +81,17 @@ export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
                     }
 
                     {/* Like button overlay */}
-                    <div className="absolute top-2 right-2 z-20 opacity-100 transition-opacity">
+                    <div
+                        className="absolute top-2 right-2 z-20 opacity-100 transition-opacity"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <FavoriteButton
                             plant={plant}
                             className="bg-white/90 backdrop-blur-md shadow-sm"
                         />
                     </div>
                 </div>
-            </Link>
+            </div>
 
             {/* Content */}
             <div className="flex flex-col flex-1 px-2 pb-1">
@@ -88,11 +99,11 @@ export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
                     {categoryLabel}
                 </span>
 
-                <Link href={`/plants/${plant.id}`}>
+                <div>
                     <h3 className="font-serif text-lg md:text-xl font-bold text-[var(--color-text-primary)] hover:text-[var(--color-primary)] transition-colors line-clamp-1 mb-1">
                         {plant.name}
                     </h3>
-                </Link>
+                </div>
 
                 {/* Rating */}
                 <div className="flex items-center gap-1.5 mb-2 font-sans">

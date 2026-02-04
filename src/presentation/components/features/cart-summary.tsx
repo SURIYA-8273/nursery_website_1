@@ -3,24 +3,28 @@ import { Button } from '@/presentation/components/ui/button';
 
 interface CartSummaryProps {
     totalPrice: number;
+    totalQuantity: number;
+    totalPlants: number;
     checkoutUrl: string;
 }
 
-export const CartSummary = ({ totalPrice, checkoutUrl }: CartSummaryProps) => {
+export const CartSummary = ({ totalPrice, totalQuantity, totalPlants, checkoutUrl }: CartSummaryProps) => {
     return (
         <div className="bg-[var(--color-surface-hover)] p-4 md:p-6 rounded-[10px] border border-primary/50 h-fit shadow-sm">
-            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-4">Order Summary</h2>
+            <h2 className="font-serif text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] mb-2">Order Summary</h2>
 
-            <div className="space-y-2 mb-4">
+        
                 <div className="flex justify-between items-center text-[var(--color-text-secondary)]">
-                    <span className="text-lg">Subtotal</span>
-                    <span className="font-medium text-[var(--color-text-primary)]">₹{totalPrice.toFixed(2)}</span>
+                    <span className="text-lg">Total Quantity</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">{totalQuantity}</span>
                 </div>
+
                 <div className="flex justify-between items-center text-[var(--color-text-secondary)]">
-                    <span className="text-lg">Shipping</span>
-                    <span className="font-medium">Free</span>
+                    <span className="text-lg">Total Plants</span>
+                    <span className="font-medium text-[var(--color-text-primary)]">{totalPlants}</span>
                 </div>
-            </div>
+
+
 
             <div className="border-t border-white/10 pt-4 mb-4">
                 <div className="flex justify-between items-center">
