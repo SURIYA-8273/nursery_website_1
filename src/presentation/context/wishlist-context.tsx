@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
-import { Wishlist, WishlistItem } from '@/domain/entities/wishlist.entity';
+import { Wishlist } from '@/domain/entities/wishlist.entity';
 import { LocalWishlistRepository } from '@/data/repositories/local-wishlist.repository';
 import { Plant } from '@/domain/entities/plant.entity';
 import { toast } from 'react-toastify';
