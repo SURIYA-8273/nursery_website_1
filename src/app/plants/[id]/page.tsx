@@ -41,8 +41,6 @@ export default async function PlantDetailsPage({ params }: Props) {
     const repo = new SupabasePlantRepository();
     const plant = await repo.getPlantById(resolvedParams.id);
 
-    console.log("oooooooo : ", plant)
-
     if (!plant) {
         notFound();
     }

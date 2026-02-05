@@ -21,6 +21,9 @@ export interface BusinessSettings {
 
     heroTitle?: string;
     heroDescription?: string;
+    heroImage?: string;
+    heroBackgroundColor?: string; // hex or rgba
+    heroShowBackgroundShape?: boolean;
 
     aboutUsDescription?: string;
 

@@ -31,22 +31,44 @@ export const ContactSection = () => {
 
 
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
-                            <ContactInfoItem
-                                icon={<MapPin size={20} />}
-                                title="Visit Our Shop"
-                                detail={settings.address || "123 Botanical Avenue, San Francisco, CA 94102"}
-                            />
-                            <ContactInfoItem
-                                icon={<Phone size={20} />}
-                                title="Call Us"
-                                detail={settings.mobileNumber || "(415) 555-0123"}
-                            />
-                            <ContactInfoItem
-                                icon={<Mail size={20} />}
-                                title="Email Us"
-                                detail={settings.email || "hello@verdantplants.com"}
-                            />
-                            <ContactInfoItem
+                            {settings.address && (
+                                <ContactInfoItem
+                                    icon={<MapPin size={20} />}
+                                    title="Visit Our Shop"
+                                    detail={settings.address}
+                                />
+                            )}
+                            {settings.mobileNumber && (
+                                <ContactInfoItem
+                                    icon={<Phone size={20} />}
+                                    title="Call Us"
+                                    detail={<div className="flex items-center gap-4">
+                                        <div className='flex items-center gap-1'>
+                                            <Phone size={15} />
+                                        <span>{settings.mobileNumber}</span>
+                                        </div>
+
+                                        {
+                                            settings?.secondaryNumber && (
+                                                <div className="flex items-center gap-1">
+                                                    <Phone size={15} />
+                                                    <span>{settings.secondaryNumber}</span>
+                                                </div>
+                                            )
+                                        }
+    
+                                    </div>}
+                                />
+                            )}
+                            {settings.email && (
+                                <ContactInfoItem
+                                    icon={<Mail size={20} />}
+                                    title="Email Us"
+                                    detail={settings.email}
+                                />
+                            )}
+                            {settings.storeHours && (
+                                <ContactInfoItem
                                 icon={<Clock size={20} />}
                                 title="Store Hours"
                                 detail={
@@ -64,6 +86,7 @@ export const ContactSection = () => {
                                     </div>
                                 }
                             />
+                            )}
                         </div>
                     </div>
 
@@ -77,7 +100,7 @@ export const ContactSection = () => {
 
 const ContactInfoItem = ({ icon, title, detail }: { icon: React.ReactNode, title: string, detail: React.ReactNode }) => (
     <div className="flex items-start gap-4 group">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16  rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 bg-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] text-white  transition-colors">
+        <div className="w-12 h-12 min-w-12 min-h-12 sm:w-14 sm:h-14 md:w-16 md:h-16  rounded-xl md:rounded-2xl flex items-center justify-center shadow-sm mb-4 md:mb-6 bg-[var(--color-primary)] group-hover:text-[var(--color-primary-light)] text-white  transition-colors">
             {icon}                            </div>
 
         <div className="space-y-1 pt-1">

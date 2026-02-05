@@ -8,7 +8,8 @@ export const revalidate = 60;
 export default async function PlantListingPage() {
     const repo = new SupabasePlantRepository();
     const { plants } = await repo.getPlants({
-        limit: 200 // Get all for client-side filtering
+        limit: 200, // Get all for client-side filtering
+        isActive: true
     });
 
     const categories = await repo.getCategories();

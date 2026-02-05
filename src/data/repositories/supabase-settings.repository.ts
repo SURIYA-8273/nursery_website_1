@@ -66,6 +66,15 @@ export class SupabaseSettingsRepository {
                 case 'hero_description':
                     settings.heroDescription = row.setting_value;
                     break;
+                case 'hero_image':
+                    settings.heroImage = row.setting_value;
+                    break;
+                case 'hero_background_color':
+                    settings.heroBackgroundColor = row.setting_value;
+                    break;
+                case 'hero_show_background_shape':
+                    settings.heroShowBackgroundShape = row.setting_value === 'true';
+                    break;
                 case 'about_us_description':
                     settings.aboutUsDescription = row.setting_value;
                     break;
@@ -149,6 +158,12 @@ export class SupabaseSettingsRepository {
 
         queueUpdate('hero_title', settings.heroTitle, 'text');
         queueUpdate('hero_description', settings.heroDescription, 'text');
+        queueUpdate('hero_image', settings.heroImage, 'image');
+        queueUpdate('hero_background_color', settings.heroBackgroundColor, 'text');
+
+        if (settings.heroShowBackgroundShape !== undefined) {
+            queueUpdate('hero_show_background_shape', String(settings.heroShowBackgroundShape), 'boolean');
+        }
 
         queueUpdate('about_us_description', settings.aboutUsDescription, 'text');
 
@@ -162,6 +177,5 @@ export class SupabaseSettingsRepository {
         if (!fresh) throw new Error('Failed to retrieve settings after update');
         return fresh;
     }
-
-    // _mapToEntity is no longer needed in the same way as before
 }
+

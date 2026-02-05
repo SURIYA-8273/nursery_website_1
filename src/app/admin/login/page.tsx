@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/data/datasources/supabase.client';
 import { APP_CONFIG } from '@/core/config/constants';
 import { Lock, Mail, Loader2 } from 'lucide-react';
+import { Input } from '@/presentation/components/admin/form/input';
+import { Button } from '@/presentation/components/admin/button';
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -38,45 +40,41 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <main className="min-h-screen flex items-center justify-center bg-surface p-4">
-            <div className="bg-white p-8 rounded-3xl shadow-soft w-full max-w-md border border-secondary/10">
+        <main className="min-h-screen flex items-center justify-center p-4">
+            <div className="bg-white p-8 rounded-md shadow-sm w-full max-w-md border border-black/30">
                 <div className="text-center mb-8">
-                    <div className="inline-flex p-4 bg-primary/10 rounded-full mb-4 text-primary">
+                    <div className="inline-flex p-4 bg-black/10 rounded-full mb-4 text-black">
                         <Lock size={32} />
                     </div>
-                    <h1 className="font-serif text-3xl font-bold text-primary">Admin Access</h1>
-                    <p className="text-text-muted mt-2">Sign in to manage your plant inventory</p>
+                    <h1 className="font-serif text-3xl font-bold text-black">Admin Access</h1>
+                    <p className="text-black mt-2">Sign in to manage your plant inventory</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-semibold text-text-secondary mb-2">Email Address</label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary" size={20} />
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                placeholder="admin@example.com"
-                            />
-                        </div>
+                        <Input
+                        name="email"
+                        label="Email Address"
+                        type="email"
+                        placeholder='Enter your email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        />
+                        
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-text-secondary mb-2">Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-secondary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                placeholder="••••••••"
-                            />
-                        </div>
+                        <Input
+                        name="password"
+                        label="Password"
+                        type="password"
+                        placeholder='Enter your password'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        />
+                        
                     </div>
 
                     {error && (
@@ -85,13 +83,15 @@ export default function AdminLoginPage() {
                         </div>
                     )}
 
-                    <button
+
+                    <Button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-primary text-white font-bold py-3.5 rounded-xl hover:bg-primary-hover shadow-lg hover:shadow-primary/30 active:scale-95 transition-all disabled:opacity-70 disabled:cursor-wait flex justify-center items-center gap-2"
+                        className='w-full'
+                        isLoading={loading}
                     >
-                        {loading ? <Loader2 className="animate-spin" /> : 'Enter Dashboard'}
-                    </button>
+                        Login
+                    </Button>
                 </form>
             </div>
         </main>

@@ -10,6 +10,7 @@ import { APP_CONFIG } from '@/core/config/constants';
 import Link from 'next/link';
 import { PlantForm, PlantFormData } from '../_components/plant-form';
 import { Heading1 } from '@/presentation/components/admin/heading_1';
+import { toast } from 'react-toastify';
 
 export default function NewPlantPage() {
     const router = useRouter();
@@ -54,44 +55,39 @@ export default function NewPlantPage() {
 
             // 2. Create Plant
             const repo = new SupabasePlantRepository();
-            const price = parseFloat(formData.price) || 0;
-            const stock = parseInt(formData.stock) || 0;
 
             await repo.createPlant({
                 name: formData.name,
-                price: price,
-                discountPrice: formData.discount ? parseFloat(formData.discount) : undefined,
                 description: formData.description,
                 careInstructions: formData.careInstructions,
                 fertilizingInfo: formData.fertilizingInfo,
                 categoryId: formData.categoryId,
                 images: imageUrls,
-                stock: stock,
                 isActive: formData.isActive,
                 isAvailable: formData.isActive,
-                // Add tag fields if needed
                 tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
 
                 // Map variants
                 variants: formData.variants.map(v => ({
-                    id: v.id, // Repo will likely ignore/regenerate this
+                    id: crypto.randomUUID(),
                     size: v.size,
-                    price: parseFloat(v.price) || price,
-                    discountPrice: v.discount ? parseFloat(v.discount) : undefined,
+                    price: parseFloat(v.price) || 0,
+                    discountPrice: v.finalPrice ? parseFloat(v.finalPrice) : undefined,
                     growthRate: undefined,
                     height: v.height,
                     weight: v.weight,
-                    quantityInStock: parseInt(v.stock) || stock,
+                    quantityInStock: parseInt(v.stock) || 0,
                     isAvailable: v.isAvailable,
-                    coverImages: [] // Can extend to support per-variant images later
+                    coverImages: []
                 }))
             });
 
-            router.push(APP_CONFIG.routes.admin.dashboard);
+            toast.success('Plant created successfully!');
+            router.push("/admin/plants");
             router.refresh();
 
         } catch (error: any) {
-            alert('Error: ' + error.message);
+            toast.error('Error: ' + error.message);
         } finally {
             setLoading(false);
         }

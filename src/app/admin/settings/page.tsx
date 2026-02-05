@@ -79,7 +79,8 @@ export default function SettingsPage() {
 
             // 1. Upload Logo if changed
             if (logoFile) {
-                const fileName = `logo-${Date.now()}`;
+                const fileExt = logoFile.name.split('.').pop();
+                const fileName = `logo-${Date.now()}.${fileExt}`;
                 const { error: uploadError } = await supabase.storage
                     .from('common_images')
                     .upload(fileName, logoFile);
@@ -334,9 +335,7 @@ export default function SettingsPage() {
 
                 <Button
                     type="submit"
-
                     className='w-full'
-
                 >
                     {loading ? (
                         <>
@@ -350,9 +349,6 @@ export default function SettingsPage() {
                         </>
                     )}
                 </Button>
-
-
-
             </form>
         </div>
     );

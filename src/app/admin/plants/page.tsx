@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plant } from '@/domain/entities/plant.entity';
 import { Plus, Edit3, Trash2, Eye, Search } from 'lucide-react';
+import { toast } from 'react-toastify';
 import { DataTable, TableHeader } from '@/presentation/components/admin/data-table';
 import { Button } from '@/presentation/components/admin/button';
 import { Heading1 } from '@/presentation/components/admin/heading_1';
@@ -43,9 +44,10 @@ export default function AdminPlantsPage() {
         setIsDeleting(true);
         try {
             await deletePlantById(deletePlant.id);
+            toast.success('Plant deleted successfully');
         } catch (error) {
             console.error('Error deleting plant:', error);
-            alert('Failed to delete plant. Please try again.');
+            toast.error('Failed to delete plant. Please try again.');
         } finally {
             setIsDeleting(false);
             setDeletePlant(null);
@@ -70,8 +72,6 @@ export default function AdminPlantsPage() {
     const headers: TableHeader[] = [
         { label: 'Image' },
         { label: 'Plant' },
-        { label: 'Price' },
-        { label: 'Stock' },
         { label: 'Status' },
         { label: 'Actions' }
     ];
@@ -89,14 +89,6 @@ export default function AdminPlantsPage() {
                 <div>
                     <div className="">{plant.name}</div>
                 </div>
-            )
-        },
-        { content: `₹${plant.price}` },
-        {
-            content: (
-                <span>
-                    {plant.stock || 0}
-                </span>
             )
         },
         {
@@ -136,7 +128,7 @@ export default function AdminPlantsPage() {
                 Add Plant
             </Button>
             <div className="bg-white rounded-md shadow-sm border border-black/20 p-4 mt-4 md:p-6 mb-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
 
                     {/* Search Filter */}
                     <div>
@@ -161,7 +153,6 @@ export default function AdminPlantsPage() {
                                 { value: 'active', label: 'Active' },
                                 { value: 'inactive', label: 'Inactive' }
                             ]}
-                            placeholder="Select Status"
                         />
                     </div>
 
@@ -172,26 +163,12 @@ export default function AdminPlantsPage() {
                             name="category"
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
-                            options={categories.map((cat) => ({ value: cat.id, label: cat.name }))}
-                            placeholder="Select Category"
+                            options={[
+                                { value: 'all', label: 'All Category' },
+                                ...categories.map((cat) => ({ value: cat.id, label: cat.name }))
+                            ]}
                         />
                     </div>
-                </div>
-
-                {/* Stock Filter */}
-                <div>
-                    <Select
-                        label="Stock"
-                        name="stock"
-                        value={stockFilter}
-                        onChange={(e) => setStockFilter(e.target.value as any)}
-                        options={[
-                            { value: 'all', label: 'All Stock' },
-                            { value: 'in_stock', label: 'In Stock' },
-                            { value: 'out_of_stock', label: 'Out of Stock' }
-                        ]}
-                        placeholder="Select Stock"
-                    />
                 </div>
             </div>
 

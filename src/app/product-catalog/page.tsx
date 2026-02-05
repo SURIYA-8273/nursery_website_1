@@ -23,7 +23,7 @@ export default function ProductCatalogPage() {
                 const categoryRepo = new SupabaseCategoryRepository();
 
                 const [plantsResult, categoriesResult] = await Promise.all([
-                    plantRepo.getPlants({ limit: 1000 }),
+                    plantRepo.getPlants({ limit: 1000, isActive: true }),
                     categoryRepo.getCategories()
                 ]);
 
@@ -78,7 +78,7 @@ export default function ProductCatalogPage() {
             { content: <span className="font-medium text-[var(--color-text-secondary)]">{sNo}</span>, align: 'center' },
             { content: <span className="font-semibold text-[var(--color-text-primary)]">{plant.name}</span>, align: 'left' },
             { content: <span className="italic text-[var(--color-text-secondary)]">-</span>, align: 'left' },
-           
+
         ];
     };
 
@@ -96,7 +96,7 @@ export default function ProductCatalogPage() {
 
                 <div className="mb-4 flex flex-col md:flex-row gap-4 items-center justify-between bg-[var(--color-surface-hover)] p-2 rounded-md">
                     <div className="w-full md:w-96">
-                        
+
                         <input
                             type="text"
                             placeholder="Search plants..."

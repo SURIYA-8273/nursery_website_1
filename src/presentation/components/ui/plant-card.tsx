@@ -16,8 +16,14 @@ interface PlantCardProps {
 
 export const PlantCard = ({ plant, badgeTitle }: PlantCardProps) => {
     const router = useRouter();
-    const price = plant.price || 0;
-    const discountPrice = plant.discountPrice;
+
+    // Use first variant price. Confirmed at least one variant exists.
+    const firstVariant = plant.variants && plant.variants.length > 0 ? plant.variants[0] : null;
+
+    // Strict Assumption: variants always exist. If data is corrupt, this might throw or show 0.
+    // We treat discountPrice as the final visible price if it exists.
+    const price = firstVariant ? (firstVariant.price || 0) : 0;
+    const discountPrice = firstVariant ? firstVariant.discountPrice : undefined;
 
     // Within last 30 days
     const isNew = new Date().getTime() - new Date(plant.createdAt).getTime() < 30 * 24 * 60 * 60 * 1000;

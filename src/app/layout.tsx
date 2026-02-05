@@ -11,17 +11,24 @@ const playfair = Playfair_Display({
   variable: '--font-playfair'
 });
 
-export const metadata: Metadata = {
-  title: 'Inner Loop Technologies',
-  description: 'Fresh & Calming plants for your home',
-};
-
 import { SupabaseSettingsRepository } from '@/data/repositories/supabase-settings.repository';
 import { SupabasePlantRepository } from '@/data/repositories/supabase-plant.repository';
 import { GetSettingsUseCase } from '@/domain/usecases/get-settings.usecase';
 import { GetCatalogDataUseCase } from '@/domain/usecases/get-catalog-data.usecase';
 
-// ... (imports)
+export async function generateMetadata(): Promise<Metadata> {
+  const settingsRepo = new SupabaseSettingsRepository();
+  const getSettings = new GetSettingsUseCase(settingsRepo);
+  const settings = await getSettings.execute();
+
+  return {
+    title: settings?.businessName || 'Plant Nursery',
+    description: 'Fresh & Calming plants for your home',
+    icons: {
+      icon: settings?.logoUrl || '/favicon.ico',
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

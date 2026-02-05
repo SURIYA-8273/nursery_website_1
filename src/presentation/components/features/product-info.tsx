@@ -7,6 +7,7 @@ import { Heart, Share2, Star, Tag, Maximize, ArrowUpToLine, Weight, ShoppingBag,
 import { cn } from '@/lib/utils';
 import { useWishlist } from '@/presentation/context/wishlist-context';
 import { useCart } from '@/presentation/context/cart-context';
+import { useSettings } from '@/presentation/context/settings-context';
 import { Button } from '@/presentation/components/ui/button';
 import { toast } from 'react-toastify';
 
@@ -17,6 +18,7 @@ interface ProductInfoProps {
 export const ProductInfo = ({ plant }: ProductInfoProps) => {
     const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
     const { addToCart } = useCart();
+    const { settings } = useSettings();
     const [isAddingToCart, setIsAddingToCart] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [isCopied, setIsCopied] = useState(false);
@@ -31,17 +33,15 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
         }
     };
 
-    // Default to first variant if exists, else undefined
+    // Default to first variant. "100% confirm one variant present"
     const [selectedVariant, setSelectedVariant] = useState<PlantVariant | undefined>(
-        plant.variants && plant.variants.length > 0 ? plant.variants[0] : undefined
+        plant.variants ? plant.variants[0] : undefined
     );
 
-    const basePrice = plant.price || 0;
-    const baseDiscountPrice = plant.discountPrice;
-
-    // Determine current price based on variant or base
-    const priceToDisplay = selectedVariant ? selectedVariant.price : basePrice;
-    const discountPriceToDisplay = selectedVariant ? selectedVariant.discountPrice : baseDiscountPrice;
+    // Determine current price based on variant.
+    // If selectedVariant is undefined (shouldn't happen), default to 0 to prevent crashes.
+    const priceToDisplay = selectedVariant ? selectedVariant.price : 0;
+    const discountPriceToDisplay = selectedVariant ? selectedVariant.discountPrice : undefined;
 
     // Calculate display values
     const finalPrice = discountPriceToDisplay || priceToDisplay;
@@ -50,7 +50,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
         ? Math.round(((priceToDisplay - discountPriceToDisplay) / priceToDisplay) * 100)
         : 0;
 
-    const stock = selectedVariant ? selectedVariant.quantityInStock : (plant.stock || 0);
+    const stock = selectedVariant ? selectedVariant.quantityInStock : 0;
     const isOutOfStock = stock <= 0;
 
     return (
@@ -161,8 +161,10 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                 </div>
             </div>
 
+
+
             {/* Variant Selector */}
-            {plant.variants && plant.variants.length > 0 && (
+            {plant.variants && plant.variants.length > 1 && (
                 <div className="space-y-3">
                     <span className="text-sm font-bold text-text-secondary ">Select Size</span>
                     <div className="flex flex-wrap gap-3 pt-2">
@@ -244,7 +246,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                     </div>
                     <div>
                         <span className="block text-text-muted text-[10px] uppercase font-bold tracking-widest mb-0.5">Height</span>
-                        <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.height || '-'} CM</p>
+                        <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.height || '-'}</p>
                     </div>
                 </div>
                 <div className="group bg-[var(--color-surface-hover)] p-4 transition-all duration-500 hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 rounded-[10px] border border-primary/50 shadow-sm hover:border-[var(--color-primary)] flex flex-col items-center justify-center text-center gap-2">
@@ -253,7 +255,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                     </div>
                     <div>
                         <span className="block text-text-muted text-[10px] uppercase font-bold tracking-widest mb-0.5">Weight</span>
-                        <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.weight || '-'} KG</p>
+                        <p className="font-serif font-bold text-primary text-lg">{selectedVariant?.weight || '-'}</p>
                     </div>
                 </div>
             </div>
@@ -305,7 +307,7 @@ export const ProductInfo = ({ plant }: ProductInfoProps) => {
                 variant="default"
                 className='rounded-md w-full'
                 onClick={() => {
-                    window.open(WhatsAppService.generateBuyNowLink(plant), '_blank');
+                    window.open(WhatsAppService.generateBuyNowLink(settings?.whatsappNumber || '', plant, selectedVariant?.id, quantity), '_blank');
                 }}
             >
                 Buy on WhatsApp

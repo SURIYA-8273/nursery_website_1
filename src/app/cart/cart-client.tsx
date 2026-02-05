@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/presentation/context/cart-context';
+import { useSettings } from '@/presentation/context/settings-context';
 import { WhatsAppService } from '@/data/services/whatsapp.service';
 import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
 import { CartSummary } from '@/presentation/components/features/cart-summary';
@@ -19,6 +20,7 @@ interface CartClientProps {
 export function CartClient({ relatedPlants }: CartClientProps) {
     const router = useRouter();
     const { cart, isLoading, refreshCart, updateQuantity, removeFromCart, clearCart } = useCart();
+    const { settings } = useSettings();
 
     // useEffect(() => {
     //     refreshCart();
@@ -53,7 +55,7 @@ export function CartClient({ relatedPlants }: CartClientProps) {
         );
     }
 
-    const checkoutUrl = WhatsAppService.generateCheckoutLink(cart.items);
+    const checkoutUrl = WhatsAppService.generateCheckoutLink(settings?.whatsappNumber || '', cart.items);
 
     return (
         <main className="min-h-screen bg-[var(--color-surface)] max-w-7xl mx-auto pb-12 md:pb-20">

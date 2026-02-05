@@ -3,11 +3,14 @@ import { Plant, Category, PlantVariant } from '@/domain/entities/plant.entity';
 import { supabase } from '../datasources/supabase.client';
 
 export class SupabasePlantRepository implements IPlantRepository {
-    async getPlants(params?: { category?: string; search?: string; page?: number; limit?: number }): Promise<{ plants: Plant[]; total: number }> {
+    async getPlants(params?: { category?: string; search?: string; page?: number; limit?: number; isActive?: boolean }): Promise<{ plants: Plant[]; total: number }> {
         let query = supabase
             .from('plants')
-            .select('*, categories(name), plant_variants(*), plant_images(*)', { count: 'exact' })
-            .eq('is_active', true);
+            .select('*, categories(name), plant_variants(*), plant_images(*)', { count: 'exact' });
+
+        if (params?.isActive !== undefined) {
+            query = query.eq('is_active', params.isActive);
+        }
 
         if (params?.category) {
             // Filter by category name via join if possible, or category_custom

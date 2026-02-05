@@ -46,12 +46,18 @@ export const Footer = () => {
                     <p className="text-xs text-[var(--color-text-muted)] flex items-center gap-2">
                         <span>Developed by</span>
                         <a
-                            href="mailto:innerloopdev@gmail.com"
+                            href="mailto:zyndrotech@gmail.com"
                             className="font-bold"
                         >
-                            Inner Loop Technologies
+                            Zyndro Tech
                         </a>
-                        <span>+91 6369363788</span>
+                        <a
+                            href="mailto:zyndrotech@gmail.com"
+                            className="font-bold"
+                        >
+                            zyndrotech@gmail.com
+                        </a>
+
                     </p>
 
                 </div>

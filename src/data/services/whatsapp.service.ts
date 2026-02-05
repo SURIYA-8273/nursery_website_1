@@ -1,41 +1,76 @@
 import { CartItem } from '@/domain/entities/cart.entity';
-import { Plant } from '@/domain/entities/plant.entity';
+import { Plant, PlantVariant } from '@/domain/entities/plant.entity';
+import { STRINGS } from '@/core/config/strings';
 
 export class WhatsAppService {
-    private static readonly PHONE_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '';
+    static generateCheckoutLink(phoneNumber: string, items: CartItem[]): string {
+        if (items.length === 0 || !phoneNumber) return '';
 
-    static generateCheckoutLink(items: CartItem[]): string {
-        if (items.length === 0) return '';
-
-        let message = 'Hello, I would like to place an order: \n\n';
+        let message = STRINGS.WHATSAPP.ORDER_GREETING;
         let total = 0;
 
         items.forEach((item, index) => {
-            const price = item.plant.discountPrice || item.plant.price || 0;
+            let price = 0;
+            let sizeLabel = '';
+
+            if (item.selectedVariant) {
+                // Cart snapshot has the final price stored in 'price'
+                price = item.selectedVariant.price;
+                sizeLabel = `(${item.selectedVariant.size})`;
+            } else if (item.plant.variants && item.plant.variants.length > 0) {
+                // Fallback to first variant
+                const variant = item.plant.variants[0];
+                price = variant.discountPrice || variant.price;
+                sizeLabel = `(${variant.size})`;
+            }
+
             const itemTotal = price * item.quantity;
             total += itemTotal;
 
-            message += `${index + 1}. ${item.plant.name} (x${item.quantity}) - ₹${itemTotal}\n`;
+            message += `${index + 1}. ${item.plant.name} ${sizeLabel} (x${item.quantity}) - ₹${itemTotal}\n`;
         });
 
-        message += `\nTotal Amount: ₹${total}`;
-        message += '\n\nPlease confirm availability and payment details.';
+        message += `${STRINGS.WHATSAPP.TOTAL_AMOUNT_PREFIX}${total}`;
+        message += STRINGS.WHATSAPP.CONFIRM_ORDER;
 
-        // Encode for URL
-        const encodedMessage = encodeURIComponent(message);
-        return `https://wa.me/${this.PHONE_NUMBER}?text=${encodedMessage}`;
+        return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     }
 
-    static generateBuyNowLink(plant: Plant, quantity: number = 1): string {
-        const price = plant.discountPrice || plant.price || 0;
+    static generateBuyNowLink(phoneNumber: string, plant: Plant, variantId?: string, quantity: number = 1): string {
+        if (!phoneNumber) return '';
+
+        let price = 0;
+        let sizeLabel = '';
+
+        let variant: PlantVariant | undefined;
+
+        if (variantId && plant.variants) {
+            variant = plant.variants.find(v => v.id === variantId);
+        }
+
+        if (!variant && plant.variants && plant.variants.length > 0) {
+            variant = plant.variants[0]; // Guaranteed
+        }
+
+        if (variant) {
+            price = variant.discountPrice || variant.price;
+            sizeLabel = `(${variant.size})`;
+        } else {
+            if (plant.variants && plant.variants.length > 0) {
+                const v = plant.variants[0];
+                price = v.discountPrice || v.price;
+                sizeLabel = `(${v.size})`;
+            }
+        }
+
         const total = price * quantity;
+        const message = `${STRINGS.WHATSAPP.BUY_NOW_GREETING}${STRINGS.WHATSAPP.NAME_LABEL}${plant.name} ${sizeLabel}\n${STRINGS.WHATSAPP.PRICE_LABEL}${price}\n${STRINGS.WHATSAPP.QUANTITY_LABEL}${quantity}\n${STRINGS.WHATSAPP.TOTAL_LABEL}${total}${STRINGS.WHATSAPP.CONFIRM_AVAILABILITY}`;
 
-        const message = `Hello, I want to buy this plant 🌱\n\nName: ${plant.name}\nPrice: ₹${price}\nQuantity: ${quantity}\nTotal: ₹${total}`;
-
-        return `https://wa.me/${this.PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+        return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     }
 
-    static generateSupportLink(message: string = 'Hello, I need some help with...'): string {
-        return `https://wa.me/${this.PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+    static generateSupportLink(phoneNumber: string, message: string = STRINGS.WHATSAPP.SUPPORT_DEFAULT_MSG): string {
+        if (!phoneNumber) return '';
+        return `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     }
 }
