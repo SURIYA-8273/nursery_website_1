@@ -18,6 +18,7 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
+
 export const WishlistProvider = ({ children }: { children: React.ReactNode }) => {
     const repository = useMemo(() => new LocalWishlistRepository(), []);
     const [wishlist, setWishlist] = useState<Wishlist>({ items: [], totalItems: 0 });
